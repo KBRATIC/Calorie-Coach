@@ -102,9 +102,7 @@ function ProfilePage() {
   const methodLabel =
     method === "katch"
       ? "Katch-McArdle (usa sua massa magra)"
-      : method === "mifflin-ajustado"
-        ? "Mifflin-St Jeor com peso ajustado (IMC ≥ 30)"
-        : "Mifflin-St Jeor";
+      : "Mifflin-St Jeor";
 
   const saveMutation = useMutation({
     mutationFn: () =>
@@ -133,7 +131,7 @@ function ProfilePage() {
       <div>
         <h1 className="text-3xl">Perfil &amp; Meta</h1>
         <p className="text-sm text-muted-foreground">
-          TMB calculada por Mifflin-St Jeor, Katch-McArdle (com % de gordura) ou peso ajustado, com
+          TMB calculada por Mifflin-St Jeor ou Katch-McArdle (se informar % de gordura), com
           limites seguros de déficit e superávit.
         </p>
 

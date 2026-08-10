@@ -60,22 +60,11 @@ export function resolveBmr(input: {
   heightCm: number;
   age: number;
   bodyFatPct?: number | null;
-}): { bmr: number; method: "katch" | "mifflin" | "mifflin-ajustado" } {
+}): { bmr: number; method: "katch" | "mifflin" } {
   const { sex, weightKg, heightCm, age, bodyFatPct } = input;
 
   if (bodyFatPct && bodyFatPct >= 5 && bodyFatPct <= 60 && weightKg > 0) {
     return { bmr: calcBmrKatchMcArdle(weightKg, bodyFatPct), method: "katch" };
-  }
-
-  const bmi = calcBmi(weightKg, heightCm);
-  if (bmi >= 30 && heightCm > 0) {
-    // Peso ajustado: peso ideal (IMC 25) + 25% do excesso.
-    const idealWeight = 25 * (heightCm / 100) ** 2;
-    const adjusted = idealWeight + 0.25 * (weightKg - idealWeight);
-    return {
-      bmr: calcBmr({ sex, weightKg: adjusted, heightCm, age }),
-      method: "mifflin-ajustado",
-    };
   }
 
   return { bmr: calcBmr({ sex, weightKg, heightCm, age }), method: "mifflin" };
