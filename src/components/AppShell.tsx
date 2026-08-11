@@ -114,22 +114,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {isTab ? (
           <div className="embla h-full" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full">
-              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
                   <TodayPage />
                 </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
                   <FoodsPage />
                 </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
                   <HistoryPage />
                 </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
                   <ProfilePage />
                 </div>
@@ -137,7 +137,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         ) : (
-          <div className="h-full overflow-y-auto overscroll-contain">
+          <div className="h-full overflow-y-auto overscroll-contain no-scrollbar">
             <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
               {children}
             </div>
