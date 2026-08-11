@@ -110,27 +110,37 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="absolute inset-0 pt-24 pb-28 md:pb-8 mx-auto w-full max-w-6xl">
+      <main className="absolute inset-0 mx-auto w-full max-w-6xl">
         {isTab ? (
           <div className="embla h-full" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full">
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
-                <TodayPage />
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                  <TodayPage />
+                </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
-                <FoodsPage />
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                  <FoodsPage />
+                </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
-                <HistoryPage />
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                  <HistoryPage />
+                </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
-                <ProfilePage />
+              <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
+                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                  <ProfilePage />
+                </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="px-4 h-full overflow-y-auto overscroll-contain">
-            {children}
+          <div className="h-full overflow-y-auto overscroll-contain">
+            <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+              {children}
+            </div>
           </div>
         )}
       </main>
