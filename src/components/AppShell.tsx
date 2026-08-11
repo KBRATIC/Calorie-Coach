@@ -70,9 +70,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isTab = currentTabIndex !== -1;
 
   return (
-    <div className="min-h-screen pb-28 md:pb-0 overflow-x-hidden">
+    <div className="fixed inset-0 overflow-hidden">
       <div className="aurora-layer" aria-hidden />
-      <header className="liquid-glass sticky top-4 z-40 mx-4 rounded-full">
+      
+      <header className="liquid-glass absolute top-4 inset-x-0 z-40 mx-4 rounded-full md:mx-auto md:max-w-6xl">
         <div className="mx-auto flex items-center justify-between px-4 py-2.5">
           <Link to="/hoje" className="flex min-w-0 items-center gap-2">
             <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
@@ -82,7 +83,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <ShinyText>KcalTrack</ShinyText>
             </span>
           </Link>
-
 
           <nav className="ml-6 hidden items-center gap-1 rounded-full border border-border/60 bg-secondary/40 p-1 md:flex">
             {NAV.map((item) => (
@@ -107,36 +107,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <span className="sr-only">Sair</span>
             </Button>
           </div>
-
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl py-8 relative">
+      <main className="absolute inset-0 pt-24 pb-28 md:pb-8 mx-auto w-full max-w-6xl">
         {isTab ? (
-          <div className="embla overflow-hidden" ref={emblaRef}>
-            <div className="embla__container flex touch-pan-y transform-gpu will-change-transform">
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
+          <div className="embla h-full" ref={emblaRef}>
+            <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
                 <TodayPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
                 <FoodsPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
                 <HistoryPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform">
                 <ProfilePage />
               </div>
             </div>
           </div>
         ) : (
-          <div className="px-4">
+          <div className="px-4 h-full overflow-y-auto overscroll-contain">
             {children}
           </div>
         )}
       </main>
 
-      <nav className="liquid-glass fixed inset-x-0 bottom-6 z-40 mx-4 rounded-full md:hidden">
+      <nav className="liquid-glass absolute inset-x-0 bottom-6 z-40 mx-4 rounded-full md:hidden">
         <div className="flex items-center justify-around p-1.5">
           {NAV.map((item) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
