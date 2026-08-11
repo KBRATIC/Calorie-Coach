@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Flame, CalendarRange, UserCog, LogOut, Table2 } from "lucide-react";
+import { Flame, CalendarRange, UserCog, LogOut, Table2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ShinyText } from "@/components/reactbits/ShinyText";
@@ -179,8 +179,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </main>
 
-      <motion.nav 
-        className="liquid-glass absolute inset-x-0 bottom-6 z-40 mx-4 rounded-full md:hidden touch-none"
+      <div className="absolute inset-x-0 bottom-6 z-40 mx-4 md:hidden">
+        <motion.div 
+          className="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none"
+          animate={{ y: [0, -5, 0], opacity: [0.6, 1, 0.6] }}
+          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+        >
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 backdrop-blur-md shadow-[var(--shadow-glow)] shadow-primary/30 text-primary border border-primary/20">
+            <Sparkles className="size-3" />
+          </div>
+        </motion.div>
+
+        <motion.nav 
+          className="liquid-glass rounded-full touch-none"
         onPanEnd={(_, info) => {
           if (info.offset.y < -30 && info.velocity.y < 0) {
             setIsChatOpen(true);
@@ -213,6 +224,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </div>
       </motion.nav>
+      </div>
 
       <ChatDrawer open={isChatOpen} onOpenChange={setIsChatOpen} />
     </div>

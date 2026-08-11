@@ -111,11 +111,16 @@ export async function parseMealText(text: string, defaultMeal: string): Promise<
 }
 
 const CHAT_SYSTEM = `Você é um nutricionista experiente e um coach de hábitos saudáveis dentro do app KcalTrack.
-Seu objetivo é ajudar o usuário a entender melhor sua alimentação, tirar dúvidas sobre calorias, macronutrientes, e dar sugestões de refeições saudáveis.
-Responda sempre de forma amigável, concisa, direta e em português do Brasil (PT-BR). Evite respostas excessivamente longas.
-Mantenha o foco em nutrição, bem-estar e no uso do app (que ajuda a rastrear calorias).`;
+Seu objetivo é ajudar o usuário a entender melhor sua alimentação, analisar fotos de pratos, tirar dúvidas sobre calorias, macronutrientes, e dar sugestões de refeições saudáveis.
+REGRAS CRÍTICAS DE COMPORTAMENTO:
+1. NUNCA inicie a resposta com saudações como "Olá", "Oi", "Tudo bem?", etc. Vá direto ao ponto!
+2. Responda sempre de forma direta, amigável, concisa e em português do Brasil (PT-BR). Evite respostas excessivamente longas.
+3. Se o usuário enviar uma imagem, analise-a cuidadosamente (identifique os alimentos, porções ou rótulos).
+4. Mantenha o foco em nutrição, bem-estar e no uso do app.`;
 
-export async function chatAssistant(messages: { role: "user" | "model"; text: string }[]): Promise<string> {
+export async function chatAssistant(
+  messages: { role: "user" | "model"; text: string; imageBase64?: string }[]
+): Promise<string> {
   const googleKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_AI_STUDIO_API_KEY"];
   if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
 
@@ -124,10 +129,38 @@ export async function chatAssistant(messages: { role: "user" | "model"; text: st
   );
   url.searchParams.set("key", googleKey);
 
-  const contents = messages.map((m) => ({
-    role: m.role,
-    parts: [{ text: m.text }],
-  }));
+  const contents = messages.map((m) => {
+    const parts: any[] = [];
+    if (m.text) {
+      parts.push({ text: m.text });
+    }
+    if (m.imageBase64) {
+      // Basic detection of mime type based on the base64 prefix
+      // If the client strips the prefix, default to jpeg. Let's assume the client sends only the base64 data, or we strip it here.
+      let mimeType = "image/jpeg";
+      let base64Data = m.imageBase64;
+      
+      if (base64Data.startsWith("data:")) {
+        const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        if (matches && matches.length === 3) {
+          mimeType = matches[1];
+          base64Data = matches[2];
+        }
+      }
+
+      parts.push({
+        inlineData: {
+          mimeType: mimeType,
+          data: base64Data,
+        },
+      });
+    }
+
+    return {
+      role: m.role,
+      parts,
+    };
+  });
 
   const res = await fetch(url.toString(), {
     method: "POST",
