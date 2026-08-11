@@ -14,3 +14,18 @@ export const parseMeal = createServerFn({ method: "POST" })
     const { parseMealText } = await import("@/lib/ai.server");
     return { items: await parseMealText(data.text, data.meal) };
   });
+
+const ChatInput = z.object({
+  messages: z.array(z.object({
+    role: z.enum(["user", "model"]),
+    text: z.string().min(1)
+  })).max(20)
+});
+
+export const askAssistant = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => ChatInput.parse(data))
+  .handler(async ({ data }) => {
+    const { chatAssistant } = await import("@/lib/ai.server");
+    return { text: await chatAssistant(data.messages) };
+  });

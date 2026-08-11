@@ -13,6 +13,7 @@ import { TodayPage } from "@/routes/_authenticated/hoje";
 import { FoodsPage } from "@/routes/_authenticated/alimentos";
 import { HistoryPage } from "@/routes/_authenticated/historico";
 import { ProfilePage } from "@/routes/_authenticated/perfil";
+import { ChatDrawer } from "@/components/ChatDrawer";
 
 
 const NAV = [
@@ -27,6 +28,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "x",
@@ -177,7 +179,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </main>
 
-      <nav className="liquid-glass absolute inset-x-0 bottom-6 z-40 mx-4 rounded-full md:hidden">
+      <motion.nav 
+        className="liquid-glass absolute inset-x-0 bottom-6 z-40 mx-4 rounded-full md:hidden touch-none"
+        onPanEnd={(_, info) => {
+          if (info.offset.y < -30 && info.velocity.y < 0) {
+            setIsChatOpen(true);
+          }
+        }}
+      >
         <div className="relative flex items-center p-1.5">
           <div className="absolute inset-y-1.5 inset-x-1.5 pointer-events-none">
             <motion.div
@@ -203,7 +212,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             );
           })}
         </div>
-      </nav>
+      </motion.nav>
+
+      <ChatDrawer open={isChatOpen} onOpenChange={setIsChatOpen} />
     </div>
   );
 }

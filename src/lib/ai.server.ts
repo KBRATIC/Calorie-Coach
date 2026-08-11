@@ -109,3 +109,53 @@ export async function parseMealText(text: string, defaultMeal: string): Promise<
   if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
   return parseWithGoogle(text, defaultMeal, googleKey);
 }
+
+const CHAT_SYSTEM = `Você é um nutricionista experiente e um coach de hábitos saudáveis dentro do app KcalTrack.
+Seu objetivo é ajudar o usuário a entender melhor sua alimentação, tirar dúvidas sobre calorias, macronutrientes, e dar sugestões de refeições saudáveis.
+Responda sempre de forma amigável, concisa, direta e em português do Brasil (PT-BR). Evite respostas excessivamente longas.
+Mantenha o foco em nutrição, bem-estar e no uso do app (que ajuda a rastrear calorias).`;
+
+export async function chatAssistant(messages: { role: "user" | "model"; text: string }[]): Promise<string> {
+  const googleKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_AI_STUDIO_API_KEY"];
+  if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
+
+  const url = new URL(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent"
+  );
+  url.searchParams.set("key", googleKey);
+
+  const contents = messages.map((m) => ({
+    role: m.role,
+    parts: [{ text: m.text }],
+  }));
+
+  const res = await fetch(url.toString(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: CHAT_SYSTEM }] },
+      contents,
+      generationConfig: {
+        temperature: 0.7,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("Google AI Chat error:", res.status, body);
+    throw new Error(`Falha no chat da IA do Google (${res.status})`);
+  }
+
+  const json = (await res.json()) as {
+    candidates?: { content?: { parts?: { text?: string }[] } }[];
+    error?: { message?: string };
+  };
+
+  if (json.error) {
+    throw new Error(json.error.message ?? "Erro na IA do Google");
+  }
+
+  const text = json.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  return text;
+}
