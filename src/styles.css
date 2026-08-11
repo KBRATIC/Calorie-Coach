@@ -393,5 +393,10 @@
     0 16px 40px -12px var(--glass-shadow);
 }
 
-/ *   H i d e   s c r o l l b a r   f o r   C h r o m e ,   S a f a r i   a n d   O p e r a   * / . n o - s c r o l l b a r : : - w e b k i t - s c r o l l b a r   {   d i s p l a y :   n o n e ;   }   / *   H i d e   s c r o l l b a r   f o r   I E ,   E d g e   a n d   F i r e f o x   * / . n o - s c r o l l b a r   {   - m s - o v e r f l o w - s t y l e :   n o n e ;   s c r o l l b a r - w i d t h :   n o n e ;   }  
- 
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
