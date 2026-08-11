@@ -77,7 +77,7 @@ function densityTone(kcal: number) {
   return { label: "Calórico", className: "border-destructive/40 text-destructive" };
 }
 
-function FoodsPage() {
+export function FoodsPage() {
   const [term, setTerm] = useState("");
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({

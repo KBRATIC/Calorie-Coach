@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Flame, CalendarRange, UserCog, LogOut, Table2 } from "lucide-react";
@@ -6,7 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ShinyText } from "@/components/reactbits/ShinyText";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { motion, AnimatePresence } from "motion/react";
+import useEmblaCarousel from "embla-carousel-react";
+
+import { TodayPage } from "@/routes/_authenticated/hoje";
+import { FoodsPage } from "@/routes/_authenticated/alimentos";
+import { HistoryPage } from "@/routes/_authenticated/historico";
+import { ProfilePage } from "@/routes/_authenticated/perfil";
 
 
 const NAV = [
@@ -21,7 +26,37 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const [direction, setDirection] = useState(0);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    axis: "x",
+    loop: false,
+    skipSnaps: false,
+  });
+
+  // Sync URL to Carousel Slide
+  useEffect(() => {
+    if (!emblaApi) return;
+    const currentIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
+    if (currentIndex !== -1 && currentIndex !== emblaApi.selectedScrollSnap()) {
+      emblaApi.scrollTo(currentIndex);
+    }
+  }, [emblaApi, location.pathname]);
+
+  // Sync Carousel Slide to URL
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => {
+      const index = emblaApi.selectedScrollSnap();
+      const currentPathIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
+      if (index !== currentPathIndex) {
+        navigate({ to: NAV[index].to, replace: true });
+      }
+    };
+    emblaApi.on("select", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, navigate, location.pathname]);
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -30,57 +65,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     navigate({ to: "/auth", replace: true });
   }
 
-  const handleNavClick = (targetPath: string) => {
-    const currentIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
-    const nextIndex = NAV.findIndex((n) => targetPath === n.to);
-    
-    if (currentIndex !== -1 && nextIndex !== -1) {
-      if (nextIndex > currentIndex) setDirection(1);
-      else if (nextIndex < currentIndex) setDirection(-1);
-    }
-  };
-
-  const handleDragEnd = (e: any, { offset, velocity }: any) => {
-    const swipe = offset.x;
-    const currentIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
-    if (currentIndex === -1) return;
-
-    if (swipe < -50) {
-      // Swipe left -> Next tab
-      if (currentIndex < NAV.length - 1) {
-        setDirection(1);
-        navigate({ to: NAV[currentIndex + 1].to });
-      }
-    } else if (swipe > 50) {
-      // Swipe right -> Prev tab
-      if (currentIndex > 0) {
-        setDirection(-1);
-        navigate({ to: NAV[currentIndex - 1].to });
-      }
-    }
-  };
-
-  const animationVariants = {
-    initial: (d: number) => ({
-      x: d > 0 ? "50%" : d < 0 ? "-50%" : 0,
-      opacity: 0,
-    }),
-    animate: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (d: number) => ({
-      x: d > 0 ? "-50%" : d < 0 ? "50%" : 0,
-      opacity: 0,
-    }),
-  };
+  const currentTabIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
+  const isTab = currentTabIndex !== -1;
 
   return (
     <div className="min-h-screen pb-24 md:pb-0 overflow-x-hidden">
       <div className="aurora-layer" aria-hidden />
       <header className="sticky top-0 z-30 border-b border-border/70 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <Link to="/hoje" className="flex min-w-0 items-center gap-2" onClick={() => handleNavClick("/hoje")}>
+          <Link to="/hoje" className="flex min-w-0 items-center gap-2">
             <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
               <Flame className="size-5" />
             </span>
@@ -95,7 +88,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.to}
                 to={item.to}
-                onClick={() => handleNavClick(item.to)}
                 className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 activeProps={{
                   className:
@@ -119,24 +111,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8 relative">
-        <AnimatePresence mode="popLayout" initial={false} custom={direction}>
-          <motion.div
-            key={location.pathname}
-            custom={direction}
-            variants={animationVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
-            onDragEnd={handleDragEnd}
-            className="w-full"
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+        {isTab ? (
+          <div className="embla overflow-hidden" ref={emblaRef}>
+            <div className="embla__container flex touch-pan-y">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+                <TodayPage />
+              </div>
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+                <FoodsPage />
+              </div>
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+                <HistoryPage />
+              </div>
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+                <ProfilePage />
+              </div>
+            </div>
+          </div>
+        ) : (
+          children
+        )}
       </main>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border/70 bg-background/95 backdrop-blur-xl md:hidden">
@@ -146,7 +140,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               key={item.to}
               to={item.to}
-              onClick={() => handleNavClick(item.to)}
               className="flex flex-col items-center gap-1 py-3 text-xs font-medium text-muted-foreground"
               activeProps={{ className: "text-primary" }}
             >

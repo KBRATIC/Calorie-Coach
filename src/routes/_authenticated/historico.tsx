@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/historico")({
   component: HistoryPage,
 });
 
-function HistoryPage() {
+export function HistoryPage() {
   const [range, setRange] = useState<7 | 30>(7);
   const today = todayISO();
   const from = addDays(today, -(range - 1));

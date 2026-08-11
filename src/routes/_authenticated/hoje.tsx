@@ -83,7 +83,7 @@ export const Route = createFileRoute("/_authenticated/hoje")({
   component: TodayPage,
 });
 
-function TodayPage() {
+export function TodayPage() {
   const { user } = useSession();
   const queryClient = useQueryClient();
   const [day, setDay] = useState(todayISO());

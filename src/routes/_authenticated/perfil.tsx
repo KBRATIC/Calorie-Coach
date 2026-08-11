@@ -54,7 +54,7 @@ export const Route = createFileRoute("/_authenticated/perfil")({
   component: ProfilePage,
 });
 
-function ProfilePage() {
+export function ProfilePage() {
   const { user } = useSession();
   const queryClient = useQueryClient();
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
