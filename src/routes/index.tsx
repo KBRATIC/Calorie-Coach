@@ -62,18 +62,20 @@ function Landing() {
       <div className="aurora-layer" aria-hidden />
       <div className="grid-lines pointer-events-none absolute inset-0 -z-10 opacity-30" aria-hidden />
 
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
-            <Flame className="size-5" />
-          </span>
-          <span className="text-display truncate text-lg">
-            <ShinyText>KcalTrack</ShinyText>
-          </span>
+      <header className="liquid-glass sticky top-4 z-40 mx-4 max-w-6xl rounded-full md:mx-auto">
+        <div className="flex items-center justify-between px-4 py-2.5">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+              <Flame className="size-5" />
+            </span>
+            <span className="text-display truncate text-lg">
+              <ShinyText>KcalTrack</ShinyText>
+            </span>
+          </div>
+          <Button asChild variant="ghost" size="sm" className="rounded-full">
+            <Link to="/auth">Entrar</Link>
+          </Button>
         </div>
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/auth">Entrar</Link>
-        </Button>
       </header>
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-10 md:pt-20">
@@ -100,13 +102,13 @@ function Landing() {
 
         <Reveal delay={0.15}>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="gap-2 shadow-[var(--shadow-glow)]">
+            <Button asChild size="lg" className="gap-2 rounded-full shadow-[var(--shadow-glow)]">
               <Link to="/auth">
                 Criar minha conta grátis
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="secondary">
+            <Button asChild size="lg" variant="secondary" className="rounded-full">
               <Link to="/auth">Já tenho conta</Link>
             </Button>
           </div>
