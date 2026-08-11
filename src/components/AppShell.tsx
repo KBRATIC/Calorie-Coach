@@ -59,15 +59,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     };
   }, [emblaApi, navigate, location.pathname]);
 
+  const [deferred, setDeferred] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setDeferred(true), 150);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const activeIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
+  const isTab = activeIndex !== -1;
+
   async function signOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   }
-
-  const currentTabIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
-  const isTab = currentTabIndex !== -1;
 
   return (
     <div className="fixed inset-0 overflow-hidden">
@@ -116,22 +122,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full">
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
-                  <TodayPage />
+                  {activeIndex === 0 || deferred ? <TodayPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
-                  <FoodsPage />
+                  {activeIndex === 1 || deferred ? <FoodsPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
-                  <HistoryPage />
+                  {activeIndex === 2 || deferred ? <HistoryPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
-                  <ProfilePage />
+                  {activeIndex === 3 || deferred ? <ProfilePage /> : null}
                 </div>
               </div>
             </div>
