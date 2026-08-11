@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ShinyText } from "@/components/reactbits/ShinyText";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
+import { motion, AnimatePresence } from "motion/react";
 
 
 const NAV = [
@@ -21,7 +21,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [direction, setDirection] = useState(0);
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -30,52 +30,57 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     navigate({ to: "/auth", replace: true });
   }
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY,
-    });
+  const handleNavClick = (targetPath: string) => {
+    const currentIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
+    const nextIndex = NAV.findIndex((n) => targetPath === n.to);
+    
+    if (currentIndex !== -1 && nextIndex !== -1) {
+      if (nextIndex > currentIndex) setDirection(1);
+      else if (nextIndex < currentIndex) setDirection(-1);
+    }
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStart) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
+  const handleDragEnd = (e: any, { offset, velocity }: any) => {
+    const swipe = offset.x;
+    const currentIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
+    if (currentIndex === -1) return;
 
-    const dx = touchStart.x - touchEndX;
-    const dy = touchStart.y - touchEndY;
-
-    // Check if it's mostly a horizontal swipe and covers enough distance
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      // Find exact or partial match for current route
-      const currentIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
-      if (currentIndex === -1) return;
-
-      if (dx > 0) {
-        // Swipe left -> Next tab
-        if (currentIndex < NAV.length - 1) {
-          navigate({ to: NAV[currentIndex + 1].to });
-        }
-      } else {
-        // Swipe right -> Prev tab
-        if (currentIndex > 0) {
-          navigate({ to: NAV[currentIndex - 1].to });
-        }
+    if (swipe < -50) {
+      // Swipe left -> Next tab
+      if (currentIndex < NAV.length - 1) {
+        setDirection(1);
+        navigate({ to: NAV[currentIndex + 1].to });
+      }
+    } else if (swipe > 50) {
+      // Swipe right -> Prev tab
+      if (currentIndex > 0) {
+        setDirection(-1);
+        navigate({ to: NAV[currentIndex - 1].to });
       }
     }
-    setTouchStart(null);
+  };
+
+  const animationVariants = {
+    initial: (d: number) => ({
+      x: d > 0 ? "50%" : d < 0 ? "-50%" : 0,
+      opacity: 0,
+    }),
+    animate: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (d: number) => ({
+      x: d > 0 ? "-50%" : d < 0 ? "50%" : 0,
+      opacity: 0,
+    }),
   };
 
   return (
-    <div 
-      className="min-h-screen pb-24 md:pb-0"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="min-h-screen pb-24 md:pb-0 overflow-x-hidden">
       <div className="aurora-layer" aria-hidden />
       <header className="sticky top-0 z-30 border-b border-border/70 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <Link to="/hoje" className="flex min-w-0 items-center gap-2">
+          <Link to="/hoje" className="flex min-w-0 items-center gap-2" onClick={() => handleNavClick("/hoje")}>
             <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
               <Flame className="size-5" />
             </span>
@@ -90,6 +95,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.to}
                 to={item.to}
+                onClick={() => handleNavClick(item.to)}
                 className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 activeProps={{
                   className:
@@ -112,7 +118,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-8 relative">
+        <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+          <motion.div
+            key={location.pathname}
+            custom={direction}
+            variants={animationVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={handleDragEnd}
+            className="w-full"
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
+      </main>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border/70 bg-background/95 backdrop-blur-xl md:hidden">
         <div className="grid grid-cols-4">
@@ -121,6 +146,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               key={item.to}
               to={item.to}
+              onClick={() => handleNavClick(item.to)}
               className="flex flex-col items-center gap-1 py-3 text-xs font-medium text-muted-foreground"
               activeProps={{ className: "text-primary" }}
             >
