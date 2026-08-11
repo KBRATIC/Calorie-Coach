@@ -111,26 +111,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8 relative">
+      <main className="mx-auto max-w-6xl py-8 relative">
         {isTab ? (
           <div className="embla overflow-hidden" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y">
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
                 <TodayPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
                 <FoodsPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
                 <HistoryPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-1">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
                 <ProfilePage />
               </div>
             </div>
           </div>
         ) : (
-          children
+          <div className="px-4">
+            {children}
+          </div>
         )}
       </main>
 
