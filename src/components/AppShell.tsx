@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Flame, CalendarRange, UserCog, LogOut, Table2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,7 +19,9 @@ const NAV = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -27,8 +30,48 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     navigate({ to: "/auth", replace: true });
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+    });
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const dx = touchStart.x - touchEndX;
+    const dy = touchStart.y - touchEndY;
+
+    // Check if it's mostly a horizontal swipe and covers enough distance
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      // Find exact or partial match for current route
+      const currentIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
+      if (currentIndex === -1) return;
+
+      if (dx > 0) {
+        // Swipe left -> Next tab
+        if (currentIndex < NAV.length - 1) {
+          navigate({ to: NAV[currentIndex + 1].to });
+        }
+      } else {
+        // Swipe right -> Prev tab
+        if (currentIndex > 0) {
+          navigate({ to: NAV[currentIndex - 1].to });
+        }
+      }
+    }
+    setTouchStart(null);
+  };
+
   return (
-    <div className="min-h-screen pb-24 md:pb-0">
+    <div 
+      className="min-h-screen pb-24 md:pb-0"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="aurora-layer" aria-hidden />
       <header className="sticky top-0 z-30 border-b border-border/70 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
