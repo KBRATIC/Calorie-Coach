@@ -28,7 +28,13 @@ export const askAssistant = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => ChatInput.parse(data))
   .handler(async ({ data, context }) => {
     // 1. Injeção de Contexto Invisível
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date();
+    const todayStr = today.toISOString().split("T")[0];
+    
+    // Data de 7 dias atrás
+    const lastWeek = new Date(today);
+    lastWeek.setDate(lastWeek.getDate() - 7);
+    const lastWeekStr = lastWeek.toISOString().split("T")[0];
     
     let contextStr = "";
     try {
@@ -39,19 +45,28 @@ export const askAssistant = createServerFn({ method: "POST" })
         .eq("user_id", context.userId)
         .maybeSingle();
 
-      // Buscar consumido hoje
-      const { data: entries } = await context.supabase
+      // Buscar entradas recentes (últimos 7 dias) para entender hábitos
+      const { data: recentEntries } = await context.supabase
         .from("food_entries")
-        .select("kcal")
+        .select("name, kcal, consumed_on")
         .eq("user_id", context.userId)
-        .gte("consumed_on", today)
-        .lte("consumed_on", today);
+        .gte("consumed_on", lastWeekStr);
 
-      if (goalData) {
+      if (goalData && recentEntries) {
         const goal = goalData.daily_calorie_goal || 2000;
-        const consumed = (entries || []).reduce((sum, e) => sum + Number(e.kcal), 0);
+        
+        // Entradas de hoje
+        const todaysEntries = recentEntries.filter(e => e.consumed_on === todayStr);
+        const consumed = todaysEntries.reduce((sum, e) => sum + Number(e.kcal), 0);
         const remaining = goal - consumed;
-        contextStr = `\n\n[CONTEXTO INTERNO INVISÍVEL AO USUÁRIO: O usuário consumiu hoje um total de ${consumed} kcal de uma meta diária de ${goal} kcal. Restam ${remaining} kcal para o dia de hoje. Leve isso em consideração se o usuário perguntar sobre dietas, o que jantar ou como fechar o dia.]`;
+        
+        // Hábitos recentes (nomes únicos)
+        const uniqueFoods = Array.from(new Set(recentEntries.map(e => e.name))).slice(0, 20).join(", ");
+        
+        contextStr = `\n\n[CONTEXTO INTERNO INVISÍVEL AO USUÁRIO:
+- Calorias consumidas hoje: ${consumed} kcal de uma meta de ${goal} kcal (Restam ${remaining} kcal).
+- Alimentos que o usuário costuma comer (histórico recente): ${uniqueFoods || "Nenhum histórico ainda"}.
+Regra extra: Se for recomendar uma refeição, priorize MUITO usar alimentos parecidos ou iguais ao histórico recente dele (não invente dietas difíceis ou coisas que ele não tem costume de comer, a menos que ele peça algo diferente). Leve o saldo de calorias em consideração.]`;
       }
     } catch (err) {
       console.error("Erro ao buscar contexto para IA", err);

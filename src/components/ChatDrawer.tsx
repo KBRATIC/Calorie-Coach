@@ -104,7 +104,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             </div>
             Assistente Nutricional
           </DialogTitle>
-          <DialogDescription className="text-sm">IA com visão computacional integrada.</DialogDescription>
+          <DialogDescription className="hidden">Assistente de Nutrição</DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-hidden flex flex-col px-4 pt-4">
