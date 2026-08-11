@@ -84,7 +84,7 @@ export function HistoryPage() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="panel p-5">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">Média diária</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">Consumo médio</p>
           <p className="stat-number text-3xl">{average} kcal</p>
         </div>
         <div className="panel p-5">
