@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ShinyText } from "@/components/reactbits/ShinyText";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import useEmblaCarousel from "embla-carousel-react";
+import { motion } from "motion/react";
 
 import { TodayPage } from "@/routes/_authenticated/hoje";
 import { FoodsPage } from "@/routes/_authenticated/alimentos";
@@ -69,12 +70,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isTab = currentTabIndex !== -1;
 
   return (
-    <div className="min-h-screen pb-24 md:pb-0 overflow-x-hidden">
+    <div className="min-h-screen pb-28 md:pb-0 overflow-x-hidden">
       <div className="aurora-layer" aria-hidden />
-      <header className="sticky top-0 z-30 border-b border-border/70 bg-background/70 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+      <header className="liquid-glass sticky top-4 z-40 mx-4 rounded-full">
+        <div className="mx-auto flex items-center justify-between px-4 py-2.5">
           <Link to="/hoje" className="flex min-w-0 items-center gap-2">
-            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
               <Flame className="size-5" />
             </span>
             <span className="text-display truncate text-lg">
@@ -101,9 +102,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="ml-auto flex items-center gap-2">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" className="gap-2" onClick={signOut}>
+            <Button variant="ghost" size="icon" className="size-9 rounded-full" onClick={signOut}>
               <LogOut className="size-4" />
-              <span className="hidden sm:inline">Sair</span>
+              <span className="sr-only">Sair</span>
             </Button>
           </div>
 
@@ -133,20 +134,34 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border/70 bg-background/95 backdrop-blur-xl md:hidden">
-        <div className="grid grid-cols-4">
-
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="flex flex-col items-center gap-1 py-3 text-xs font-medium text-muted-foreground"
-              activeProps={{ className: "text-primary" }}
-            >
-              <item.icon className="size-5" />
-              {item.label}
-            </Link>
-          ))}
+      <nav className="liquid-glass fixed inset-x-0 bottom-6 z-40 mx-4 rounded-full md:hidden">
+        <div className="flex items-center justify-around p-1.5">
+          {NAV.map((item) => {
+            const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`relative flex h-14 w-full flex-col items-center justify-center gap-1 rounded-full transition-colors ${
+                  isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="mobile-nav-pill"
+                    className="absolute inset-0 rounded-full bg-primary shadow-[var(--shadow-glow)]"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <div className="relative z-10 flex flex-col items-center gap-1">
+                  <item.icon className={`size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
+                  <span className={`text-[10px] font-semibold tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                    {item.label}
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </div>
