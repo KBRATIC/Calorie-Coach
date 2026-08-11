@@ -66,7 +66,9 @@ export const askAssistant = createServerFn({ method: "POST" })
         contextStr = `\n\n[CONTEXTO INTERNO INVISÍVEL AO USUÁRIO:
 - Calorias consumidas hoje: ${consumed} kcal de uma meta de ${goal} kcal (Restam ${remaining} kcal).
 - Alimentos que o usuário costuma comer (histórico recente): ${uniqueFoods || "Nenhum histórico ainda"}.
-Regra extra: Se for recomendar uma refeição, priorize MUITO usar alimentos parecidos ou iguais ao histórico recente dele (não invente dietas difíceis ou coisas que ele não tem costume de comer, a menos que ele peça algo diferente). Leve o saldo de calorias em consideração.]`;
+Regra 1: Se for recomendar uma refeição, priorize MUITO usar alimentos parecidos ou iguais ao histórico recente dele. Leve o saldo de calorias em consideração.
+Regra 2 (CRÍTICA): Aja naturalmente. NUNCA mencione que você teve acesso ao "histórico" dele, nem diga frases como "com base no seu histórico". Apenas recomende.
+Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofundada dos ingredientes e estimativas, sem ser superficial.]`;
       }
     } catch (err) {
       console.error("Erro ao buscar contexto para IA", err);

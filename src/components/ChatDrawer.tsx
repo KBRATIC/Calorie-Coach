@@ -45,8 +45,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
         img.src = event.target?.result as string;
         img.onload = () => {
           const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 800;
-          const MAX_HEIGHT = 800;
+          const MAX_WIDTH = 1400;
+          const MAX_HEIGHT = 1400;
           let width = img.width;
           let height = img.height;
 
@@ -67,8 +67,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
           const ctx = canvas.getContext("2d");
           ctx?.drawImage(img, 0, 0, width, height);
 
-          // Compress to JPEG with 0.7 quality
-          const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          // Compress to JPEG with 0.85 quality for better analysis
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
           resolve(dataUrl);
         };
         img.onerror = (error) => reject(error);
