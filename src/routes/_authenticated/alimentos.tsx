@@ -171,8 +171,6 @@ export function FoodsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="aurora-layer" aria-hidden />
-
       <Reveal>
         <div>
           <p className="eyebrow">Base de referência</p>
