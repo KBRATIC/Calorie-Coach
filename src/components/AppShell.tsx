@@ -180,24 +180,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <div className="absolute inset-x-0 bottom-6 z-40 mx-4 md:hidden">
-        <motion.div 
-          className="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none"
-          animate={{ y: [0, -5, 0], opacity: [0.6, 1, 0.6] }}
-          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        >
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 backdrop-blur-md shadow-[var(--shadow-glow)] shadow-primary/30 text-primary border border-primary/20">
-            <Sparkles className="size-3" />
-          </div>
-        </motion.div>
-
         <motion.nav 
-          className="liquid-glass rounded-full touch-none"
-        onPanEnd={(_, info) => {
-          if (info.offset.y < -30 && info.velocity.y < 0) {
-            setIsChatOpen(true);
-          }
-        }}
-      >
+          className="liquid-glass rounded-full touch-none relative"
+          onPanEnd={(_, info) => {
+            if (info.offset.y < -30 && info.velocity.y < 0) {
+              setIsChatOpen(true);
+            }
+          }}
+        >
+          {/* Drag Handle */}
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-border/50 backdrop-blur-md shadow-sm" />
         <div className="relative flex items-center p-1.5">
           <div className="absolute inset-y-1.5 inset-x-1.5 pointer-events-none">
             <motion.div

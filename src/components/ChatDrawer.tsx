@@ -76,7 +76,10 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     setIsLoading(true);
 
     try {
-      const response = await ask({ data: { messages: newMessages } });
+      // Gemini API requires the first message to be from the 'user'.
+      // If the first message in our state is the default 'model' greeting, we must exclude it.
+      const apiMessages = newMessages.filter((m, idx) => !(idx === 0 && m.role === "model"));
+      const response = await ask({ data: { messages: apiMessages } });
       setMessages((prev) => [...prev, { role: "model", text: response.text }]);
     } catch (err) {
       console.error(err);
