@@ -188,8 +188,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             }
           }}
         >
-          {/* Drag Handle */}
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-border/50 backdrop-blur-md shadow-sm" />
+          {/* Drag Handle with Floating Animation and Glow */}
+          <motion.div 
+            className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-primary/70 backdrop-blur-md shadow-[0_0_8px_rgba(var(--primary),0.8)] border border-primary/50"
+            animate={{ y: [0, -3, 0], opacity: [0.7, 1, 0.7] }}
+            transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+          />
         <div className="relative flex items-center p-1.5">
           <div className="absolute inset-y-1.5 inset-x-1.5 pointer-events-none">
             <motion.div

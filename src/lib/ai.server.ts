@@ -119,7 +119,8 @@ REGRAS CRÍTICAS DE COMPORTAMENTO:
 4. Mantenha o foco em nutrição, bem-estar e no uso do app.`;
 
 export async function chatAssistant(
-  messages: { role: "user" | "model"; text: string; imageBase64?: string }[]
+  messages: { role: "user" | "model"; text: string; imageBase64?: string }[],
+  contextStr: string = ""
 ): Promise<string> {
   const googleKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_AI_STUDIO_API_KEY"];
   if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
@@ -129,10 +130,17 @@ export async function chatAssistant(
   );
   url.searchParams.set("key", googleKey);
 
-  const contents = messages.map((m) => {
+  const contents = messages.map((m, index) => {
     const parts: any[] = [];
-    if (m.text) {
-      parts.push({ text: m.text });
+    
+    // Injeta o contexto no último texto enviado pelo usuário
+    let textToSend = m.text;
+    if (m.role === "user" && index === messages.length - 1 && contextStr) {
+      textToSend += contextStr;
+    }
+
+    if (textToSend) {
+      parts.push({ text: textToSend });
     }
     if (m.imageBase64) {
       // Basic detection of mime type based on the base64 prefix

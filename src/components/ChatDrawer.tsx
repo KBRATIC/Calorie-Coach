@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      text: "Sou o assistente de nutrição do KcalTrack. Como posso te ajudar hoje? Tire dúvidas sobre alimentos, peças sugestões de refeições saudáveis ou envie uma foto do seu prato para estimar as calorias.",
+      text: "Sou o assistente de nutrição do KcalTrack. Como posso te ajudar hoje? Tire dúvidas sobre alimentos, peça sugestões de refeições saudáveis ou envie uma foto do seu prato para estimar as calorias.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -93,19 +93,19 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="h-[85vh] liquid-glass border-t border-border/40 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 to-background pointer-events-none -z-10" />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md w-[95vw] h-[75vh] md:h-[70vh] liquid-glass p-0 gap-0 overflow-hidden border border-primary/20 shadow-xl shadow-black/40 rounded-2xl mx-auto flex flex-col">
+        <div className="absolute inset-0 bg-gradient-to-br from-background/40 to-background/90 pointer-events-none -z-10" />
         
-        <DrawerHeader className="pb-4 border-b border-border/10">
-          <DrawerTitle className="flex items-center gap-2">
+        <DialogHeader className="p-4 border-b border-border/10 shrink-0">
+          <DialogTitle className="flex items-center gap-2 text-lg">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary shadow-[var(--shadow-glow)]">
               <Sparkles className="size-4" />
             </div>
             Assistente Nutricional
-          </DrawerTitle>
-          <DrawerDescription>IA com visão computacional integrada.</DrawerDescription>
-        </DrawerHeader>
+          </DialogTitle>
+          <DialogDescription className="text-sm">IA com visão computacional integrada.</DialogDescription>
+        </DialogHeader>
 
         <div className="flex-1 overflow-hidden flex flex-col px-4 pt-4">
           <ScrollArea className="flex-1 pr-4 -mr-4" ref={scrollRef}>
@@ -122,7 +122,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       className={`max-w-[85%] rounded-3xl px-4 py-3 text-sm flex flex-col gap-2 ${
                         msg.role === "user"
                           ? "bg-primary text-primary-foreground rounded-br-sm shadow-[var(--shadow-glow)] shadow-primary/20"
-                          : "bg-secondary/60 backdrop-blur-md text-secondary-foreground rounded-bl-sm border border-border/30"
+                          : "bg-secondary/40 backdrop-blur-md text-secondary-foreground rounded-bl-sm border border-border/30"
                       }`}
                     >
                       {msg.imageBase64 && (
@@ -149,7 +149,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className="flex justify-start"
                   >
-                    <div className="max-w-[85%] rounded-3xl rounded-bl-sm bg-secondary/60 backdrop-blur-md px-5 py-4 text-secondary-foreground border border-border/30">
+                    <div className="max-w-[85%] rounded-3xl rounded-bl-sm bg-secondary/40 backdrop-blur-md px-5 py-4 text-secondary-foreground border border-border/30">
                       <Loader2 className="size-5 animate-spin text-primary" />
                     </div>
                   </motion.div>
@@ -159,7 +159,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
           </ScrollArea>
         </div>
 
-        <div className="p-4 pt-2 flex flex-col gap-2 bg-background/40 backdrop-blur-xl border-t border-border/20">
+        <div className="p-4 pt-2 flex flex-col gap-2 bg-background/20 backdrop-blur-xl border-t border-border/10 shrink-0">
           <AnimatePresence>
             {imageBase64Preview && (
               <motion.div 
@@ -196,7 +196,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
               type="button"
               variant="outline"
               size="icon"
-              className="h-12 w-12 rounded-full border-border/40 bg-secondary/50 shrink-0 text-muted-foreground hover:text-foreground"
+              className="h-12 w-12 rounded-full border-border/20 bg-secondary/30 shrink-0 text-muted-foreground hover:text-foreground"
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
             >
@@ -208,7 +208,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pergunte ou envie uma foto..."
-                className="pr-12 rounded-full h-12 bg-secondary/50 border-border/40 shadow-inner"
+                className="pr-12 rounded-full h-12 bg-secondary/30 border-border/20 shadow-inner placeholder:text-muted-foreground/70"
                 disabled={isLoading}
               />
               <Button
@@ -222,7 +222,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             </div>
           </form>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 }
