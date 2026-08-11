@@ -114,17 +114,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="mx-auto max-w-6xl py-8 relative">
         {isTab ? (
           <div className="embla overflow-hidden" ref={emblaRef}>
-            <div className="embla__container flex touch-pan-y">
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
+            <div className="embla__container flex touch-pan-y transform-gpu will-change-transform">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
                 <TodayPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
                 <FoodsPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
                 <HistoryPage />
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4">
+              <div className="embla__slide min-w-0 flex-[0_0_100%] px-4 transform-gpu will-change-transform">
                 <ProfilePage />
               </div>
             </div>
