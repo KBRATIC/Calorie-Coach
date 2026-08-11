@@ -9,8 +9,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         style: {
           backgroundColor: "var(--glass-bg)",
-          backdropFilter: "blur(32px) saturate(150%)",
-          WebkitBackdropFilter: "blur(32px) saturate(150%)",
+          backdropFilter: "blur(16px) saturate(150%)",
+          WebkitBackdropFilter: "blur(16px) saturate(150%)",
+          transform: "translateZ(0)",
           border: "1px solid var(--glass-border)",
           boxShadow:
             "inset 0 1px 1px var(--glass-highlight), 0 16px 40px -12px var(--glass-shadow)",
