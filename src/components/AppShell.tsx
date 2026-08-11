@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ShinyText } from "@/components/reactbits/ShinyText";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import useEmblaCarousel from "embla-carousel-react";
-import { motion } from "motion/react";
+import { motion, useMotionValue, useTransform } from "motion/react";
 
 import { TodayPage } from "@/routes/_authenticated/hoje";
 import { FoodsPage } from "@/routes/_authenticated/alimentos";
@@ -58,6 +58,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, navigate, location.pathname]);
+
+  const scrollProgress = useMotionValue(0);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    // Set initial position
+    scrollProgress.set(emblaApi.scrollProgress());
+    
+    const onScroll = () => {
+      scrollProgress.set(emblaApi.scrollProgress());
+    };
+    
+    emblaApi.on("scroll", onScroll);
+    emblaApi.on("reInit", onScroll);
+    
+    return () => {
+      emblaApi.off("scroll", onScroll);
+      emblaApi.off("reInit", onScroll);
+    };
+  }, [emblaApi, scrollProgress]);
+
+  // Maps scroll progress 0 -> 1 to translateX 0% -> 300%
+  const pillX = useTransform(scrollProgress, [0, 1], ["0%", "300%"]);
 
   const [deferred, setDeferred] = useState(false);
   useEffect(() => {
@@ -154,30 +178,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <nav className="liquid-glass absolute inset-x-0 bottom-6 z-40 mx-4 rounded-full md:hidden">
-        <div className="flex items-center justify-around p-1.5">
+        <div className="relative flex items-center p-1.5">
+          <div className="absolute inset-y-1.5 inset-x-1.5 pointer-events-none">
+            <motion.div
+              className="h-full w-1/4 rounded-full bg-primary shadow-[var(--shadow-glow)]"
+              style={{ x: pillX }}
+            />
+          </div>
           {NAV.map((item) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`relative flex h-14 w-full flex-col items-center justify-center gap-1 rounded-full transition-colors ${
+                className={`relative z-10 flex h-14 w-full flex-col items-center justify-center gap-1 rounded-full transition-colors ${
                   isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="mobile-nav-pill"
-                    className="absolute inset-0 rounded-full bg-primary shadow-[var(--shadow-glow)]"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <div className="relative z-10 flex flex-col items-center gap-1">
-                  <item.icon className={`size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
-                  <span className={`text-[10px] font-semibold tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-                    {item.label}
-                  </span>
-                </div>
+                <item.icon className={`size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
+                <span className={`text-[10px] font-semibold tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                  {item.label}
+                </span>
               </Link>
             );
           })}
