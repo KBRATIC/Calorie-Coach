@@ -65,9 +65,11 @@ function Landing() {
       <header className="liquid-glass sticky top-4 z-40 mx-4 max-w-6xl rounded-full md:mx-auto">
         <div className="flex items-center justify-between px-4 py-2.5">
           <div className="flex min-w-0 items-center gap-2">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
-              <Flame className="size-5" />
-            </span>
+            <img 
+              src="/icon.png" 
+              alt="KcalTrack Logo" 
+              className="size-9 rounded-full shadow-[var(--shadow-glow)] object-cover"
+            />
             <span className="text-display truncate text-lg">
               <ShinyText>KcalTrack</ShinyText>
             </span>
