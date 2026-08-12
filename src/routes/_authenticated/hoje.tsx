@@ -63,6 +63,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Onboarding } from "@/components/Onboarding";
 
 
 export const Route = createFileRoute("/_authenticated/hoje")({
@@ -141,6 +148,7 @@ export function TodayPage() {
 
   return (
     <div className="space-y-6">
+      <Onboarding />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-3xl">Diário</h1>
@@ -251,39 +259,36 @@ export function TodayPage() {
           Nenhum alimento registrado neste dia.
         </div>
       ) : (
-        <div className="space-y-6">
-          {MEALS.filter((m) => entries.some((e) => e.meal === m.id)).map((meal) => (
-            <div key={meal.id} className="panel overflow-hidden">
-              <div className="flex items-center justify-between gap-2 border-b border-border/70 px-5 py-3">
-                <span className="text-sm font-semibold uppercase tracking-wider text-primary">
-                  {meal.label}
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="stat-number text-sm">
-                    {Math.round(
-                      entries
-                        .filter((e) => e.meal === meal.id)
-                        .reduce((s, e) => s + Number(e.kcal), 0),
-                    )}{" "}
-                    kcal
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1.5 text-xs text-muted-foreground hover:text-destructive"
-                    onClick={() => clearMealMutation.mutate(meal.id)}
-                    disabled={clearMealMutation.isPending}
-                  >
-                    <Eraser className="size-3.5" /> Limpar
-                  </Button>
-                </div>
+        <Accordion type="multiple" className="space-y-4" defaultValue={MEALS.map(m => m.id)}>
+          {MEALS.filter((m) => entries.some((e) => e.meal === m.id)).map((meal) => {
+            const mealEntries = entries.filter((e) => e.meal === meal.id);
+            const totalKcal = Math.round(mealEntries.reduce((s, e) => s + Number(e.kcal), 0));
+            
+            return (
+            <AccordionItem key={meal.id} value={meal.id} className="panel overflow-hidden border-none px-0">
+              <div className="flex items-center justify-between gap-2 border-b border-border/40 px-5">
+                <AccordionTrigger className="hover:no-underline py-4 flex-1">
+                  <div className="flex flex-1 items-center justify-between pr-4">
+                    <span className="text-sm font-bold uppercase tracking-wider text-primary">
+                      {meal.label}
+                    </span>
+                    <span className="stat-number text-sm">{totalKcal} kcal</span>
+                  </div>
+                </AccordionTrigger>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 text-xs text-muted-foreground hover:text-destructive shrink-0"
+                  onClick={() => clearMealMutation.mutate(meal.id)}
+                  disabled={clearMealMutation.isPending}
+                >
+                  <Eraser className="size-3.5" />
+                </Button>
               </div>
-
-              <ul className="divide-y divide-border/60">
-                {entries
-                  .filter((e) => e.meal === meal.id)
-                  .map((entry) => (
-                    <li key={entry.id} className="flex items-center gap-3 px-5 py-3">
+              <AccordionContent className="pt-0 pb-0">
+                <ul className="divide-y divide-border/60">
+                  {mealEntries.map((entry) => (
+                    <li key={entry.id} className="flex items-center gap-3 px-5 py-3 hover:bg-muted/20 transition-colors">
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{entry.name}</p>
                         <p className="text-xs text-muted-foreground">
@@ -296,15 +301,17 @@ export function TodayPage() {
                         size="icon"
                         onClick={() => removeMutation.mutate(entry.id)}
                         aria-label={`Remover ${entry.name}`}
+                        className="text-muted-foreground hover:text-destructive"
                       >
                         <Trash2 className="size-4" />
                       </Button>
                     </li>
                   ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          )})}
+        </Accordion>
       )}
     </div>
   );
@@ -433,8 +440,8 @@ function AiTextDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="secondary" className="gap-2">
-          <Sparkles className="size-4" /> Lançar por texto
+        <Button size="sm" className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-none shadow-md shadow-purple-500/20">
+          <Sparkles className="size-4" /> Assistente IA
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">

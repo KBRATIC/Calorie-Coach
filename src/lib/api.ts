@@ -196,24 +196,47 @@ export type RecentFood = {
   meal: string;
 };
 
-/** Alimentos usados recentemente, sem repetir nomes. */
+/** Alimentos mais frequentes nos últimos 500 lançamentos. */
 export async function fetchRecentFoods(limit = 12): Promise<RecentFood[]> {
   const { data, error } = await supabase
     .from("food_entries")
     .select("name, grams, unit, kcal, meal")
     .order("created_at", { ascending: false })
-    .limit(120);
+    .limit(500);
   if (error) throw error;
-  const seen = new Set<string>();
-  const out: RecentFood[] = [];
+  
+  const counts = new Map<string, { count: number; food: RecentFood }>();
   for (const row of (data ?? []) as RecentFood[]) {
     const key = row.name.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(row);
-    if (out.length >= limit) break;
+    if (counts.has(key)) {
+      counts.get(key)!.count++;
+    } else {
+      counts.set(key, { count: 1, food: row });
+    }
   }
-  return out;
+  
+  return Array.from(counts.values())
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit)
+    .map((x) => x.food);
+}
+
+export async function fetchHasSeenOnboarding(userId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("has_seen_onboarding")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) return false;
+  return data?.has_seen_onboarding ?? false;
+}
+
+export async function markOnboardingSeen(userId: string) {
+  const { error } = await supabase
+    .from("profiles")
+    .update({ has_seen_onboarding: true })
+    .eq("id", userId);
+  if (error) throw error;
 }
 
 export async function addEntries(
