@@ -31,7 +31,11 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
         stream.getTracks().forEach(track => track.stop());
       }
       const newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode },
+        video: { 
+          facingMode,
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
         audio: false,
       });
       setStream(newStream);
@@ -72,9 +76,21 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
 
   const handleCapture = () => {
     if (videoRef.current && stream) {
+      const MAX_SIZE = 1280;
+      let width = videoRef.current.videoWidth;
+      let height = videoRef.current.videoHeight;
+      
+      if (width > height && width > MAX_SIZE) {
+        height = Math.round(height * (MAX_SIZE / width));
+        width = MAX_SIZE;
+      } else if (height > MAX_SIZE) {
+        width = Math.round(width * (MAX_SIZE / height));
+        height = MAX_SIZE;
+      }
+
       const canvas = document.createElement("canvas");
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
+      canvas.width = width;
+      canvas.height = height;
       const ctx = canvas.getContext("2d");
       if (ctx) {
         // Draw image flipped if using user camera
@@ -82,8 +98,9 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
           ctx.translate(canvas.width, 0);
           ctx.scale(-1, 1);
         }
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        const base64 = canvas.toDataURL("image/jpeg", 0.8);
+        ctx.drawImage(videoRef.current, 0, 0, width, height);
+        // Compress as WebP at 85% quality to save bandwidth while keeping visual fidelity high
+        const base64 = canvas.toDataURL("image/webp", 0.85);
         onCapture(base64);
         onClose();
       }
