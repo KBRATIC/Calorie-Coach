@@ -96,46 +96,26 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
     <AnimatePresence>
       {open && (
         <motion.div
-          initial={{ opacity: 0, y: "10%" }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: "10%" }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.05 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="fixed inset-0 z-[9999] bg-black flex flex-col"
+          className="fixed inset-0 z-[9999] bg-black overflow-hidden"
         >
-          {/* Top Bar */}
-          <div className="absolute top-0 inset-x-0 p-4 flex justify-between items-center z-10 bg-gradient-to-b from-black/60 to-transparent">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full bg-black/30 text-white hover:bg-black/50 border-none"
-              onClick={onClose}
-            >
-              <X className="size-6" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full bg-black/30 text-white hover:bg-black/50 border-none"
-              onClick={toggleCamera}
-            >
-              <RefreshCcw className="size-5" />
-            </Button>
-          </div>
-
-          {/* Camera Feed */}
-          <div className="flex-1 relative flex items-center justify-center bg-black overflow-hidden">
+          {/* Video Feed (Full Screen) */}
+          <div className="absolute inset-0 flex items-center justify-center">
             {error ? (
-              <div className="text-white text-center p-6 bg-red-500/20 rounded-xl max-w-sm mx-4">
-                <p>{error}</p>
-                <Button className="mt-4 w-full" onClick={onClose} variant="secondary">
+              <div className="text-white text-center p-6 bg-red-500/20 liquid-glass border-glass-border rounded-2xl max-w-sm mx-4 z-20">
+                <p className="mb-4">{error}</p>
+                <Button className="w-full rounded-xl" onClick={onClose} variant="secondary">
                   Voltar
                 </Button>
               </div>
             ) : (
               <>
                 {isStarting && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black z-0">
-                    <Loader2 className="size-8 text-white animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-20 backdrop-blur-sm">
+                    <Loader2 className="size-10 text-primary animate-spin" />
                   </div>
                 )}
                 <video
@@ -143,21 +123,52 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
                   autoPlay
                   playsInline
                   muted
-                  className={`w-full h-full object-cover transition-opacity duration-300 ${isStarting ? 'opacity-0' : 'opacity-100'} ${facingMode === 'user' ? 'scale-x-[-1]' : ''}`}
+                  className={`w-full h-full object-cover transition-opacity duration-500 ${isStarting ? 'opacity-0' : 'opacity-100'} ${facingMode === 'user' ? 'scale-x-[-1]' : ''}`}
                 />
               </>
             )}
           </div>
 
+          {/* Vignette Overlay for better UI contrast */}
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.8)_120%)] z-10" />
+
+          {/* Top Bar */}
+          <div className="absolute top-0 inset-x-0 p-6 flex justify-between items-center z-20">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-12 w-12 rounded-full liquid-glass border-glass-border shadow-lg text-white hover:text-white transition-transform active:scale-95"
+              onClick={onClose}
+            >
+              <X className="size-6" />
+            </Button>
+            
+            <div className="liquid-glass px-5 py-2 rounded-full text-xs font-semibold tracking-wide text-white/90 border-glass-border flex items-center gap-2 shadow-lg">
+              <div className="size-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+              CÂMERA
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-12 w-12 rounded-full liquid-glass border-glass-border shadow-lg text-white hover:text-white transition-transform active:scale-95"
+              onClick={toggleCamera}
+            >
+              <RefreshCcw className="size-5" />
+            </Button>
+          </div>
+
           {/* Bottom Controls */}
-          <div className="h-32 bg-black flex items-center justify-center pb-safe">
+          <div className="absolute bottom-0 inset-x-0 h-48 flex flex-col items-center justify-center z-20 pb-8 bg-gradient-to-t from-black/80 to-transparent">
             <button
               onClick={handleCapture}
               disabled={!!error || isStarting}
-              className="w-20 h-20 rounded-full border-[6px] border-white/30 flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 hover:bg-white/10"
+              className="group relative flex h-[88px] w-[88px] items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] shadow-lg shadow-purple-500/30 transition-transform active:scale-90 hover:scale-105 border-[6px] border-background/20 disabled:opacity-50"
             >
-              <div className="w-[60px] h-[60px] bg-white rounded-full shadow-lg" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] blur opacity-60" />
+              <div className="absolute inset-2 rounded-full bg-white transition-transform group-hover:scale-95 shadow-inner" />
             </button>
+            <span className="mt-6 text-[11px] font-semibold tracking-[0.2em] text-white/60 uppercase">Tirar Foto</span>
           </div>
         </motion.div>
       )}
