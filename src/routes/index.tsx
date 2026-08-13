@@ -2,24 +2,24 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Flame, Calculator, CalendarRange, Search, ArrowRight, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/")({\r
-  head: () => ({\r
-    meta: [\r
-      { title: "KcalTrack — Controle de calorias e calculadora de TMB" },\r
-      {\r
-        name: "description",\r
-        content:\r
-          "Calcule sua taxa metabólica basal, defina metas de calorias para emagrecer ou ganhar peso e registre tudo que você come com controle semanal e mensal.",\r
-      },\r
-      { property: "og:title", content: "KcalTrack — Controle de calorias e calculadora de TMB" },\r
-      {\r
-        property: "og:description",\r
-        content:\r
-          "Calcule sua taxa metabólica basal, defina metas de calorias para emagrecer ou ganhar peso e registre tudo que você come com controle semanal e mensal.",\r
-      },\r
-    ],\r
-  }),\r
-  component: Landing,\r
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "KcalTrack — Controle de calorias e calculadora de TMB" },
+      {
+        name: "description",
+        content:
+          "Calcule sua taxa metabólica basal, defina metas de calorias para emagrecer ou ganhar peso e registre tudo que você come com controle semanal e mensal.",
+      },
+      { property: "og:title", content: "KcalTrack — Controle de calorias e calculadora de TMB" },
+      {
+        property: "og:description",
+        content:
+          "Calcule sua taxa metabólica basal, defina metas de calorias para emagrecer ou ganhar peso e registre tudo que você come com controle semanal e mensal.",
+      },
+    ],
+  }),
+  component: Landing,
 });
 
 const FEATURES = [
@@ -50,7 +50,7 @@ function Landing() {
     <div className="relative min-h-screen overflow-hidden">
       <div className="aurora-layer" aria-hidden />
 
-      {/* ── Header ────────────────────────────────────────────── */}
+      {/* Header */}
       <header className="liquid-glass sticky top-4 z-40 mx-4 max-w-6xl rounded-full md:mx-auto">
         <div className="flex items-center justify-between px-4 py-2.5">
           <Link to="/" className="flex min-w-0 items-center gap-2">
@@ -67,7 +67,7 @@ function Landing() {
         </div>
       </header>
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pt-12 md:pt-24">
         <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
           <div>
@@ -92,7 +92,7 @@ function Landing() {
             </div>
           </div>
 
-          {/* Stats card no lugar de imagem hero */}
+          {/* Stats card */}
           <div className="panel space-y-1 p-6">
             <div className="flex items-baseline justify-between border-b border-border/40 pb-4">
               <div>
@@ -115,7 +115,7 @@ function Landing() {
         </div>
       </section>
 
-      {/* ── Features ──────────────────────────────────────────── */}
+      {/* Features */}
       <section className="mx-auto max-w-6xl px-4 py-20">
         <h2 className="text-2xl md:text-3xl">O que o KcalTrack faz por você</h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -131,7 +131,7 @@ function Landing() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────── */}
+      {/* CTA */}
       <section className="mx-auto max-w-6xl px-4 pb-20">
         <div className="panel flex flex-col items-center gap-4 p-8 text-center md:p-12">
           <h2 className="text-2xl md:text-3xl">Pronto para começar?</h2>
@@ -147,7 +147,7 @@ function Landing() {
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────── */}
+      {/* Footer */}
       <footer className="border-t border-border/40 py-8">
         <p className="mx-auto max-w-6xl px-4 text-xs text-muted-foreground">
           Valores calóricos de referência baseados na Tabela de Calorias EndocrinoSaude. Este app não
