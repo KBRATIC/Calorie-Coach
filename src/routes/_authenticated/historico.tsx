@@ -53,7 +53,7 @@ export function HistoryPage() {
     : 0;
   const onTarget = logged.filter((t) => t.total <= goal).length;
   const total = Math.round(totals.reduce((s, t) => s + t.total, 0));
-  const max = Math.max(goal, ...totals.map((t) => t.total), 1);
+  // Bar reference removed — bars are now relative to daily goal
 
   // Calorie Bank: sum of (goal - consumed) for all logged days
   const netBalance = logged.reduce((sum, t) => sum + (goal - t.total), 0);
@@ -151,7 +151,7 @@ export function HistoryPage() {
               <div className="h-3 flex-1 overflow-hidden rounded-full bg-secondary">
                 <div
                   className={`h-full rounded-full ${t.total > goal ? "bg-destructive" : "bg-primary"}`}
-                  style={{ width: `${Math.min((t.total / max) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((t.total / goal) * 100, 100)}%` }}
                 />
               </div>
               <span className="stat-number w-16 shrink-0 text-right text-xs">
