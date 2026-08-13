@@ -8,6 +8,7 @@ import { Send, Loader2, Sparkles, Camera, X } from "lucide-react";
 import { askAssistant } from "@/lib/ai.functions";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Message {
   role: "user" | "model";
@@ -28,6 +29,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const ask = useServerFn(askAssistant);
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -123,6 +125,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       const apiMessages = newMessages.filter((m, idx) => !(idx === 0 && m.role === "model"));
       const response = await ask({ data: { messages: apiMessages } });
       setMessages((prev) => [...prev, { role: "model", text: response.text }]);
+      queryClient.invalidateQueries({ queryKey: ["entries"] });
     } catch (err) {
       console.error(err);
       setMessages((prev) => [

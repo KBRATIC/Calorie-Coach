@@ -75,5 +75,29 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
     }
 
     const { chatAssistant } = await import("@/lib/ai.server");
-    return { text: await chatAssistant(data.messages, contextStr) };
+    let responseText = await chatAssistant(data.messages, contextStr);
+    
+    // Intercept [LOG_FOOD: {...}] tag
+    const logMatch = responseText.match(/\[LOG_FOOD:\s*({.*?})\s*\]/);
+    if (logMatch && logMatch[1]) {
+      try {
+        const foodData = JSON.parse(logMatch[1]);
+        await context.supabase.from("food_entries").insert({
+          user_id: context.userId,
+          name: foodData.name,
+          grams: foodData.quantity,
+          unit: foodData.unit || "g",
+          kcal: foodData.kcal,
+          meal: foodData.meal || "almoço",
+          consumed_on: todayStr
+        });
+        
+        // Remove the tag from the final response
+        responseText = responseText.replace(logMatch[0], "").trim();
+      } catch (err) {
+        console.error("Erro ao parsear e salvar LOG_FOOD tag", err);
+      }
+    }
+
+    return { text: responseText };
   });
