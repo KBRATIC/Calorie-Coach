@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Flame, CalendarRange, UserCog, LogOut, Table2, Sparkles } from "lucide-react";
@@ -81,8 +81,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     };
   }, [emblaApi, scrollProgress]);
 
-  // Maps scroll progress 0 -> 1 to translateX 0% -> 300%
-  const pillX = useTransform(scrollProgress, [0, 1], ["0%", "300%"]);
+  // Maps scroll progress 0 -> 1 to translateX 0% -> 400% with a gap in the middle (slot 2)
+  const pillX = useTransform(scrollProgress, [0, 1/3, 2/3, 1], ["0%", "100%", "300%", "400%"]);
 
   const [deferred, setDeferred] = useState(false);
   useEffect(() => {
@@ -201,25 +201,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="relative flex items-center p-1.5">
           <div className="absolute inset-y-1.5 inset-x-1.5 pointer-events-none">
             <motion.div
-              className="h-full w-1/4 rounded-full bg-primary shadow-[var(--shadow-glow)]"
+              className="h-full w-1/5 rounded-full bg-primary shadow-[var(--shadow-glow)]"
               style={{ x: pillX }}
             />
           </div>
-          {NAV.map((item) => {
+          {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`relative z-10 flex h-14 w-full flex-col items-center justify-center gap-1 rounded-full transition-colors ${
-                  isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <item.icon className={`size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
-                <span className={`text-[10px] font-semibold tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-                  {item.label}
-                </span>
-              </Link>
+              <Fragment key={item.to}>
+                {idx === 2 && (
+                  <div className="w-full flex-shrink-0" />
+                )}
+                <Link
+                  to={item.to}
+                  className={`relative z-10 flex h-14 w-full flex-col items-center justify-center gap-1 rounded-full transition-colors ${
+                    isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <item.icon className={`size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
+                  <span className={`text-[10px] font-semibold tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                    {item.label}
+                  </span>
+                </Link>
+              </Fragment>
             );
           })}
         </div>
