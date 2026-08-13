@@ -177,7 +177,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md w-[95vw] h-[75vh] md:h-[70vh] liquid-glass p-0 gap-0 overflow-hidden border border-primary/20 shadow-xl shadow-black/40 rounded-2xl mx-auto flex flex-col">
+      <DialogContent className="sm:max-w-md w-[calc(100vw-10px)] h-[calc(100dvh-10px)] liquid-glass p-0 gap-0 overflow-hidden border border-primary/20 shadow-xl shadow-black/40 rounded-2xl mx-auto flex flex-col">
         <div className="absolute inset-0 bg-gradient-to-br from-background/40 to-background/90 pointer-events-none -z-10" />
         
         <DialogHeader className="p-4 border-b border-border/10 shrink-0">

@@ -187,13 +187,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <div className="absolute inset-x-0 bottom-6 z-40 mx-4 md:hidden">
         {/* FAB Assistente IA Central */}
-        <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-50">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] z-50">
           <button
             onClick={() => setIsChatOpen(true)}
-            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-fuchsia-500 shadow-lg shadow-purple-500/30 transition-transform active:scale-95 hover:scale-105 border-2 border-background"
+            className="group relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] shadow-lg shadow-purple-500/30 transition-transform active:scale-95 hover:scale-105 border-4 border-background"
           >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-fuchsia-500 blur animate-pulse opacity-50" />
-            <Sparkles className="size-6 text-white relative z-10" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] blur opacity-60" />
+            <Sparkles className="size-7 text-white relative z-10" />
           </button>
         </div>
 
