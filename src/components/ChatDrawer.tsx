@@ -4,12 +4,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import { Send, Loader2, Sparkles, Camera, X, Mic } from "lucide-react";
+import { Send, Loader2, Sparkles, Camera, X, Mic, Paperclip, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
 import { askAssistant } from "@/lib/ai.functions";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
 import { useQueryClient } from "@tanstack/react-query";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CameraCaptureDialog } from "@/components/CameraCaptureDialog";
 
 interface Message {
   role: "user" | "model";
@@ -35,6 +37,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   const [isListening, setIsListening] = useState(false);
   const [interimText, setInterimText] = useState("");
   const recognitionRef = useRef<any>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const toggleListening = () => {
     if (isListening) {
@@ -195,7 +199,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md w-[calc(100vw-10px)] h-[calc(100dvh-10px)] liquid-glass p-0 gap-0 overflow-hidden border border-primary/20 shadow-xl shadow-black/40 rounded-2xl mx-auto flex flex-col">
         <div className="absolute inset-0 bg-gradient-to-br from-background/40 to-background/90 pointer-events-none -z-10" />
         
@@ -324,17 +329,51 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
               ref={fileInputRef}
               onChange={handleImageSelect}
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="h-12 w-12 rounded-full border-border/20 bg-secondary/30 shrink-0 text-muted-foreground hover:text-foreground"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isLoading}
-              aria-label="Selecionar imagem"
-            >
-              <Camera className="size-5" />
-            </Button>
+            
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-12 w-12 rounded-full bg-transparent hover:bg-secondary/40 shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={isLoading}
+                  aria-label="Anexar arquivo"
+                >
+                  <Paperclip className="size-5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent 
+                side="top" 
+                align="start" 
+                className="w-56 p-2 rounded-2xl liquid-glass border-glass-border shadow-lg mb-2"
+              >
+                <div className="flex flex-col gap-1">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 rounded-xl hover:bg-white/10"
+                    onClick={() => {
+                      setIsPopoverOpen(false);
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    <ImagePlus className="size-5 text-indigo-400" />
+                    <span>Galeria</span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 rounded-xl hover:bg-white/10"
+                    onClick={() => {
+                      setIsPopoverOpen(false);
+                      setIsCameraOpen(true);
+                    }}
+                  >
+                    <Camera className="size-5 text-fuchsia-400" />
+                    <span>Câmera do App</span>
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
             
             <div className="relative flex-1">
               <Input
@@ -344,7 +383,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pergunte ou envie uma foto..."
-                className="pr-20 rounded-full h-12 bg-secondary/30 border-border/20 shadow-inner placeholder:text-muted-foreground/70"
+                className="pr-20 rounded-full h-12 bg-secondary/20 hover:bg-secondary/30 focus:bg-secondary/30 transition-colors border-transparent focus-visible:ring-1 focus-visible:ring-primary/30 shadow-none placeholder:text-muted-foreground/60"
                 disabled={isLoading}
               />
               <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
@@ -352,7 +391,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   type="button"
                   size="icon"
                   variant="ghost"
-                  className={`h-9 w-9 rounded-full transition-transform active:scale-95 ${isListening ? "text-destructive animate-pulse" : "text-muted-foreground"}`}
+                  className={`h-9 w-9 rounded-full transition-transform active:scale-95 ${isListening ? "text-destructive animate-pulse bg-destructive/10" : "text-muted-foreground hover:bg-secondary/40 hover:text-foreground"}`}
                   onClick={toggleListening}
                   disabled={isLoading}
                   aria-label="Ativar microfone"
@@ -362,7 +401,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 <Button
                   type="submit"
                   size="icon"
-                  className="h-9 w-9 rounded-full transition-transform active:scale-95 shadow-[var(--shadow-glow)]"
+                  className="h-9 w-9 rounded-full transition-transform active:scale-95 bg-primary/90 hover:bg-primary text-primary-foreground shadow-sm"
                   disabled={(!input.trim() && !imageBase64Preview) || isLoading}
                   aria-label="Enviar mensagem"
                 >
@@ -374,5 +413,11 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
         </div>
       </DialogContent>
     </Dialog>
+    <CameraCaptureDialog 
+      open={isCameraOpen} 
+      onClose={() => setIsCameraOpen(false)} 
+      onCapture={(base64) => setImageBase64Preview(base64)} 
+    />
+    </>
   );
 }
