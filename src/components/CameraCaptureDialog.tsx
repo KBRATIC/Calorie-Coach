@@ -100,7 +100,7 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="fixed inset-0 z-[9999] bg-black overflow-hidden"
+          className="fixed inset-0 z-[9999] bg-black overflow-hidden pointer-events-auto"
         >
           {/* Video Feed (Full Screen) */}
           <div className="absolute inset-0 flex items-center justify-center">
