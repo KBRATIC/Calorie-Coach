@@ -4,7 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Flame, CalendarRange, UserCog, LogOut, Table2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ShinyText } from "@/components/reactbits/ShinyText";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion, useMotionValue, useTransform } from "motion/react";
@@ -113,9 +112,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               alt="KcalTrack Logo" 
               className="size-9 rounded-full shadow-[var(--shadow-glow)] object-cover"
             />
-            <span className="text-display truncate text-lg">
-              <ShinyText>KcalTrack</ShinyText>
-            </span>
+            <span className="text-display truncate text-lg">KcalTrack</span>
           </Link>
 
           <nav className="ml-6 hidden items-center gap-1 rounded-full border border-border/60 bg-secondary/40 p-1 md:flex">

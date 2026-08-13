@@ -321,55 +321,9 @@
     0 16px 40px -12px var(--glass-shadow);
 }
 
-@utility spotlight-card {
-  --spot-opacity: 0;
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  background-color: var(--glass-bg);
-  @apply backdrop-blur-[16px] backdrop-saturate-150 transform-gpu;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-3xl);
-  box-shadow: 
-    inset 0 1px 1px var(--glass-highlight),
-    0 16px 40px -12px var(--glass-shadow);
-  transition:
-    border-color 300ms ease,
-    transform 300ms ease;
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    opacity: var(--spot-opacity);
-    transition: opacity 320ms ease;
-    background: radial-gradient(
-      18rem 18rem at var(--mx, 50%) var(--my, 0%),
-      var(--spot-color),
-      transparent 70%
-    );
-  }
 
-  &:hover {
-    border-color: var(--panel-border-hover);
-    transform: translateY(-2px);
-  }
-}
 
-@utility shiny-text {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-foreground) 35%,
-    var(--color-primary) 50%,
-    var(--color-foreground) 65%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: kt-shine 4.5s linear infinite;
-}
 
 
 @utility float-slow {

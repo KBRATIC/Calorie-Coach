@@ -32,9 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SpotlightCard } from "@/components/reactbits/SpotlightCard";
-import { CountUp } from "@/components/reactbits/CountUp";
-import { Reveal } from "@/components/reactbits/Reveal";
+
 
 export const Route = createFileRoute("/_authenticated/alimentos")({
   head: () => ({
@@ -171,16 +169,14 @@ export function FoodsPage() {
 
   return (
     <div className="space-y-6">
-      <Reveal>
-        <div>
-          <p className="eyebrow">Base de referência</p>
-          <h1 className="mt-2 text-4xl md:text-5xl">Tabela de alimentos</h1>
-          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-            Todos os alimentos disponíveis no app, com calorias por 100 g, medida caseira e o valor
-            estimado por porção. Filtre por categoria, ordene por densidade calórica e planeje o dia.
-          </p>
-        </div>
-      </Reveal>
+      <div>
+        <p className="eyebrow">Base de referência</p>
+        <h1 className="mt-2 text-4xl md:text-5xl">Tabela de alimentos</h1>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+          Todos os alimentos disponíveis no app, com calorias por 100 g, medida caseira e o valor
+          estimado por porção. Filtre por categoria, ordene por densidade calórica e planeje o dia.
+        </p>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         {[
@@ -189,22 +185,20 @@ export function FoodsPage() {
           {
             icon: Flame,
             label: "Média por 100 g",
-            value: avg,
+            value: Math.round(avg),
             suffix: " kcal",
           },
-        ].map((stat, i) => (
-          <Reveal key={stat.label} delay={i * 0.06}>
-            <SpotlightCard className="p-5">
-              <stat.icon className="size-5 text-primary" />
-              <p className="stat-number mt-3 text-3xl">
-                <CountUp value={stat.value} decimals={stat.suffix ? 0 : 0} />
-                {stat.suffix}
-              </p>
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                {stat.label}
-              </p>
-            </SpotlightCard>
-          </Reveal>
+        ].map((stat) => (
+          <div key={stat.label} className="panel p-5">
+            <stat.icon className="size-5 text-primary" />
+            <p className="stat-number mt-3 text-3xl">
+              {stat.value}
+              {stat.suffix}
+            </p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+              {stat.label}
+            </p>
+          </div>
         ))}
       </div>
 
