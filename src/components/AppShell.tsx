@@ -135,6 +135,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="hidden md:flex gap-2 rounded-full border-primary/50 text-primary hover:bg-primary/10"
+              onClick={() => setIsChatOpen(true)}
+            >
+              <Sparkles className="size-4" />
+              <span className="text-xs font-semibold">Assistente IA</span>
+            </Button>
             <ThemeToggle />
             <Button variant="ghost" size="icon" className="size-9 rounded-full" onClick={signOut}>
               <LogOut className="size-4" />
@@ -144,7 +153,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="absolute inset-0 mx-auto w-full max-w-6xl">
+      <main className="absolute inset-0 mx-auto w-full max-w-6xl overflow-hidden">
         {isTab ? (
           <div className="embla h-full" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full">

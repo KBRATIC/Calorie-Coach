@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Loader2, PiggyBank, TrendingUp, TrendingDown, Sparkles } from "lucide-react";
 import { fetchEntries, fetchGoals } from "@/lib/api";
 import { addDays, formatDayLabel, todayISO } from "@/lib/nutrition";
 import { Button } from "@/components/ui/button";
@@ -55,6 +55,10 @@ export function HistoryPage() {
   const total = Math.round(totals.reduce((s, t) => s + t.total, 0));
   const max = Math.max(goal, ...totals.map((t) => t.total), 1);
 
+  // Calorie Bank: sum of (goal - consumed) for all logged days
+  const netBalance = logged.reduce((sum, t) => sum + (goal - t.total), 0);
+  const isPositive = netBalance >= 0;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -97,6 +101,40 @@ export function HistoryPage() {
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Total do período</p>
           <p className="stat-number text-3xl">{total} kcal</p>
         </div>
+
+        {/* Banco de Calorias */}
+        {logged.length > 0 && (
+          <div className={`panel p-6 sm:col-span-3 relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-4 border ${isPositive ? 'bg-primary/5 border-primary/20' : 'bg-destructive/5 border-destructive/20'}`}>
+            <div className="relative z-10 flex-1">
+              <p className={`flex items-center justify-center sm:justify-start gap-2 text-xs uppercase tracking-widest font-semibold ${isPositive ? 'text-primary' : 'text-destructive'}`}>
+                <PiggyBank className="size-4" /> Saldo de Calorias
+              </p>
+              <div className="mt-2 flex items-center justify-center sm:justify-start gap-3">
+                <h3 className={`text-4xl font-black tracking-tight ${isPositive ? 'text-primary' : 'text-destructive'}`}>
+                  {isPositive ? '+' : ''}{Math.round(netBalance)} <span className="text-xl font-bold">kcal</span>
+                </h3>
+                <div className={`flex items-center justify-center size-8 rounded-full ${isPositive ? 'bg-primary/20 text-primary' : 'bg-destructive/20 text-destructive'}`}>
+                  {isPositive ? <TrendingDown className="size-5" /> : <TrendingUp className="size-5" />}
+                </div>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground text-center sm:text-left max-w-md">
+                {isPositive 
+                  ? "Você tem um saldo positivo acumulado no período! Suas economias diárias te dão folga para a meta mensal." 
+                  : "Você consumiu mais do que a meta neste período. Tente economizar nos próximos dias para equilibrar o saldo!"}
+              </p>
+            </div>
+            
+            {/* Decorative background icon */}
+            <div className="hidden sm:block">
+              {isPositive ? (
+                <Sparkles className="size-24 opacity-10 text-primary" />
+              ) : (
+                <PiggyBank className="size-24 opacity-10 text-destructive" />
+              )}
+            </div>
+            <PiggyBank className={`absolute -right-6 -bottom-6 size-48 opacity-[0.03] pointer-events-none ${isPositive ? 'text-primary' : 'text-destructive'}`} />
+          </div>
+        )}
       </div>
 
       {entriesQuery.isLoading ? (
