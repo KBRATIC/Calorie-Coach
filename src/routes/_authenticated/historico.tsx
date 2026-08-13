@@ -26,16 +26,19 @@ export const Route = createFileRoute("/_authenticated/historico")({
 });
 
 export function HistoryPage() {
-  const [period, setPeriod] = useState<"semana" | "mes" | "ano">("semana");
+  const [period, setPeriod] = useState<"semana" | "mes">("semana");
   const today = todayISO();
   
   let from = today;
   if (period === "semana") {
-    from = addDays(today, -6);
+    const [y, m, d] = today.split("-").map(Number);
+    // Use the exact date without timezone shifts
+    const date = new Date(y!, (m ?? 1) - 1, d ?? 1);
+    const day = date.getDay(); // 0 (Sun) to 6 (Sat)
+    const diff = day === 0 ? 6 : day - 1; // Days to subtract to get to Monday
+    from = addDays(today, -diff);
   } else if (period === "mes") {
     from = today.substring(0, 8) + "01";
-  } else if (period === "ano") {
-    from = today.substring(0, 5) + "01-01";
   }
 
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
@@ -100,14 +103,6 @@ export function HistoryPage() {
             onClick={() => setPeriod("mes")}
           >
             Mês
-          </Button>
-          <Button
-            size="sm"
-            variant={period === "ano" ? "default" : "ghost"}
-            className={`rounded-lg ${period !== "ano" && "text-muted-foreground hover:text-foreground hover:bg-white/10"}`}
-            onClick={() => setPeriod("ano")}
-          >
-            Ano
           </Button>
         </div>
       </div>
