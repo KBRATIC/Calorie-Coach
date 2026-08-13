@@ -55,8 +55,10 @@ export function HistoryPage() {
   const total = Math.round(totals.reduce((s, t) => s + t.total, 0));
   // Bar reference removed — bars are now relative to daily goal
 
-  // Calorie Bank: sum of (goal - consumed) for all logged days
-  const netBalance = logged.reduce((sum, t) => sum + (goal - t.total), 0);
+  // Calorie Bank: sum of (goal - consumed) for all logged days, excluding today
+  const netBalance = logged
+    .filter((t) => t.day !== today)
+    .reduce((sum, t) => sum + (goal - t.total), 0);
   const isPositive = netBalance >= 0;
 
   return (
