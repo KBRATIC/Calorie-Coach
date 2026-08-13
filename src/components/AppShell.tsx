@@ -82,7 +82,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="aurora-layer" aria-hidden />
       
       <header className="liquid-glass sticky top-0 z-40 w-full">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-4 py-3 md:px-8">
           <Link to="/hoje" className="flex min-w-0 items-center gap-2">
             <img 
               src="/icon.png" 
@@ -127,9 +127,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="absolute inset-0 mx-auto w-full max-w-6xl overflow-hidden">
+      <main className="absolute inset-0 mx-auto w-full max-w-[1800px] overflow-hidden">
         {isTab ? (
-          <div className="embla h-full" ref={emblaRef}>
+          <div className="embla h-full overflow-hidden" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full">
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
