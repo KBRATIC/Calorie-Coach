@@ -315,6 +315,9 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
           
           <form onSubmit={handleSend} className="relative flex items-center gap-2">
             <input 
+              id="chat-image-upload"
+              name="chat-image-upload"
+              aria-label="Upload de imagem"
               type="file" 
               accept="image/*"
               className="hidden" 
@@ -328,12 +331,16 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
               className="h-12 w-12 rounded-full border-border/20 bg-secondary/30 shrink-0 text-muted-foreground hover:text-foreground"
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
+              aria-label="Selecionar imagem"
             >
               <Camera className="size-5" />
             </Button>
             
             <div className="relative flex-1">
               <Input
+                id="chat-input"
+                name="chat-input"
+                aria-label="Mensagem para o assistente"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pergunte ou envie uma foto..."
@@ -348,6 +355,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   className={`h-9 w-9 rounded-full transition-transform active:scale-95 ${isListening ? "text-destructive animate-pulse" : "text-muted-foreground"}`}
                   onClick={toggleListening}
                   disabled={isLoading}
+                  aria-label="Ativar microfone"
                 >
                   <Mic className="size-4" />
                 </Button>
@@ -356,6 +364,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   size="icon"
                   className="h-9 w-9 rounded-full transition-transform active:scale-95 shadow-[var(--shadow-glow)]"
                   disabled={(!input.trim() && !imageBase64Preview) || isLoading}
+                  aria-label="Enviar mensagem"
                 >
                   <Send className="size-4" />
                 </Button>
