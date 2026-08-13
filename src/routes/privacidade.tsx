@@ -15,7 +15,7 @@ export const Route = createFileRoute("/privacidade")({
 function PrivacidadePage() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 pt-8 pb-32 md:pb-12">
         <Link to="/" className="inline-block mb-8">
           <Button variant="ghost" className="gap-2 text-muted-foreground">
             <ArrowLeft className="size-4" />
