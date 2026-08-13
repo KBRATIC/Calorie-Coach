@@ -283,7 +283,6 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   </Button>
                 </div>
               </motion.div>
-              </motion.div>
             )}
           </AnimatePresence>
 
