@@ -223,7 +223,7 @@ export function TodayPage() {
             <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
               <div 
                 className="h-full bg-[oklch(0.6_0.15_250)] transition-all" 
-                style={{ width: \`\${Math.min(100, (consumedProtein / goalProtein) * 100)}%\` }} 
+                style={{ width: `${Math.min(100, (consumedProtein / goalProtein) * 100)}%` }} 
               />
             </div>
           </div>
@@ -236,7 +236,7 @@ export function TodayPage() {
             <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
               <div 
                 className="h-full bg-[oklch(0.7_0.18_70)] transition-all" 
-                style={{ width: \`\${Math.min(100, (consumedCarbs / goalCarbs) * 100)}%\` }} 
+                style={{ width: `${Math.min(100, (consumedCarbs / goalCarbs) * 100)}%` }} 
               />
             </div>
           </div>
@@ -249,7 +249,7 @@ export function TodayPage() {
             <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
               <div 
                 className="h-full bg-[oklch(0.6_0.2_15)] transition-all" 
-                style={{ width: \`\${Math.min(100, (consumedFat / goalFat) * 100)}%\` }} 
+                style={{ width: `${Math.min(100, (consumedFat / goalFat) * 100)}%` }} 
               />
             </div>
           </div>
