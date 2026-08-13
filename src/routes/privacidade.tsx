@@ -24,9 +24,11 @@ function PrivacidadePage() {
         </Link>
         
         <div className="flex items-center gap-3 mb-10">
-          <span className="grid size-12 place-items-center rounded-2xl bg-primary text-primary-foreground">
-            <Flame className="size-6" />
-          </span>
+          <img 
+            src="/icon.png" 
+            alt="KcalTrack Logo" 
+            className="size-12 rounded-2xl object-cover" 
+          />
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Política de Privacidade</h1>
         </div>
 
