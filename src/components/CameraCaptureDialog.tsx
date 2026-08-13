@@ -3,6 +3,8 @@ import { X, RefreshCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 
+import { createPortal } from "react-dom";
+
 interface CameraCaptureDialogProps {
   open: boolean;
   onClose: () => void;
@@ -15,6 +17,11 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
   const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
   const [error, setError] = useState<string | null>(null);
   const [isStarting, setIsStarting] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const startCamera = useCallback(async () => {
     try {
@@ -83,7 +90,9 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -91,7 +100,7 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: "10%" }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="fixed inset-0 z-[100] bg-black flex flex-col"
+          className="fixed inset-0 z-[9999] bg-black flex flex-col"
         >
           {/* Top Bar */}
           <div className="absolute top-0 inset-x-0 p-4 flex justify-between items-center z-10 bg-gradient-to-b from-black/60 to-transparent">
@@ -152,6 +161,7 @@ export function CameraCaptureDialog({ open, onClose, onCapture }: CameraCaptureD
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
