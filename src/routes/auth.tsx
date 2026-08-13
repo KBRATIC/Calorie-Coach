@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -31,6 +32,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [lgpdConsent, setLgpdConsent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -57,6 +59,10 @@ function AuthPage() {
 
   async function signUp(e: React.FormEvent) {
     e.preventDefault();
+    if (!lgpdConsent) {
+      toast.error("Termos não aceitos", { description: "Você precisa concordar com os Termos e Política de Privacidade para criar uma conta." });
+      return;
+    }
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -162,6 +168,22 @@ function AuthPage() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
+                
+                <div className="flex items-start space-x-3 py-2">
+                  <Checkbox 
+                    id="lgpd-consent" 
+                    checked={lgpdConsent} 
+                    onCheckedChange={(c) => setLgpdConsent(c as boolean)} 
+                    required 
+                    className="mt-1"
+                  />
+                  <div className="space-y-1 leading-none">
+                    <Label htmlFor="lgpd-consent" className="text-sm font-medium leading-relaxed">
+                      Concordo com os <Link to="/termos" className="text-primary hover:underline">Termos de Uso</Link> e <Link to="/privacidade" className="text-primary hover:underline">Política de Privacidade</Link> e autorizo o tratamento de meus dados de saúde e biometria pelo aplicativo.
+                    </Label>
+                  </div>
+                </div>
+
                 <Button type="submit" className="w-full" disabled={loading}>
                   Criar conta
                 </Button>

@@ -37,6 +37,34 @@ export const askAssistant = createServerFn({ method: "POST" })
     const lastWeekStr = lastWeek.toISOString().split("T")[0];
     
     let contextStr = "";
+    
+    // Rate Limiting Check (Tenta consultar tabela 'user_ai_limits', se não existir ou falhar, ignora)
+    try {
+      const { data: limitData, error: limitError } = await context.supabase
+        .from('user_ai_limits')
+        .select('count')
+        .eq('user_id', context.userId)
+        .eq('date', todayStr)
+        .maybeSingle();
+        
+      if (!limitError && limitData && limitData.count >= 50) {
+        throw new Error("RATE_LIMIT_EXCEEDED");
+      }
+      
+      // Incrementa ou insere (se a tabela existir)
+      await context.supabase.from('user_ai_limits').upsert({
+        user_id: context.userId,
+        date: todayStr,
+        count: (limitData?.count || 0) + 1
+      }, { onConflict: 'user_id,date' });
+    } catch (err: any) {
+      if (err.message === "RATE_LIMIT_EXCEEDED") {
+        throw new Error("Você atingiu o limite diário de mensagens com a IA (50/dia). Volte amanhã!");
+      }
+      // Ignora erro se a tabela não existir ainda
+      console.warn("Rate limit table might not exist:", err.message);
+    }
+
     try {
       // Buscar metas
       const { data: goalData } = await context.supabase

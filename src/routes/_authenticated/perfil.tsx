@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { deleteAccount } from "@/lib/user.functions";
 import {
   addCustomFood,
   deleteCustomFood,
@@ -26,6 +28,17 @@ import {
 import { useSession } from "@/hooks/useSession";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -67,6 +80,22 @@ export function ProfilePage() {
   const [goalType, setGoalType] = useState("cut");
   const [manual, setManual] = useState("2000");
   const [bodyFat, setBodyFat] = useState("");
+
+  const navigate = useNavigate();
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: async () => {
+      return await deleteAccount();
+    },
+    onSuccess: async () => {
+      toast.success("Conta excluída com sucesso.");
+      await supabase.auth.signOut();
+      navigate({ to: "/", replace: true });
+    },
+    onError: (e: Error) => {
+      toast.error("Erro ao excluir conta", { description: e.message });
+    },
+  });
 
   useEffect(() => {
     const g = goalsQuery.data;
@@ -283,6 +312,42 @@ export function ProfilePage() {
       </div>
 
       {user && <CustomFoods userId={user.id} />}
+
+      <div className="panel space-y-4 p-6 border-destructive/20 bg-destructive/5 mt-8">
+        <div>
+          <h2 className="text-xl text-destructive flex items-center gap-2">
+            <AlertTriangle className="size-5" /> Zona de Perigo
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            A exclusão da sua conta apagará permanentemente todos os seus registros de refeições, metas e informações pessoais.
+            Esta ação não pode ser desfeita.
+          </p>
+        </div>
+        
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive">Excluir minha conta</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Isso apagará permanentemente sua conta e removerá todos os seus dados e registros alimentares dos nossos servidores. Esta ação é irreversível.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction 
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={() => deleteAccountMutation.mutate()}
+                disabled={deleteAccountMutation.isPending}
+              >
+                {deleteAccountMutation.isPending ? "Excluindo..." : "Sim, excluir minha conta"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 }
