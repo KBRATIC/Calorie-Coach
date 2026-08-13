@@ -119,7 +119,9 @@ function AuthPage() {
                   <Label htmlFor="email">E-mail</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -129,7 +131,9 @@ function AuthPage() {
                   <Label htmlFor="password">Senha</Label>
                   <Input
                     id="password"
+                    name="password"
                     type="password"
+                    autoComplete="current-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -145,13 +149,21 @@ function AuthPage() {
               <form onSubmit={signUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Nome</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                  <Input 
+                    id="name" 
+                    name="name" 
+                    autoComplete="name" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email-up">E-mail</Label>
                   <Input
                     id="email-up"
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -161,7 +173,9 @@ function AuthPage() {
                   <Label htmlFor="password-up">Senha</Label>
                   <Input
                     id="password-up"
+                    name="password"
                     type="password"
+                    autoComplete="new-password"
                     required
                     minLength={6}
                     value={password}
