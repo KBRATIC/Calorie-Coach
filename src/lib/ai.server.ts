@@ -3,13 +3,16 @@ export type ParsedItem = {
   quantity: number;
   unit: "g" | "ml";
   kcalPer100: number;
+  proteinPer100: number;
+  carbsPer100: number;
+  fatPer100: number;
   meal: string;
 };
 
 const SYSTEM = `Você é nutricionista e converte descrições de refeições em português (Brasil) para JSON.
 
 FORMATO
-Responda apenas: {"items":[{"name":string,"quantity":number,"unit":"g"|"ml","kcalPer100":number,"meal":"breakfast"|"lunch"|"snack"|"dinner"|"other"}]}
+Responda apenas: {"items":[{"name":string,"quantity":number,"unit":"g"|"ml","kcalPer100":number,"proteinPer100":number,"carbsPer100":number,"fatPer100":number,"meal":"breakfast"|"lunch"|"snack"|"dinner"|"other"}]}
 
 RACIOCÍNIO DE QUANTIDADE (faça passo a passo antes de responder)
 1. Identifique cada alimento separadamente. Nunca junte itens diferentes em uma linha (ex.: "pão com requeijão" = 2 itens: pão e requeijão).
@@ -20,9 +23,10 @@ RACIOCÍNIO DE QUANTIDADE (faça passo a passo antes de responder)
 6. Volumes: 1 copo americano 200 ml · 1 copo grande 300 ml · 1 xícara 240 ml · 1 lata 350 ml · 1 garrafinha 500 ml · 1 caneca de café 200 ml · 1 cafezinho 50 ml.
 7. Trate o modo de preparo: frito soma óleo absorvido (+5 a 10 g de óleo por porção como item separado só se o texto indicar fritura em óleo), grelhado/cozido não.
 
-RACIOCÍNIO DE CALORIAS
+RACIOCÍNIO DE CALORIAS E MACRONUTRIENTES
 8. kcalPer100 = calorias por 100 g ou 100 ml do alimento JÁ NO ESTADO CONSUMIDO (arroz cozido ~128, não arroz cru ~358; macarrão cozido ~157; feijão cozido ~76; frango grelhado ~165; carne bovina magra grelhada ~200; ovo cozido ~155, ovo frito ~200; pão francês ~300; queijo mussarela ~300; requeijão ~257; leite integral ~61; suco de laranja natural ~45; refrigerante comum ~42; refrigerante zero ~0; café sem açúcar ~2; cerveja ~43; azeite/óleo ~884; manteiga ~717; açúcar ~387; batata frita ~312; pizza mussarela ~266; arroz + feijão devem ser itens separados).
-9. Nunca use kcalPer100 acima de 900 (limite físico das gorduras puras) nem 0 para alimentos com calorias.
+9. Estime proteinPer100, carbsPer100, e fatPer100 (gramas de macronutrientes por 100g/ml) com base em dados nutricionais padronizados. Exemplo: 100g frango grelhado = ~31g prot, 0g carb, ~3.6g gord. Nunca use valores acima de 100.
+10. Nunca use kcalPer100 acima de 900 (limite físico das gorduras puras) nem 0 para alimentos com calorias.
 10. Faça a sanidade final: quantity × kcalPer100 / 100 deve dar um total plausível para a porção descrita. Se o resultado ficar absurdo (ex.: 1 ovo com 500 kcal), corrija antes de responder.
 11. Bebidas, sucos, leites, cafés, chás, sopas, caldos e iogurtes líquidos usam "ml". Todo o resto usa "g".
 12. meal: use a refeição citada no texto; se não houver menção, use exatamente a refeição padrão informada pelo usuário.
@@ -36,12 +40,18 @@ function normalizeItems(items: unknown[], defaultMeal: string): ParsedItem[] {
       const it = raw as Partial<ParsedItem>;
       const quantity = Number(it.quantity);
       const kcalPer100 = Number(it.kcalPer100);
+      const proteinPer100 = Number(it.proteinPer100) || 0;
+      const carbsPer100 = Number(it.carbsPer100) || 0;
+      const fatPer100 = Number(it.fatPer100) || 0;
       if (!it.name || !Number.isFinite(quantity) || !Number.isFinite(kcalPer100)) return null;
       return {
         name: String(it.name).slice(0, 120),
         quantity: Math.max(1, Math.round(quantity)),
         unit: it.unit === "ml" ? "ml" : "g",
         kcalPer100: Math.max(0, Math.round(kcalPer100 * 10) / 10),
+        proteinPer100: Math.max(0, Math.round(proteinPer100 * 10) / 10),
+        carbsPer100: Math.max(0, Math.round(carbsPer100 * 10) / 10),
+        fatPer100: Math.max(0, Math.round(fatPer100 * 10) / 10),
         meal: typeof it.meal === "string" && it.meal ? it.meal : defaultMeal,
       } satisfies ParsedItem;
     })
@@ -118,11 +128,12 @@ REGRAS CRÍTICAS DE COMPORTAMENTO:
 3. Se o usuário enviar uma imagem, analise-a cuidadosamente (identifique os alimentos, porções ou rótulos).
 4. Mantenha o foco em nutrição, bem-estar e no uso do app.
 5. Se o usuário pedir expressamente para registrar, adicionar ou lançar um alimento no diário (ex: "lança isso no almoço", "registra 1 pão"), responda normalmente E adicione, EXATAMENTE no final da sua mensagem, a tag invisível:
-[LOG_FOOD: {"name": "Nome", "quantity": 100, "unit": "g", "kcal": 250, "meal": "lunch"}]
+[LOG_FOOD: {"name": "Nome", "quantity": 100, "unit": "g", "kcal": 250, "protein": 10, "carbs": 30, "fat": 5, "meal": "lunch"}]
 - "meal" deve ser ESTRITAMENTE um destes IDs em inglês: "breakfast", "lunch", "snack", "dinner" ou "other".
+- Estime as gramas totais de proteínas (protein), carboidratos (carbs) e gorduras (fat) para a quantidade consumida.
 6. Se o usuário pedir para EDITAR/CORRIGIR um alimento que JÁ ESTÁ NO DIÁRIO DE HOJE (que você verá no contexto fornecido), adicione no final:
-[EDIT_FOOD: {"id": "ID_AQUI", "name": "Novo Nome", "quantity": 100, "unit": "g", "kcal": 200}]
-- Identifique o "id" correto a partir do contexto injetado. Recalcule as calorias proporcionalmente se a quantidade mudar.
+[EDIT_FOOD: {"id": "ID_AQUI", "name": "Novo Nome", "quantity": 100, "unit": "g", "kcal": 200, "protein": 10, "carbs": 30, "fat": 5}]
+- Identifique o "id" correto a partir do contexto injetado. Recalcule as calorias e os macros proporcionalmente se a quantidade mudar.
 7. Se o usuário pedir para REMOVER ou APAGAR um alimento do diário, adicione no final:
 [REMOVE_FOOD: {"id": "ID_AQUI"}]
 - Não use crases nem formatação markdown nas tags. As tags devem ser literais. CALORIAS: Não superestime calorias; use bom senso nutricional e, se possível, justifique a matemática de forma breve na resposta.

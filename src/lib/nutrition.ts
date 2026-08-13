@@ -109,6 +109,22 @@ export function calcSafeGoalCalories(input: {
   return { target: raw, capped: false };
 }
 
+/** 
+ * Calcula a meta de macronutrientes (em gramas) baseada em uma distribuição padrão:
+ * 30% Proteína (4 kcal/g), 40% Carboidratos (4 kcal/g), 30% Gorduras (9 kcal/g).
+ */
+export function calcMacroGoals(calories: number): { protein: number; carbs: number; fat: number } {
+  const proteinKcal = calories * 0.3;
+  const carbsKcal = calories * 0.4;
+  const fatKcal = calories * 0.3;
+
+  return {
+    protein: Math.round(proteinKcal / 4),
+    carbs: Math.round(carbsKcal / 4),
+    fat: Math.round(fatKcal / 9),
+  };
+}
+
 /** Estimativa de variação de peso por semana com base no déficit/superávit. */
 export function weeklyWeightChangeKg(target: number, tdee: number): number {
   return Math.round(((target - tdee) * 7) / 7700 * 100) / 100;

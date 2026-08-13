@@ -103,7 +103,14 @@ export function TodayPage() {
 
   const entries = entriesQuery.data ?? [];
   const consumed = entries.reduce((sum, e) => sum + Number(e.kcal), 0);
+  const consumedProtein = entries.reduce((sum, e) => sum + Number(e.protein || 0), 0);
+  const consumedCarbs = entries.reduce((sum, e) => sum + Number(e.carbs || 0), 0);
+  const consumedFat = entries.reduce((sum, e) => sum + Number(e.fat || 0), 0);
+  
   const goal = goalsQuery.data?.daily_calorie_goal ?? 2000;
+  const goalProtein = goalsQuery.data?.protein_goal ?? 150;
+  const goalCarbs = goalsQuery.data?.carbs_goal ?? 200;
+  const goalFat = goalsQuery.data?.fat_goal ?? 67;
 
   const invalidateEntries = () => {
     queryClient.invalidateQueries({ queryKey: ["entries"] });
@@ -188,20 +195,64 @@ export function TodayPage() {
         </div>
       )}
 
-      <div className="panel flex flex-col items-center gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-        <CalorieRing consumed={consumed} goal={goal} />
-        <div className="grid w-full max-w-xs gap-3">
-          {MEALS.map((meal) => {
-            const total = entries
-              .filter((e) => e.meal === meal.id)
-              .reduce((s, e) => s + Number(e.kcal), 0);
-            return (
-              <div key={meal.id} className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">{meal.label}</span>
-                <span className="stat-number">{Math.round(total)} kcal</span>
-              </div>
-            );
-          })}
+      <div className="panel flex flex-col gap-6 p-6 sm:p-8">
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <CalorieRing consumed={consumed} goal={goal} />
+          <div className="grid w-full max-w-xs gap-3">
+            {MEALS.map((meal) => {
+              const total = entries
+                .filter((e) => e.meal === meal.id)
+                .reduce((s, e) => s + Number(e.kcal), 0);
+              return (
+                <div key={meal.id} className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">{meal.label}</span>
+                  <span className="stat-number">{Math.round(total)} kcal</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Macro Progress Bars */}
+        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/40">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-medium text-[oklch(0.6_0.15_250)]">Proteína</span>
+              <span className="text-muted-foreground">{Math.round(consumedProtein)}/{goalProtein}g</span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
+              <div 
+                className="h-full bg-[oklch(0.6_0.15_250)] transition-all" 
+                style={{ width: \`\${Math.min(100, (consumedProtein / goalProtein) * 100)}%\` }} 
+              />
+            </div>
+          </div>
+          
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-medium text-[oklch(0.7_0.18_70)]">Carbo</span>
+              <span className="text-muted-foreground">{Math.round(consumedCarbs)}/{goalCarbs}g</span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
+              <div 
+                className="h-full bg-[oklch(0.7_0.18_70)] transition-all" 
+                style={{ width: \`\${Math.min(100, (consumedCarbs / goalCarbs) * 100)}%\` }} 
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-medium text-[oklch(0.6_0.2_15)]">Gordura</span>
+              <span className="text-muted-foreground">{Math.round(consumedFat)}/{goalFat}g</span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
+              <div 
+                className="h-full bg-[oklch(0.6_0.2_15)] transition-all" 
+                style={{ width: \`\${Math.min(100, (consumedFat / goalFat) * 100)}%\` }} 
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -342,6 +393,9 @@ function QuickActions({ userId, day }: { userId: string; day: string }) {
         grams: food.grams,
         unit: food.unit,
         kcal: Number(food.kcal),
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat,
         meal: food.meal,
         consumed_on: day,
       }),
@@ -413,7 +467,11 @@ function AddFoodDialog({ userId, day }: { userId: string; day: string }) {
   );
 
   const unit = selected ? (selected.unit ?? unitFor(selected)) : "g";
-  const kcal = selected ? Math.round((selected.kcalPer100g * Number(grams || 0)) / 100) : 0;
+  const factor = Number(grams || 0) / 100;
+  const kcal = selected ? Math.round(selected.kcalPer100g * factor) : 0;
+  const protein = selected && selected.proteinPer100g ? Math.round(selected.proteinPer100g * factor) : 0;
+  const carbs = selected && selected.carbsPer100g ? Math.round(selected.carbsPer100g * factor) : 0;
+  const fat = selected && selected.fatPer100g ? Math.round(selected.fatPer100g * factor) : 0;
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -423,6 +481,9 @@ function AddFoodDialog({ userId, day }: { userId: string; day: string }) {
         grams: Number(grams),
         unit,
         kcal,
+        protein,
+        carbs,
+        fat,
         meal,
         consumed_on: day,
       }),

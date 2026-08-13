@@ -57,12 +57,16 @@ export function HistoryPage() {
     current = addDays(current, 1);
   }
 
-  const totals = days.map((d) => ({
-    day: d,
-    total: entries
-      .filter((e) => e.consumed_on === d)
-      .reduce((sum, e) => sum + Number(e.kcal), 0),
-  }));
+  const totals = days.map((d) => {
+    const dayEntries = entries.filter((e) => e.consumed_on === d);
+    return {
+      day: d,
+      total: dayEntries.reduce((sum, e) => sum + Number(e.kcal), 0),
+      protein: dayEntries.reduce((sum, e) => sum + Number(e.protein || 0), 0),
+      carbs: dayEntries.reduce((sum, e) => sum + Number(e.carbs || 0), 0),
+      fat: dayEntries.reduce((sum, e) => sum + Number(e.fat || 0), 0),
+    };
+  });
 
   const logged = totals.filter((t) => t.total > 0);
   const average = logged.length
@@ -165,19 +169,39 @@ export function HistoryPage() {
       ) : (
         <div className="panel space-y-2 p-6">
           {totals.map((t) => (
-            <div key={t.day} className="flex items-center gap-3">
-              <span className="w-20 shrink-0 text-xs text-muted-foreground">
-                {formatDayLabel(t.day)}
-              </span>
-              <div className="h-3 flex-1 overflow-hidden rounded-full bg-secondary">
-                <div
-                  className={`h-full rounded-full ${t.total > goal ? "bg-destructive" : "bg-primary"}`}
-                  style={{ width: `${Math.min((t.total / goal) * 100, 100)}%` }}
-                />
+            <div key={t.day} className="flex flex-col gap-1.5 py-1">
+              <div className="flex items-center gap-3">
+                <span className="w-20 shrink-0 text-xs text-muted-foreground">
+                  {formatDayLabel(t.day)}
+                </span>
+                <div className="h-3 flex-1 overflow-hidden rounded-full bg-secondary">
+                  <div
+                    className={`h-full rounded-full ${t.total > goal ? "bg-destructive" : "bg-primary"}`}
+                    style={{ width: `${Math.min((t.total / goal) * 100, 100)}%` }}
+                  />
+                </div>
+                <span className="stat-number w-16 shrink-0 text-right text-xs">
+                  {Math.round(t.total)}
+                </span>
               </div>
-              <span className="stat-number w-16 shrink-0 text-right text-xs">
-                {Math.round(t.total)}
-              </span>
+              
+              {/* Macro breakdown for the day */}
+              {t.total > 0 && (
+                <div className="flex items-center gap-2 pl-24 text-[10px] text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <div className="size-1.5 rounded-full bg-[oklch(0.6_0.15_250)]" />
+                    P: {Math.round(t.protein)}g
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <div className="size-1.5 rounded-full bg-[oklch(0.7_0.18_70)]" />
+                    C: {Math.round(t.carbs)}g
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <div className="size-1.5 rounded-full bg-[oklch(0.6_0.2_15)]" />
+                    G: {Math.round(t.fat)}g
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -11,6 +11,9 @@ export type Goals = {
   activity_factor: number;
   goal_type: string;
   daily_calorie_goal: number;
+  protein_goal: number | null;
+  carbs_goal: number | null;
+  fat_goal: number | null;
   bmr: number | null;
   tdee: number | null;
   body_fat_pct: number | null;
@@ -23,6 +26,9 @@ export type Entry = {
   grams: number | null;
   unit: string;
   kcal: number;
+  protein: number | null;
+  carbs: number | null;
+  fat: number | null;
   meal: string;
   consumed_on: string;
 };
@@ -32,6 +38,9 @@ export type CustomFood = {
   name: string;
   category: string | null;
   kcal_per_100g: number;
+  protein_per_100g: number | null;
+  carbs_per_100g: number | null;
+  fat_per_100g: number | null;
   default_measure: string | null;
   default_grams: number | null;
   unit: string;
@@ -55,7 +64,7 @@ export async function saveGoals(userId: string, values: Partial<Goals>) {
 export async function fetchEntries(from: string, to: string): Promise<Entry[]> {
   const { data, error } = await supabase
     .from("food_entries")
-    .select("id, name, grams, unit, kcal, meal, consumed_on")
+    .select("id, name, grams, unit, kcal, protein, carbs, fat, meal, consumed_on")
     .gte("consumed_on", from)
     .lte("consumed_on", to)
     .order("created_at", { ascending: true });
@@ -69,6 +78,9 @@ export async function addEntry(entry: {
   grams: number | null;
   unit: string;
   kcal: number;
+  protein?: number | null;
+  carbs?: number | null;
+  fat?: number | null;
   meal: string;
   consumed_on: string;
 }) {
@@ -193,6 +205,9 @@ export type RecentFood = {
   grams: number | null;
   unit: string;
   kcal: number;
+  protein: number | null;
+  carbs: number | null;
+  fat: number | null;
   meal: string;
 };
 
@@ -200,7 +215,7 @@ export type RecentFood = {
 export async function fetchRecentFoods(limit = 12): Promise<RecentFood[]> {
   const { data, error } = await supabase
     .from("food_entries")
-    .select("name, grams, unit, kcal, meal")
+    .select("name, grams, unit, kcal, protein, carbs, fat, meal")
     .order("created_at", { ascending: false })
     .limit(500);
   if (error) throw error;
@@ -246,6 +261,9 @@ export async function addEntries(
     grams: number | null;
     unit: string;
     kcal: number;
+    protein?: number | null;
+    carbs?: number | null;
+    fat?: number | null;
     meal: string;
     consumed_on: string;
   }[],
@@ -266,6 +284,9 @@ export async function copyDay(userId: string, from: string, to: string): Promise
       grams: e.grams,
       unit: e.unit,
       kcal: Number(e.kcal),
+      protein: e.protein,
+      carbs: e.carbs,
+      fat: e.fat,
       meal: e.meal,
       consumed_on: to,
     })),

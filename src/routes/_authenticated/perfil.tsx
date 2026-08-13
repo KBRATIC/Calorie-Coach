@@ -22,6 +22,7 @@ import {
   resolveBmr,
   safeFloor,
   weeklyWeightChangeKg,
+  calcMacroGoals,
   type Sex,
 } from "@/lib/nutrition";
 
@@ -146,6 +147,9 @@ export function ProfilePage() {
         bmr,
         tdee,
         daily_calorie_goal: target,
+        protein_goal: calcMacroGoals(target).protein,
+        carbs_goal: calcMacroGoals(target).carbs,
+        fat_goal: calcMacroGoals(target).fat,
       }),
 
     onSuccess: () => {

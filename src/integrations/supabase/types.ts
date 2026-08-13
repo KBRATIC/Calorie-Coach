@@ -22,6 +22,9 @@ export type Database = {
           grams: number | null
           id: string
           kcal: number
+          protein: number | null
+          carbs: number | null
+          fat: number | null
           meal: string
           name: string
           unit: string
@@ -34,6 +37,9 @@ export type Database = {
           grams?: number | null
           id?: string
           kcal: number
+          protein?: number | null
+          carbs?: number | null
+          fat?: number | null
           meal?: string
           name: string
           unit?: string
@@ -46,6 +52,9 @@ export type Database = {
           grams?: number | null
           id?: string
           kcal?: number
+          protein?: number | null
+          carbs?: number | null
+          fat?: number | null
           meal?: string
           name?: string
           unit?: string
@@ -69,6 +78,9 @@ export type Database = {
           default_measure: string | null
           id: string
           kcal_per_100g: number
+          protein_per_100g: number | null
+          carbs_per_100g: number | null
+          fat_per_100g: number | null
           name: string
           unit: string
           user_id: string | null
@@ -80,6 +92,9 @@ export type Database = {
           default_measure?: string | null
           id?: string
           kcal_per_100g: number
+          protein_per_100g?: number | null
+          carbs_per_100g?: number | null
+          fat_per_100g?: number | null
           name: string
           unit?: string
           user_id?: string | null
@@ -91,6 +106,9 @@ export type Database = {
           default_measure?: string | null
           id?: string
           kcal_per_100g?: number
+          protein_per_100g?: number | null
+          carbs_per_100g?: number | null
+          fat_per_100g?: number | null
           name?: string
           unit?: string
           user_id?: string | null
@@ -127,6 +145,9 @@ export type Database = {
           body_fat_pct: number | null
           created_at: string
           daily_calorie_goal: number
+          protein_goal: number | null
+          carbs_goal: number | null
+          fat_goal: number | null
           goal_type: string
           height_cm: number
           sex: string
@@ -143,6 +164,9 @@ export type Database = {
           body_fat_pct?: number | null
           created_at?: string
           daily_calorie_goal?: number
+          protein_goal?: number | null
+          carbs_goal?: number | null
+          fat_goal?: number | null
           goal_type?: string
           height_cm?: number
           sex?: string
@@ -159,6 +183,9 @@ export type Database = {
           body_fat_pct?: number | null
           created_at?: string
           daily_calorie_goal?: number
+          protein_goal?: number | null
+          carbs_goal?: number | null
+          fat_goal?: number | null
           goal_type?: string
           height_cm?: number
           sex?: string

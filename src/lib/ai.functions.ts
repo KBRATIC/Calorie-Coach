@@ -120,6 +120,9 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
           grams: foodData.quantity,
           unit: foodData.unit || "g",
           kcal: foodData.kcal,
+          protein: foodData.protein || 0,
+          carbs: foodData.carbs || 0,
+          fat: foodData.fat || 0,
           meal: foodData.meal || "lunch",
           consumed_on: todayStr
         });
@@ -142,6 +145,9 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
           if (editData.quantity !== undefined) updateObj.grams = editData.quantity;
           if (editData.unit) updateObj.unit = editData.unit;
           if (editData.kcal !== undefined) updateObj.kcal = editData.kcal;
+          if (editData.protein !== undefined) updateObj.protein = editData.protein;
+          if (editData.carbs !== undefined) updateObj.carbs = editData.carbs;
+          if (editData.fat !== undefined) updateObj.fat = editData.fat;
           
           await context.supabase.from("food_entries").update(updateObj).eq("id", editData.id).eq("user_id", context.userId);
         }
