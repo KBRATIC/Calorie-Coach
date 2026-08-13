@@ -26,9 +26,17 @@ export const Route = createFileRoute("/_authenticated/historico")({
 });
 
 export function HistoryPage() {
-  const [range, setRange] = useState<7 | 30>(7);
+  const [period, setPeriod] = useState<"semana" | "mes" | "ano">("semana");
   const today = todayISO();
-  const from = addDays(today, -(range - 1));
+  
+  let from = today;
+  if (period === "semana") {
+    from = addDays(today, -6);
+  } else if (period === "mes") {
+    from = today.substring(0, 8) + "01";
+  } else if (period === "ano") {
+    from = today.substring(0, 5) + "01-01";
+  }
 
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
   const entriesQuery = useQuery({
@@ -39,7 +47,13 @@ export function HistoryPage() {
   const goal = goalsQuery.data?.daily_calorie_goal ?? 2000;
   const entries = entriesQuery.data ?? [];
 
-  const days = Array.from({ length: range }, (_, i) => addDays(from, i));
+  const days: string[] = [];
+  let current = from;
+  while (current <= today) {
+    days.push(current);
+    current = addDays(current, 1);
+  }
+
   const totals = days.map((d) => ({
     day: d,
     total: entries
@@ -70,20 +84,30 @@ export function HistoryPage() {
             Meta atual: {goal} kcal por dia
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 bg-secondary/30 p-1.5 rounded-xl border border-white/5 backdrop-blur-md">
           <Button
             size="sm"
-            variant={range === 7 ? "default" : "secondary"}
-            onClick={() => setRange(7)}
+            variant={period === "semana" ? "default" : "ghost"}
+            className={`rounded-lg ${period !== "semana" && "text-muted-foreground hover:text-foreground hover:bg-white/10"}`}
+            onClick={() => setPeriod("semana")}
           >
             Semana
           </Button>
           <Button
             size="sm"
-            variant={range === 30 ? "default" : "secondary"}
-            onClick={() => setRange(30)}
+            variant={period === "mes" ? "default" : "ghost"}
+            className={`rounded-lg ${period !== "mes" && "text-muted-foreground hover:text-foreground hover:bg-white/10"}`}
+            onClick={() => setPeriod("mes")}
           >
             Mês
+          </Button>
+          <Button
+            size="sm"
+            variant={period === "ano" ? "default" : "ghost"}
+            className={`rounded-lg ${period !== "ano" && "text-muted-foreground hover:text-foreground hover:bg-white/10"}`}
+            onClick={() => setPeriod("ano")}
+          >
+            Ano
           </Button>
         </div>
       </div>
