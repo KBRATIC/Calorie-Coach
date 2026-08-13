@@ -13,7 +13,7 @@ import {
   Eraser,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
-import { parseMeal } from "@/lib/ai.functions";
+
 import { toast } from "sonner";
 import {
   addEntries,
@@ -361,7 +361,7 @@ function QuickActions({ userId, day }: { userId: string; day: string }) {
           <Zap className="size-4" /> Lançamento rápido
         </span>
         <div className="ml-auto flex flex-wrap gap-2">
-          <AiTextDialog userId={userId} day={day} onDone={invalidate} />
+
           <Button
             variant="secondary"
             size="sm"
@@ -397,93 +397,6 @@ function QuickActions({ userId, day }: { userId: string; day: string }) {
   );
 }
 
-function AiTextDialog({
-  userId,
-  day,
-  onDone,
-}: {
-  userId: string;
-  day: string;
-  onDone: () => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [text, setText] = useState("");
-  const [meal, setMeal] = useState("lunch");
-  const parse = useServerFn(parseMeal);
-
-  const run = useMutation({
-    mutationFn: async () => {
-      const { items } = await parse({ data: { text: text.trim(), meal } });
-      if (items.length === 0) throw new Error("Nenhum alimento identificado");
-      await addEntries(
-        items.map((item) => ({
-          user_id: userId,
-          name: item.name,
-          grams: item.quantity,
-          unit: item.unit,
-          kcal: Math.round((item.kcalPer100 * item.quantity) / 100),
-          meal: item.meal,
-          consumed_on: day,
-        })),
-      );
-      return items.length;
-    },
-    onSuccess: (count) => {
-      onDone();
-      toast.success(`${count} alimentos lançados`);
-      setOpen(false);
-      setText("");
-    },
-    onError: (e: Error) => toast.error("Não deu para lançar", { description: e.message }),
-  });
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm" className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-none shadow-md shadow-purple-500/20">
-          <Sparkles className="size-4" /> Assistente IA
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Descreva o que você comeu</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <Textarea
-            rows={4}
-            autoFocus
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Ex.: 2 ovos mexidos, 1 pão francês com requeijão e 1 copo de suco de laranja"
-          />
-          <div className="space-y-2">
-            <Label>Refeição padrão</Label>
-            <Select value={meal} onValueChange={setMeal}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {MEALS.map((m) => (
-                  <SelectItem key={m.id} value={m.id}>
-                    {mealLabel(m.id)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <Button
-            className="w-full gap-2"
-            onClick={() => run.mutate()}
-            disabled={run.isPending || text.trim().length < 3}
-          >
-            {run.isPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
-            Lançar tudo
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 function AddFoodDialog({ userId, day }: { userId: string; day: string }) {
   const queryClient = useQueryClient();

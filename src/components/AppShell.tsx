@@ -186,20 +186,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <div className="absolute inset-x-0 bottom-6 z-40 mx-4 md:hidden">
-        <motion.nav 
-          className="liquid-glass rounded-full touch-none relative"
-          onPanEnd={(_, info) => {
-            if (info.offset.y < -30 && info.velocity.y < 0) {
-              setIsChatOpen(true);
-            }
-          }}
-        >
-          {/* Drag Handle with Floating Animation and Glow */}
-          <motion.div 
-            className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-primary/70 backdrop-blur-md shadow-[0_0_8px_rgba(var(--primary),0.8)] border border-primary/50"
-            animate={{ y: [0, -3, 0], opacity: [0.7, 1, 0.7] }}
-            transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-          />
+        {/* FAB Assistente IA Central */}
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-50">
+          <button
+            onClick={() => setIsChatOpen(true)}
+            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-fuchsia-500 shadow-lg shadow-purple-500/30 transition-transform active:scale-95 hover:scale-105 border-2 border-background"
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-fuchsia-500 blur animate-pulse opacity-50" />
+            <Sparkles className="size-6 text-white relative z-10" />
+          </button>
+        </div>
+
+        <nav className="liquid-glass rounded-full relative">
         <div className="relative flex items-center p-1.5">
           <div className="absolute inset-y-1.5 inset-x-1.5 pointer-events-none">
             <motion.div
@@ -225,7 +223,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             );
           })}
         </div>
-      </motion.nav>
+      </nav>
       </div>
 
       <ChatDrawer open={isChatOpen} onOpenChange={setIsChatOpen} />

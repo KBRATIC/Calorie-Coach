@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import { Send, Loader2, Sparkles, Camera, X } from "lucide-react";
+import { Send, Loader2, Sparkles, Camera, X, Mic } from "lucide-react";
+import { toast } from "sonner";
 import { askAssistant } from "@/lib/ai.functions";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
@@ -31,6 +32,43 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   const ask = useServerFn(askAssistant);
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error("Reconhecimento de voz não suportado neste navegador.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.lang = "pt-BR";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput((prev) => (prev ? prev + " " + transcript : transcript));
+    };
+    recognition.onerror = (event: any) => {
+      console.error("Speech error", event.error);
+      setIsListening(false);
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -253,17 +291,29 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pergunte ou envie uma foto..."
-                className="pr-12 rounded-full h-12 bg-secondary/30 border-border/20 shadow-inner placeholder:text-muted-foreground/70"
+                className="pr-20 rounded-full h-12 bg-secondary/30 border-border/20 shadow-inner placeholder:text-muted-foreground/70"
                 disabled={isLoading}
               />
-              <Button
-                type="submit"
-                size="icon"
-                className="absolute right-1.5 top-1.5 h-9 w-9 rounded-full transition-transform active:scale-95 shadow-[var(--shadow-glow)]"
-                disabled={(!input.trim() && !imageBase64Preview) || isLoading}
-              >
-                <Send className="size-4" />
-              </Button>
+              <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  className={`h-9 w-9 rounded-full transition-transform active:scale-95 ${isListening ? "text-destructive animate-pulse" : "text-muted-foreground"}`}
+                  onClick={toggleListening}
+                  disabled={isLoading}
+                >
+                  <Mic className="size-4" />
+                </Button>
+                <Button
+                  type="submit"
+                  size="icon"
+                  className="h-9 w-9 rounded-full transition-transform active:scale-95 shadow-[var(--shadow-glow)]"
+                  disabled={(!input.trim() && !imageBase64Preview) || isLoading}
+                >
+                  <Send className="size-4" />
+                </Button>
+              </div>
             </div>
           </form>
         </div>

@@ -48,7 +48,7 @@ export const askAssistant = createServerFn({ method: "POST" })
       // Buscar entradas recentes (últimos 7 dias) para entender hábitos
       const { data: recentEntries } = await context.supabase
         .from("food_entries")
-        .select("name, kcal, consumed_on")
+        .select("id, name, grams, unit, kcal, meal, consumed_on")
         .eq("user_id", context.userId)
         .gte("consumed_on", lastWeekStr);
 
@@ -63,8 +63,12 @@ export const askAssistant = createServerFn({ method: "POST" })
         // Hábitos recentes (nomes únicos)
         const uniqueFoods = Array.from(new Set(recentEntries.map(e => e.name))).slice(0, 20).join(", ");
         
+        const todaysList = todaysEntries.map(e => `- ID: ${e.id} | ${e.name} | ${e.grams || "?"}${e.unit} | ${e.kcal} kcal | Refeição: ${e.meal}`).join("\n");
+        
         contextStr = `\n\n[CONTEXTO INTERNO INVISÍVEL AO USUÁRIO:
 - Calorias consumidas hoje: ${consumed} kcal de uma meta de ${goal} kcal (Restam ${remaining} kcal).
+- ALIMENTOS REGISTRADOS HOJE:
+${todaysList || "Nenhum alimento registrado ainda hoje."}
 - Alimentos que o usuário costuma comer (histórico recente): ${uniqueFoods || "Nenhum histórico ainda"}.
 Regra 1: Se for recomendar uma refeição, priorize MUITO usar alimentos parecidos ou iguais ao histórico recente dele. Leve o saldo de calorias em consideração.
 Regra 2 (CRÍTICA): Aja naturalmente. NUNCA mencione que você teve acesso ao "histórico" dele, nem diga frases como "com base no seu histórico". Apenas recomende.
@@ -88,7 +92,7 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
           grams: foodData.quantity,
           unit: foodData.unit || "g",
           kcal: foodData.kcal,
-          meal: foodData.meal || "almoço",
+          meal: foodData.meal || "lunch",
           consumed_on: todayStr
         });
         
@@ -96,6 +100,40 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
         responseText = responseText.replace(logMatch[0], "").trim();
       } catch (err) {
         console.error("Erro ao parsear e salvar LOG_FOOD tag", err);
+      }
+    }
+
+    // Intercept [EDIT_FOOD: {...}] tag
+    const editMatch = responseText.match(/\[EDIT_FOOD:\s*({.*?})\s*\]/);
+    if (editMatch && editMatch[1]) {
+      try {
+        const editData = JSON.parse(editMatch[1]);
+        if (editData.id) {
+          const updateObj: any = {};
+          if (editData.name) updateObj.name = editData.name;
+          if (editData.quantity !== undefined) updateObj.grams = editData.quantity;
+          if (editData.unit) updateObj.unit = editData.unit;
+          if (editData.kcal !== undefined) updateObj.kcal = editData.kcal;
+          
+          await context.supabase.from("food_entries").update(updateObj).eq("id", editData.id).eq("user_id", context.userId);
+        }
+        responseText = responseText.replace(editMatch[0], "").trim();
+      } catch (err) {
+        console.error("Erro ao parsear e salvar EDIT_FOOD tag", err);
+      }
+    }
+
+    // Intercept [REMOVE_FOOD: {...}] tag
+    const removeMatch = responseText.match(/\[REMOVE_FOOD:\s*({.*?})\s*\]/);
+    if (removeMatch && removeMatch[1]) {
+      try {
+        const removeData = JSON.parse(removeMatch[1]);
+        if (removeData.id) {
+          await context.supabase.from("food_entries").delete().eq("id", removeData.id).eq("user_id", context.userId);
+        }
+        responseText = responseText.replace(removeMatch[0], "").trim();
+      } catch (err) {
+        console.error("Erro ao parsear e salvar REMOVE_FOOD tag", err);
       }
     }
 

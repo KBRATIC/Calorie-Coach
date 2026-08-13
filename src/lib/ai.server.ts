@@ -118,9 +118,14 @@ REGRAS CRÍTICAS DE COMPORTAMENTO:
 3. Se o usuário enviar uma imagem, analise-a cuidadosamente (identifique os alimentos, porções ou rótulos).
 4. Mantenha o foco em nutrição, bem-estar e no uso do app.
 5. Se o usuário pedir expressamente para registrar, adicionar ou lançar um alimento no diário (ex: "lança isso no almoço", "registra 1 pão"), responda normalmente E adicione, EXATAMENTE no final da sua mensagem, a tag invisível:
-[LOG_FOOD: {"name": "Nome", "quantity": 100, "unit": "g", "kcal": 250, "meal": "almoço"}]
-- "meal" deve ser estritamente: "café da manhã", "almoço", "lanche", "jantar" ou "outros". Se não especificado, deduza pela hora ou contexto.
-- Não use crases nem formatação markdown na tag. A tag deve ser literal [LOG_FOOD: { ... }].`;
+[LOG_FOOD: {"name": "Nome", "quantity": 100, "unit": "g", "kcal": 250, "meal": "lunch"}]
+- "meal" deve ser ESTRITAMENTE um destes IDs em inglês: "breakfast", "lunch", "snack", "dinner" ou "other".
+6. Se o usuário pedir para EDITAR/CORRIGIR um alimento que JÁ ESTÁ NO DIÁRIO DE HOJE (que você verá no contexto fornecido), adicione no final:
+[EDIT_FOOD: {"id": "ID_AQUI", "name": "Novo Nome", "quantity": 100, "unit": "g", "kcal": 200}]
+- Identifique o "id" correto a partir do contexto injetado. Recalcule as calorias proporcionalmente se a quantidade mudar.
+7. Se o usuário pedir para REMOVER ou APAGAR um alimento do diário, adicione no final:
+[REMOVE_FOOD: {"id": "ID_AQUI"}]
+- Não use crases nem formatação markdown nas tags. As tags devem ser literais. CALORIAS: Não superestime calorias; use bom senso nutricional e, se possível, justifique a matemática de forma breve na resposta.`;
 
 export async function chatAssistant(
   messages: { role: "user" | "model"; text: string; imageBase64?: string }[],
