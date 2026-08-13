@@ -51,7 +51,7 @@ function Landing() {
 
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="liquid-glass sticky top-0 z-40 w-full">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 md:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-10">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <img
               src="/icon.png"
@@ -70,9 +70,9 @@ function Landing() {
       </header>
 
       {/* ── Hero (centered) ────────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-4 pt-16 pb-8 text-center md:pt-28 md:px-8">
+      <section className="mx-auto max-w-7xl px-4 pt-16 pb-10 text-center md:pt-32 md:px-10">
         <p className="eyebrow mb-4">Controle inteligente de calorias</p>
-        <h1 className="mx-auto max-w-3xl text-4xl leading-[1.08] md:text-6xl lg:text-[4.25rem]">
+        <h1 className="mx-auto max-w-4xl text-4xl leading-[1.08] md:text-6xl lg:text-[5rem]">
           Seu corpo merece{" "}
           <span className="text-primary">dados</span>, não achismo.
         </h1>
@@ -102,7 +102,7 @@ function Landing() {
       </section>
 
       {/* ── App preview card ───────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-4 pb-16 md:px-8">
+      <section className="mx-auto max-w-7xl px-4 pb-20 md:px-10">
         <div className="panel overflow-hidden p-5 md:p-8">
           <div className="grid gap-6 md:grid-cols-[auto_1fr]">
             {/* Calorie ring */}
@@ -159,7 +159,7 @@ function Landing() {
       </section>
 
       {/* ── Bento features grid ────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-4 pb-16 md:px-8">
+      <section className="mx-auto max-w-7xl px-4 pb-20 md:px-10">
         <h2 className="mb-8 text-center text-2xl md:text-3xl">
           O que o KcalTrack faz por você
         </h2>
@@ -260,7 +260,7 @@ function Landing() {
       </section>
 
       {/* ── CTA ────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-4 pb-20 md:px-8">
+      <section className="mx-auto max-w-7xl px-4 pb-20 md:px-10">
         <div className="panel flex flex-col items-center gap-4 p-8 text-center md:p-12">
           <h2 className="text-2xl md:text-3xl">Pronto para começar?</h2>
           <p className="max-w-md text-sm text-muted-foreground">
@@ -277,7 +277,7 @@ function Landing() {
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
       <footer className="border-t border-border/40 py-8">
-        <div className="mx-auto max-w-5xl px-4 md:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto max-w-7xl px-4 md:px-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} KcalTrack. Valores calóricos baseados na Tabela EndocrinoSaude.
           </p>
