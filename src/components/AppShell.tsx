@@ -175,7 +175,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="liquid-glass rounded-full relative">
-        <div className="relative flex items-center p-1.5">
+        <div className="relative flex items-center p-1.5 overflow-hidden rounded-full">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             return (
