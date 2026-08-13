@@ -52,7 +52,7 @@ function Landing() {
 
       {/* Header */}
       <header className="liquid-glass sticky top-0 z-40 w-full">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-[1800px] items-center justify-between px-4 py-3 md:px-8">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <img
               src="/icon.png"
@@ -68,7 +68,7 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-4 pt-12 md:pt-24">
+      <section className="mx-auto max-w-[1800px] px-4 pt-12 md:pt-24 md:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
           <div>
             <h1 className="text-4xl leading-[1.1] md:text-6xl lg:text-7xl">
