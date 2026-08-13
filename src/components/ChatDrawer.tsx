@@ -33,6 +33,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [interimText, setInterimText] = useState("");
   const recognitionRef = useRef<any>(null);
 
   const toggleListening = () => {
@@ -52,19 +53,37 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     recognitionRef.current = recognition;
     recognition.lang = "pt-BR";
     recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.interimResults = true;
 
-    recognition.onstart = () => setIsListening(true);
+    recognition.onstart = () => {
+      setIsListening(true);
+      setInterimText("");
+    };
     recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setInput((prev) => (prev ? prev + " " + transcript : transcript));
+      let finalTranscript = "";
+      let currentInterim = "";
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          currentInterim += event.results[i][0].transcript;
+        }
+      }
+
+      if (finalTranscript) {
+        setInput((prev) => (prev ? prev + " " + finalTranscript : finalTranscript));
+      }
+      setInterimText(currentInterim);
     };
     recognition.onerror = (event: any) => {
       console.error("Speech error", event.error);
       setIsListening(false);
+      setInterimText("");
     };
     recognition.onend = () => {
       setIsListening(false);
+      setInterimText("");
     };
 
     recognition.start();
@@ -263,6 +282,34 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     <X className="size-3" />
                   </Button>
                 </div>
+              </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {isListening && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                exit={{ opacity: 0, scale: 0.9, height: 0 }}
+                className="mb-3 px-4 py-3 bg-secondary/40 rounded-2xl border border-primary/20 flex flex-col gap-2 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent bg-[length:200%_100%] animate-[gradient_2s_linear_infinite]" />
+                <div className="flex items-center gap-3 relative z-10">
+                  <div className="flex gap-1 h-4 items-center justify-center">
+                    <motion.div animate={{ height: [4, 16, 4] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1 bg-primary rounded-full" />
+                    <motion.div animate={{ height: [4, 24, 4] }} transition={{ repeat: Infinity, duration: 1.2 }} className="w-1 bg-primary rounded-full" />
+                    <motion.div animate={{ height: [4, 12, 4] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1 bg-primary rounded-full" />
+                    <motion.div animate={{ height: [4, 20, 4] }} transition={{ repeat: Infinity, duration: 1.1 }} className="w-1 bg-primary rounded-full" />
+                  </div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">Ouvindo...</span>
+                </div>
+                {interimText && (
+                  <p className="text-sm text-foreground/90 italic relative z-10">
+                    "{interimText}"
+                  </p>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

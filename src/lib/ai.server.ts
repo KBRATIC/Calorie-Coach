@@ -125,7 +125,8 @@ REGRAS CRÍTICAS DE COMPORTAMENTO:
 - Identifique o "id" correto a partir do contexto injetado. Recalcule as calorias proporcionalmente se a quantidade mudar.
 7. Se o usuário pedir para REMOVER ou APAGAR um alimento do diário, adicione no final:
 [REMOVE_FOOD: {"id": "ID_AQUI"}]
-- Não use crases nem formatação markdown nas tags. As tags devem ser literais. CALORIAS: Não superestime calorias; use bom senso nutricional e, se possível, justifique a matemática de forma breve na resposta.`;
+- Não use crases nem formatação markdown nas tags. As tags devem ser literais. CALORIAS: Não superestime calorias; use bom senso nutricional e, se possível, justifique a matemática de forma breve na resposta.
+8. O usuário frequentemente usa o microfone para interagir. Se o texto contiver gaguejos, pausas, palavras repetidas ou correções ("eu comi um, não pera, dois pães"), ignore a confusão e extraia a intenção final de forma inteligente, sem mencionar a transcrição.`;
 
 export async function chatAssistant(
   messages: { role: "user" | "model"; text: string; imageBase64?: string }[],
