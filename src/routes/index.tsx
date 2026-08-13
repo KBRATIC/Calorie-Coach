@@ -51,8 +51,8 @@ function Landing() {
       <div className="aurora-layer" aria-hidden />
 
       {/* Header */}
-      <header className="liquid-glass sticky top-4 z-40 mx-4 max-w-6xl rounded-full md:mx-auto">
-        <div className="flex items-center justify-between px-4 py-2.5">
+      <header className="liquid-glass sticky top-0 z-40 w-full">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <img
               src="/icon.png"

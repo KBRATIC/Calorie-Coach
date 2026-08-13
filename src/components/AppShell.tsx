@@ -104,8 +104,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="fixed inset-0 overflow-hidden">
       <div className="aurora-layer" aria-hidden />
       
-      <header className="liquid-glass absolute top-4 inset-x-0 z-40 mx-4 rounded-full md:mx-auto md:max-w-6xl">
-        <div className="mx-auto flex items-center justify-between px-4 py-2.5">
+      <header className="liquid-glass sticky top-0 z-40 w-full">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link to="/hoje" className="flex min-w-0 items-center gap-2">
             <img 
               src="/icon.png" 

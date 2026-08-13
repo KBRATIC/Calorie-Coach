@@ -67,7 +67,7 @@
 }
 
 :root {
-  --radius: 0.9rem;
+  --radius: 0.5rem;
 
   --background: oklch(0.17 0.014 158);
   --foreground: oklch(0.95 0.015 140);
@@ -132,10 +132,10 @@
   --body-glow-2: oklch(0.78 0.16 150 / 0.08);
   --spot-color: oklch(0.88 0.21 124 / 0.18);
   
-  --glass-bg: oklch(1 0 0 / 0.04);
-  --glass-border: oklch(1 0 0 / 0.12);
-  --glass-highlight: oklch(1 0 0 / 0.2);
-  --glass-shadow: oklch(0 0 0 / 0.5);
+  --glass-bg: oklch(1 0 0 / 0.02);
+  --glass-border: oklch(1 0 0 / 0.08);
+  --glass-highlight: oklch(1 0 0 / 0.1);
+  --glass-shadow: oklch(0 0 0 / 0.25);
   
   --scheme: dark;
 }
@@ -207,10 +207,10 @@
   --spot-color: oklch(0.68 0.17 135 / 0.14);
   --shadow-panel: 0 22px 50px -32px oklch(0.22 0.02 158 / 0.35);
 
-  --glass-bg: oklch(1 0 0 / 0.65);
-  --glass-border: oklch(0 0 0 / 0.08);
-  --glass-highlight: oklch(1 0 0 / 0.8);
-  --glass-shadow: oklch(0 0 0 / 0.05);
+  --glass-bg: oklch(1 0 0 / 0.85);
+  --glass-border: oklch(0 0 0 / 0.04);
+  --glass-highlight: oklch(1 0 0 / 0.4);
+  --glass-shadow: oklch(0 0 0 / 0.03);
 }
 
 @layer base {
@@ -313,12 +313,12 @@
 @utility panel {
   position: relative;
   background-color: var(--glass-bg);
-  @apply backdrop-blur-[16px] backdrop-saturate-150 transform-gpu;
+  @apply backdrop-blur-[8px] transform-gpu;
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-3xl);
+  border-radius: var(--radius-lg);
   box-shadow: 
     inset 0 1px 1px var(--glass-highlight),
-    0 16px 40px -12px var(--glass-shadow);
+    0 4px 12px -2px var(--glass-shadow);
 }
 
 
@@ -340,11 +340,11 @@
 
 @utility liquid-glass {
   background-color: var(--glass-bg);
-  @apply backdrop-blur-[16px] backdrop-saturate-150 transform-gpu;
-  border: 1px solid var(--glass-border);
+  @apply backdrop-blur-[8px] transform-gpu;
+  border-bottom: 1px solid var(--glass-border);
   box-shadow: 
     inset 0 1px 1px var(--glass-highlight),
-    0 16px 40px -12px var(--glass-shadow);
+    0 4px 12px -2px var(--glass-shadow);
 }
 
 @utility no-scrollbar {
