@@ -6,8 +6,8 @@ import { fetchEntries, fetchGoals } from "@/lib/api";
 import { addDays, formatDayLabel, todayISO } from "@/lib/nutrition";
 import { Button } from "@/components/ui/button";
 import {
-  Area,
-  AreaChart,
+  Bar,
+  BarChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -178,13 +178,7 @@ export function HistoryPage() {
         ) : (
           <div className="h-72 w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={totals} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="oklch(var(--primary))" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="oklch(var(--primary))" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
+              <BarChart data={totals} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={2} barCategoryGap="20%">
                 <XAxis 
                   dataKey="shortDate" 
                   axisLine={false} 
@@ -193,44 +187,69 @@ export function HistoryPage() {
                   dy={10}
                 />
                 <YAxis 
+                  yAxisId="left"
                   axisLine={false} 
                   tickLine={false} 
                   tick={{ fontSize: 12, fill: 'oklch(var(--muted-foreground))' }} 
                 />
+                <YAxis 
+                  yAxisId="right"
+                  orientation="right"
+                  axisLine={false} 
+                  tickLine={false} 
+                  hide={true}
+                />
                 <Tooltip 
-                  content={({ active, payload, label }) => {
+                  cursor={{ fill: 'oklch(var(--muted))', opacity: 0.1 }}
+                  content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       const overGoal = data.total > goal;
                       return (
-                        <div className="bg-surface/90 border border-white/10 backdrop-blur-md p-4 rounded-2xl shadow-xl">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">{formatDayLabel(data.day)}</p>
-                          <p className={`stat-number text-2xl font-medium tracking-tight ${overGoal ? 'text-destructive' : 'text-primary'}`}>
-                            {Math.round(data.total)} <span className="text-sm font-normal text-foreground">kcal</span>
-                          </p>
+                        <div className="bg-surface/90 border border-white/10 backdrop-blur-md p-4 rounded-2xl shadow-xl flex flex-col gap-2 min-w-[150px]">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{formatDayLabel(data.day)}</p>
+                          <div className="flex justify-between items-baseline gap-4">
+                            <span className="text-xs text-muted-foreground font-medium">Kcal</span>
+                            <span className={`stat-number text-xl font-medium tracking-tight ${overGoal ? 'text-destructive' : 'text-primary'}`}>
+                              {Math.round(data.total)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-baseline gap-4">
+                            <span className="text-xs text-muted-foreground font-medium">Proteína</span>
+                            <span className="stat-number text-sm font-medium tracking-tight text-[oklch(0.6_0.15_250)]">
+                              {Math.round(data.protein)}g
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-baseline gap-4">
+                            <span className="text-xs text-muted-foreground font-medium">Carbo</span>
+                            <span className="stat-number text-sm font-medium tracking-tight text-[oklch(0.7_0.18_70)]">
+                              {Math.round(data.carbs)}g
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-baseline gap-4">
+                            <span className="text-xs text-muted-foreground font-medium">Gordura</span>
+                            <span className="stat-number text-sm font-medium tracking-tight text-[oklch(0.6_0.2_15)]">
+                              {Math.round(data.fat)}g
+                            </span>
+                          </div>
                         </div>
                       );
                     }
                     return null;
                   }}
-                  cursor={{ stroke: 'oklch(var(--border))', strokeWidth: 1, strokeDasharray: '4 4' }}
                 />
                 <ReferenceLine 
+                  yAxisId="left"
                   y={goal} 
                   stroke="oklch(var(--muted-foreground))" 
                   strokeDasharray="4 4" 
                   strokeOpacity={0.5}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="total" 
-                  stroke="oklch(var(--primary))" 
-                  strokeWidth={3}
-                  fillOpacity={1} 
-                  fill="url(#colorTotal)" 
-                  activeDot={{ r: 6, fill: "oklch(var(--primary))", stroke: "oklch(var(--background))", strokeWidth: 3 }}
-                />
-              </AreaChart>
+                <Bar yAxisId="left" dataKey="total" fill="oklch(var(--primary))" radius={[4, 4, 0, 0]} />
+                <Bar yAxisId="right" dataKey="protein" fill="oklch(0.6 0.15 250)" radius={[4, 4, 0, 0]} />
+                <Bar yAxisId="right" dataKey="carbs" fill="oklch(0.7 0.18 70)" radius={[4, 4, 0, 0]} />
+                <Bar yAxisId="right" dataKey="fat" fill="oklch(0.6 0.2 15)" radius={[4, 4, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         )}
