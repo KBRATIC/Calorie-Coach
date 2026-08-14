@@ -141,7 +141,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <nav className="relative flex items-center p-2 md:p-3 gap-2 overflow-hidden rounded-full bg-surface/80 backdrop-blur-2xl shadow-2xl pointer-events-auto border border-border">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
-            return (
+            const navLink = (
               <Link
                 key={item.to}
                 to={item.to}
@@ -162,19 +162,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </span>
               </Link>
             );
+
+            if (idx === 1) {
+              return (
+                <Fragment key={item.to}>
+                  {navLink}
+                  <button
+                    onClick={() => setIsChatOpen(true)}
+                    className="group relative flex size-12 md:size-14 items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-2 shrink-0 shadow-xl"
+                    aria-label="Assistente Inteligente"
+                  >
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-fuchsia-500 to-purple-500 blur-md animate-spin [animation-duration:3s]" />
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-fuchsia-500 to-purple-500 animate-spin [animation-duration:3s]" />
+                    <div className="absolute inset-[4px] md:inset-[5px] bg-white rounded-full z-10 shadow-inner" />
+                  </button>
+                </Fragment>
+              );
+            }
+
+            return navLink;
           })}
         </nav>
-      </div>
-
-      {/* Floating AI Orb */}
-      <div className="fixed bottom-28 right-6 z-50 md:bottom-8 md:right-8">
-        <button
-          onClick={() => setIsChatOpen(true)}
-          className="group relative flex size-14 items-center justify-center rounded-full bg-primary/10 backdrop-blur-md border border-primary/20 text-primary shadow-[0_0_30px_rgb(0,0,0,0.1)] shadow-primary/20 transition-transform active:scale-[0.95] hover:scale-105 overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-150 animate-pulse" />
-          <Sparkles className="size-6 relative z-10" />
-        </button>
       </div>
 
       <ChatDrawer open={isChatOpen} onOpenChange={setIsChatOpen} />
