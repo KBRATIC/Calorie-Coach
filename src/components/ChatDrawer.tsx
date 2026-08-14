@@ -19,6 +19,70 @@ interface Message {
   images?: string[];
 }
 
+const AudioVisualizer = ({ isListening }: { isListening: boolean }) => {
+  const [volumes, setVolumes] = useState<number[]>(Array(30).fill(4));
+  
+  useEffect(() => {
+    if (!isListening) return;
+    
+    let audioContext: AudioContext;
+    let analyser: AnalyserNode;
+    let microphone: MediaStreamAudioSourceNode;
+    let animationFrame: number;
+    
+    const startAudio = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 64;
+        microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        
+        const update = () => {
+          analyser.getByteFrequencyData(dataArray);
+          const step = Math.max(1, Math.floor(dataArray.length / 30));
+          const newVolumes = [];
+          for (let i = 0; i < 30; i++) {
+            const val = dataArray[i * step] || 0;
+            // map 0-255 to 4-32 px
+            const height = Math.max(4, (val / 255) * 32);
+            newVolumes.push(height);
+          }
+          setVolumes(newVolumes);
+          animationFrame = requestAnimationFrame(update);
+        };
+        update();
+      } catch (err) {
+        console.error("Error accessing mic for visualizer:", err);
+      }
+    };
+    
+    startAudio();
+    
+    return () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      if (audioContext) audioContext.close();
+    };
+  }, [isListening]);
+
+  return (
+    <div className="flex items-center justify-between w-full h-8 gap-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+      {volumes.map((h, i) => (
+        <motion.div
+          key={i}
+          animate={{ height: h }}
+          transition={{ type: "tween", duration: 0.05, ease: "linear" }}
+          className="flex-1 rounded-full bg-gradient-to-t from-fuchsia-500 via-purple-400 to-cyan-400"
+          style={{ minWidth: '4px' }}
+        />
+      ))}
+    </div>
+  );
+};
+
 export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -346,17 +410,12 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     initial={{ opacity: 0, y: 10, height: 0 }}
                     animate={{ opacity: 1, y: 0, height: 'auto' }}
                     exit={{ opacity: 0, scale: 0.9, height: 0 }}
-                    className="mb-2 mx-2 px-5 py-4 bg-surface-strong rounded-3xl border border-primary/20 flex flex-col gap-2 relative overflow-hidden backdrop-blur-md"
+                    className="mb-2 mx-2 px-4 py-3 bg-black/60 rounded-[32px] border border-fuchsia-500/30 flex flex-col gap-2 relative overflow-hidden backdrop-blur-xl shadow-[0_0_30px_rgba(217,70,239,0.15)]"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent bg-[length:200%_100%] animate-[gradient_2s_linear_infinite]" />
-                    <div className="flex items-center gap-4 relative z-10">
-                      <div className="flex gap-1 h-4 items-center justify-center">
-                        <motion.div animate={{ height: [4, 16, 4] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1 bg-primary rounded-full" />
-                        <motion.div animate={{ height: [4, 24, 4] }} transition={{ repeat: Infinity, duration: 1.2 }} className="w-1 bg-primary rounded-full" />
-                        <motion.div animate={{ height: [4, 12, 4] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1 bg-primary rounded-full" />
-                        <motion.div animate={{ height: [4, 20, 4] }} transition={{ repeat: Infinity, duration: 1.1 }} className="w-1 bg-primary rounded-full" />
-                      </div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-primary">Ouvindo...</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-fuchsia-600/20 to-purple-600/20 bg-[length:200%_100%] animate-[gradient_2s_linear_infinite]" />
+                    <div className="flex flex-col items-center justify-center relative z-10 w-full gap-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-fuchsia-400/80 w-full text-center mb-1">Ouvindo...</span>
+                      <AudioVisualizer isListening={isListening} />
                     </div>
                     {interimText && (
                       <p className="text-base text-foreground/90 font-light relative z-10">
