@@ -205,6 +205,7 @@ export function HistoryPage() {
 
 function MiniProgressBar({ value, max, color, label, suffix }: { value: number, max: number, color: string, label: string, suffix: string }) {
   const pct = Math.min(100, (value / Math.max(1, max)) * 100);
+  const isOver = value > max;
   return (
     <div className="flex items-center gap-3 w-full">
       <span className="w-16 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</span>
@@ -216,8 +217,8 @@ function MiniProgressBar({ value, max, color, label, suffix }: { value: number, 
            className={`h-full rounded-full ${color}`}
         />
       </div>
-      <span className="w-16 text-right text-[11px] font-medium text-foreground">
-        {Math.round(value)}<span className="text-[9px] text-muted-foreground ml-0.5">{suffix}</span>
+      <span className={`w-16 text-right text-[11px] font-medium ${isOver ? 'text-destructive' : 'text-foreground'}`}>
+        {Math.round(value)}<span className={`text-[9px] ml-0.5 ${isOver ? 'text-destructive/70' : 'text-muted-foreground'}`}>{suffix}</span>
       </span>
     </div>
   );
