@@ -56,7 +56,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
     recognition.lang = "pt-BR";
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.interimResults = true;
 
     recognition.onstart = () => {
@@ -76,7 +76,10 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       }
 
       if (finalTranscript) {
-        setInput((prev) => (prev ? prev + " " + finalTranscript : finalTranscript));
+        setInput((prev) => {
+          const sep = prev && !prev.endsWith(" ") && !finalTranscript.startsWith(" ") ? " " : "";
+          return prev + sep + finalTranscript;
+        });
       }
       setInterimText(currentInterim);
     };

@@ -110,66 +110,73 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
     let responseText = await chatAssistant(data.messages, contextStr);
     
     // Intercept [LOG_FOOD: {...}] tag
-    const logMatch = responseText.match(/\[LOG_FOOD:\s*({.*?})\s*\]/);
-    if (logMatch && logMatch[1]) {
-      try {
-        const foodData = JSON.parse(logMatch[1]);
-        await context.supabase.from("food_entries").insert({
-          user_id: context.userId,
-          name: foodData.name,
-          grams: foodData.quantity,
-          unit: foodData.unit || "g",
-          kcal: foodData.kcal,
-          protein: foodData.protein || 0,
-          carbs: foodData.carbs || 0,
-          fat: foodData.fat || 0,
-          meal: foodData.meal || "lunch",
-          consumed_on: todayStr
-        });
-        
-        // Remove the tag from the final response
-        responseText = responseText.replace(logMatch[0], "").trim();
-      } catch (err) {
-        console.error("Erro ao parsear e salvar LOG_FOOD tag", err);
+    const logMatches = [...responseText.matchAll(/\[LOG_FOOD:\s*({[\s\S]*?})\s*\]/g)];
+    for (const match of logMatches) {
+      if (match[1]) {
+        try {
+          const foodData = JSON.parse(match[1]);
+          await context.supabase.from("food_entries").insert({
+            user_id: context.userId,
+            name: foodData.name,
+            grams: foodData.quantity,
+            unit: foodData.unit || "g",
+            kcal: foodData.kcal,
+            protein: foodData.protein || 0,
+            carbs: foodData.carbs || 0,
+            fat: foodData.fat || 0,
+            meal: foodData.meal || "lunch",
+            consumed_on: todayStr
+          });
+          
+          responseText = responseText.replace(match[0], "");
+        } catch (err) {
+          console.error("Erro ao parsear e salvar LOG_FOOD tag", err);
+        }
       }
     }
 
     // Intercept [EDIT_FOOD: {...}] tag
-    const editMatch = responseText.match(/\[EDIT_FOOD:\s*({.*?})\s*\]/);
-    if (editMatch && editMatch[1]) {
-      try {
-        const editData = JSON.parse(editMatch[1]);
-        if (editData.id) {
-          const updateObj: any = {};
-          if (editData.name) updateObj.name = editData.name;
-          if (editData.quantity !== undefined) updateObj.grams = editData.quantity;
-          if (editData.unit) updateObj.unit = editData.unit;
-          if (editData.kcal !== undefined) updateObj.kcal = editData.kcal;
-          if (editData.protein !== undefined) updateObj.protein = editData.protein;
-          if (editData.carbs !== undefined) updateObj.carbs = editData.carbs;
-          if (editData.fat !== undefined) updateObj.fat = editData.fat;
-          
-          await context.supabase.from("food_entries").update(updateObj).eq("id", editData.id).eq("user_id", context.userId);
+    const editMatches = [...responseText.matchAll(/\[EDIT_FOOD:\s*({[\s\S]*?})\s*\]/g)];
+    for (const match of editMatches) {
+      if (match[1]) {
+        try {
+          const editData = JSON.parse(match[1]);
+          if (editData.id) {
+            const updateObj: any = {};
+            if (editData.name) updateObj.name = editData.name;
+            if (editData.quantity !== undefined) updateObj.grams = editData.quantity;
+            if (editData.unit) updateObj.unit = editData.unit;
+            if (editData.kcal !== undefined) updateObj.kcal = editData.kcal;
+            if (editData.protein !== undefined) updateObj.protein = editData.protein;
+            if (editData.carbs !== undefined) updateObj.carbs = editData.carbs;
+            if (editData.fat !== undefined) updateObj.fat = editData.fat;
+            
+            await context.supabase.from("food_entries").update(updateObj).eq("id", editData.id).eq("user_id", context.userId);
+          }
+          responseText = responseText.replace(match[0], "");
+        } catch (err) {
+          console.error("Erro ao parsear e salvar EDIT_FOOD tag", err);
         }
-        responseText = responseText.replace(editMatch[0], "").trim();
-      } catch (err) {
-        console.error("Erro ao parsear e salvar EDIT_FOOD tag", err);
       }
     }
 
     // Intercept [REMOVE_FOOD: {...}] tag
-    const removeMatch = responseText.match(/\[REMOVE_FOOD:\s*({.*?})\s*\]/);
-    if (removeMatch && removeMatch[1]) {
-      try {
-        const removeData = JSON.parse(removeMatch[1]);
-        if (removeData.id) {
-          await context.supabase.from("food_entries").delete().eq("id", removeData.id).eq("user_id", context.userId);
+    const removeMatches = [...responseText.matchAll(/\[REMOVE_FOOD:\s*({[\s\S]*?})\s*\]/g)];
+    for (const match of removeMatches) {
+      if (match[1]) {
+        try {
+          const removeData = JSON.parse(match[1]);
+          if (removeData.id) {
+            await context.supabase.from("food_entries").delete().eq("id", removeData.id).eq("user_id", context.userId);
+          }
+          responseText = responseText.replace(match[0], "");
+        } catch (err) {
+          console.error("Erro ao parsear e salvar REMOVE_FOOD tag", err);
         }
-        responseText = responseText.replace(removeMatch[0], "").trim();
-      } catch (err) {
-        console.error("Erro ao parsear e salvar REMOVE_FOOD tag", err);
       }
     }
+    
+    responseText = responseText.trim();
 
     return { text: responseText };
   });
