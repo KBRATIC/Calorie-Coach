@@ -16,7 +16,7 @@ import { ChatDrawer } from "@/components/ChatDrawer";
 
 
 const NAV = [
-  { to: "/hoje", label: "Hoje", icon: Flame },
+  { to: "/hoje", label: "Diário", icon: Flame },
   { to: "/alimentos", label: "Alimentos", icon: Table2 },
   { to: "/historico", label: "Histórico", icon: CalendarRange },
   { to: "/perfil", label: "Perfil", icon: UserCog },
