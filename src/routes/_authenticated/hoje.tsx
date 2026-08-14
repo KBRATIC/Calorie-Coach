@@ -259,12 +259,7 @@ export function TodayPage() {
         {/* Macro Widgets - Bento small cards */}
         <MacroBento title="Proteína" consumed={consumedProtein} goal={goalProtein} color="from-[oklch(0.6_0.15_250)] to-[oklch(0.7_0.15_250)]" />
         <MacroBento title="Carbo" consumed={consumedCarbs} goal={goalCarbs} color="from-[oklch(0.7_0.18_70)] to-[oklch(0.8_0.18_70)]" />
-        <MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" />
-        
-        {/* Quick Add floating trigger */}
-        <div className="col-span-1 bento-card p-4 flex items-center justify-center h-32 sm:h-36">
-          {user && <QuickAddDrawer userId={user.id} day={day} />}
-        </div>
+        <MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" className="col-span-2" />
       </div>
 
       <div className="flex items-center justify-between pt-6">
@@ -311,10 +306,10 @@ export function TodayPage() {
 // Sub-components for Native Feel
 // ----------------------------------------
 
-function MacroBento({ title, consumed, goal, color }: { title: string, consumed: number, goal: number, color: string }) {
+function MacroBento({ title, consumed, goal, color, className }: { title: string, consumed: number, goal: number, color: string, className?: string }) {
   const progress = Math.min(100, (consumed / Math.max(1, goal)) * 100);
   return (
-    <div className="col-span-1 bento-card p-4 sm:p-5 flex flex-col justify-between h-32 sm:h-36">
+    <div className={`bento-card p-4 sm:p-5 flex flex-col justify-between h-32 sm:h-36 ${className || 'col-span-1'}`}>
       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
       <div>
         <div className="flex items-baseline gap-1">
