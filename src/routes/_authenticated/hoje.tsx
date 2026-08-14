@@ -12,7 +12,11 @@ import {
   ChevronRight
 } from "lucide-react";
 import { Drawer } from "vaul";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { ptBR } from "date-fns/locale";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+
 
 import { toast } from "sonner";
 import {
@@ -68,6 +72,7 @@ export function TodayPage() {
     setDayState(d);
     activeDayState.date = d;
   };
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
   const entriesQuery = useQuery({
@@ -123,15 +128,66 @@ export function TodayPage() {
       <Onboarding />
       
       {/* Native-style Header */}
-      <div className="flex flex-col gap-1 items-center justify-center pt-2 pb-4 relative">
+      <div className="flex flex-col gap-1 items-center justify-center pt-2 pb-4 relative z-20">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" className="size-8 rounded-full text-muted-foreground" onClick={() => setDay(addDays(day, -1))}>
             <ChevronRight className="size-5 rotate-180" />
           </Button>
-          <div className="text-center min-w-[160px]">
-            <h1 className="text-[15px] font-bold uppercase tracking-widest text-foreground">
-              {formatDayLabel(day)}
-            </h1>
+          <div className="text-center min-w-[160px] relative flex justify-center">
+            
+            <AnimatePresence>
+              {day !== todayISO() && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                  animate={{ opacity: 1, y: -25, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                  className="absolute pointer-events-none"
+                >
+                  <span className="bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest backdrop-blur-md whitespace-nowrap shadow-xl">
+                    2x clique = Hoje
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+              <PopoverTrigger asChild>
+                <div 
+                  className="cursor-pointer group flex flex-col items-center select-none py-1"
+                  onDoubleClick={() => {
+                    setDay(todayISO());
+                    setCalendarOpen(false);
+                  }}
+                >
+                  <h1 className="text-[15px] font-bold uppercase tracking-widest text-foreground transition-colors group-hover:text-primary active:scale-95 duration-200">
+                    {formatDayLabel(day)}
+                  </h1>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-white/10 bg-surface/90 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl" align="center">
+                <Calendar 
+                  mode="single"
+                  locale={ptBR}
+                  selected={
+                    new Date(
+                      Number(day.split("-")[0]),
+                      Number(day.split("-")[1]) - 1,
+                      Number(day.split("-")[2])
+                    )
+                  }
+                  onSelect={(date) => {
+                    if (date) {
+                      const y = date.getFullYear();
+                      const m = String(date.getMonth() + 1).padStart(2, "0");
+                      const d = String(date.getDate()).padStart(2, "0");
+                      setDay(`${y}-${m}-${d}`);
+                      setCalendarOpen(false);
+                    }
+                  }}
+                  disabled={(date) => date > new Date()}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <Button variant="ghost" size="icon" className="size-8 rounded-full text-muted-foreground" onClick={() => setDay(addDays(day, 1))} disabled={day >= todayISO()}>
             <ChevronRight className="size-5" />
