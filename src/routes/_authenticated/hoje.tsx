@@ -31,7 +31,7 @@ import {
   type RecentFood,
   type SearchableFood,
 } from "@/lib/api";
-import { MEALS, mealLabel, todayISO, formatDayLabel, addDays, unitFor, activeDayState } from "@/lib/nutrition";
+import { MEALS, mealLabel, todayISO, formatDayLabel, addDays, unitFor, activeDayState, calcMacroGoals } from "@/lib/nutrition";
 import { useSession } from "@/hooks/useSession";
 import { CalorieRing } from "@/components/CalorieRing";
 import { Button } from "@/components/ui/button";
@@ -113,9 +113,10 @@ export function TodayPage() {
   const consumedFat = entries.reduce((sum, e) => sum + Number(e.fat || 0), 0);
   
   const goal = goalsQuery.data?.daily_calorie_goal ?? 2000;
-  const goalProtein = goalsQuery.data?.protein_goal ?? 150;
-  const goalCarbs = goalsQuery.data?.carbs_goal ?? 200;
-  const goalFat = goalsQuery.data?.fat_goal ?? 67;
+  const fallbackMacros = calcMacroGoals(goal);
+  const goalProtein = goalsQuery.data?.protein_goal ?? fallbackMacros.protein;
+  const goalCarbs = goalsQuery.data?.carbs_goal ?? fallbackMacros.carbs;
+  const goalFat = goalsQuery.data?.fat_goal ?? fallbackMacros.fat;
 
   const invalidateEntries = () => {
     queryClient.invalidateQueries({ queryKey: ["entries"] });
