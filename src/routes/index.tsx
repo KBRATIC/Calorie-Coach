@@ -103,7 +103,7 @@ function Landing() {
 
       {/* ── App preview card ───────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 pb-20 md:px-10">
-        <div className="panel overflow-hidden p-5 md:p-8">
+        <div className="bento-card overflow-hidden p-5 md:p-8">
           <div className="grid gap-6 md:grid-cols-[auto_1fr]">
             {/* Calorie ring */}
             <div className="flex flex-col items-center justify-center gap-2">
@@ -166,7 +166,7 @@ function Landing() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* Card 1 — Alimentos (tall) */}
-          <div className="panel row-span-2 flex flex-col justify-between p-6">
+          <div className="bento-card flex flex-col justify-between p-6">
             <div>
               <span className="grid size-10 place-items-center rounded-xl border border-border/60 bg-secondary/50 text-primary">
                 <Search className="size-5" />
@@ -181,7 +181,7 @@ function Landing() {
           </div>
 
           {/* Card 2 — Gráfico semanal (wide) */}
-          <div className="panel col-span-1 p-6 sm:col-span-1 lg:col-span-2">
+          <div className="bento-card col-span-1 p-6 sm:col-span-1 lg:col-span-2">
             <div className="flex items-center justify-between">
               <div>
                 <span className="grid size-10 place-items-center rounded-xl border border-border/60 bg-secondary/50 text-primary">
@@ -214,7 +214,7 @@ function Landing() {
           </div>
 
           {/* Card 3 — Cenários de meta */}
-          <div className="panel p-6 lg:col-span-2">
+          <div className="bento-card p-6 lg:col-span-2">
             <span className="grid size-10 place-items-center rounded-xl border border-border/60 bg-secondary/50 text-primary">
               <Flame className="size-5" />
             </span>
@@ -242,7 +242,7 @@ function Landing() {
           </div>
 
           {/* Card 4 — Fórmula TMB */}
-          <div className="panel flex flex-col justify-between p-6">
+          <div className="bento-card flex flex-col justify-between p-6">
             <div>
               <span className="grid size-10 place-items-center rounded-xl border border-border/60 bg-secondary/50 text-primary">
                 <Calculator className="size-5" />
@@ -261,7 +261,7 @@ function Landing() {
 
       {/* ── CTA ────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 pb-20 md:px-10">
-        <div className="panel flex flex-col items-center gap-4 p-8 text-center md:p-12">
+        <div className="bento-card flex flex-col items-center gap-4 p-8 text-center md:p-12">
           <h2 className="text-2xl md:text-3xl">Pronto para começar?</h2>
           <p className="max-w-md text-sm text-muted-foreground">
             Crie sua conta em segundos, calcule sua meta e comece a registrar hoje.
