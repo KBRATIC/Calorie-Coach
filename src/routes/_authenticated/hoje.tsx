@@ -153,15 +153,24 @@ export function TodayPage() {
             <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
               <PopoverTrigger asChild>
                 <div 
-                  className="cursor-pointer group flex flex-col items-center select-none py-1"
+                  className="cursor-pointer group flex flex-col items-center select-none py-1 relative h-6 w-full overflow-hidden"
                   onDoubleClick={() => {
                     setDay(todayISO());
                     setCalendarOpen(false);
                   }}
                 >
-                  <h1 className="text-[15px] font-bold uppercase tracking-widest text-foreground transition-colors group-hover:text-primary active:scale-95 duration-200">
-                    {formatDayLabel(day)}
-                  </h1>
+                  <AnimatePresence mode="popLayout">
+                    <motion.h1 
+                      key={day}
+                      initial={{ y: 15, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -15, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      className="absolute text-[15px] font-bold uppercase tracking-widest text-foreground transition-colors group-hover:text-primary active:scale-95"
+                    >
+                      {formatDayLabel(day)}
+                    </motion.h1>
+                  </AnimatePresence>
                 </div>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 border-white/10 bg-surface/90 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl" align="center">
