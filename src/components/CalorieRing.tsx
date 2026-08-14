@@ -4,9 +4,9 @@ type Props = {
   size?: number;
 };
 
-export function CalorieRing({ consumed, goal, size = 200 }: Props) {
+export function CalorieRing({ consumed, goal, size = 260 }: Props) {
   const pct = goal > 0 ? Math.min(consumed / goal, 1.25) : 0;
-  const radius = size / 2 - 14;
+  const radius = size / 2 - 18;
   const circumference = 2 * Math.PI * radius;
   const dash = circumference * Math.min(pct, 1);
   const over = consumed > goal;
@@ -20,7 +20,7 @@ export function CalorieRing({ consumed, goal, size = 200 }: Props) {
           cy={size / 2}
           r={radius}
           fill="none"
-          strokeWidth={14}
+          strokeWidth={18}
           className="stroke-secondary"
         />
         <circle
@@ -28,7 +28,7 @@ export function CalorieRing({ consumed, goal, size = 200 }: Props) {
           cy={size / 2}
           r={radius}
           fill="none"
-          strokeWidth={14}
+          strokeWidth={18}
           strokeLinecap="round"
           strokeDasharray={`${dash} ${circumference}`}
           className={over ? "stroke-destructive" : "stroke-primary"}
@@ -36,12 +36,12 @@ export function CalorieRing({ consumed, goal, size = 200 }: Props) {
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="stat-number text-4xl">{Math.round(consumed)}</span>
-        <span className="text-xs uppercase tracking-widest text-muted-foreground">
+        <span className="stat-number text-6xl tracking-tighter drop-shadow-sm font-light text-foreground">{Math.round(consumed)}</span>
+        <span className="text-[11px] uppercase tracking-widest text-muted-foreground mt-1">
           de {Math.round(goal)} kcal
         </span>
         <span
-          className={`mt-1 text-sm font-semibold ${over ? "text-destructive" : "text-primary"}`}
+          className={`mt-2 text-sm font-bold tracking-wide uppercase ${over ? "text-destructive" : "text-primary"}`}
         >
           {over
             ? `${Math.round(Math.abs(remaining))} kcal acima`

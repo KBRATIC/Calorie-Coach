@@ -254,10 +254,6 @@ export function TodayPage() {
         <div className="col-span-2 sm:col-span-2 row-span-2 bento-card p-6 flex flex-col items-center justify-center transition-transform relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-[50px] -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2" />
           <CalorieRing consumed={consumed} goal={goal} />
-          <div className="mt-5 text-center flex flex-col">
-            <span className="stat-number text-5xl font-light tracking-tighter text-foreground drop-shadow-sm">{Math.max(0, Math.round(goal - consumed))}</span>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mt-1">kcal restantes</span>
-          </div>
         </div>
 
         {/* Macro Widgets - Bento small cards */}
