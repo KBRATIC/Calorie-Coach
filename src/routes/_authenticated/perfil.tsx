@@ -172,45 +172,49 @@ export function ProfilePage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-        <div className="panel space-y-5 p-6">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Sexo biológico</Label>
+        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
+          
+          <div className="grid gap-6 sm:grid-cols-2 relative z-10">
+            <div className="space-y-3">
+              <Label className="text-muted-foreground font-medium">Sexo biológico</Label>
               <Select value={sex} onValueChange={(v) => setSex(v as Sex)}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-2xl h-12">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="male">Masculino</SelectItem>
-                  <SelectItem value="female">Feminino</SelectItem>
+                <SelectContent className="rounded-2xl border-white/10 bg-surface/80 backdrop-blur-xl">
+                  <SelectItem value="male" className="rounded-xl">Masculino</SelectItem>
+                  <SelectItem value="female" className="rounded-xl">Feminino</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="age">Idade</Label>
-              <Input id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} />
+            <div className="space-y-3">
+              <Label htmlFor="age" className="text-muted-foreground font-medium">Idade</Label>
+              <Input id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} className="bg-white/[0.03] border-white/10 rounded-2xl h-12" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="height">Altura (cm)</Label>
+            <div className="space-y-3">
+              <Label htmlFor="height" className="text-muted-foreground font-medium">Altura (cm)</Label>
               <Input
                 id="height"
                 type="number"
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
+                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="weight">Peso (kg)</Label>
+            <div className="space-y-3">
+              <Label htmlFor="weight" className="text-muted-foreground font-medium">Peso (kg)</Label>
               <Input
                 id="weight"
                 type="number"
                 step="0.1"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
+                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
               />
             </div>
-            <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="bodyfat">Gordura corporal (%) — opcional</Label>
+            <div className="space-y-3 sm:col-span-2">
+              <Label htmlFor="bodyfat" className="text-muted-foreground font-medium">Gordura corporal (%) — opcional</Label>
               <Input
                 id="bodyfat"
                 type="number"
@@ -218,23 +222,24 @@ export function ProfilePage() {
                 placeholder="Ex.: 18"
                 value={bodyFat}
                 onChange={(e) => setBodyFat(e.target.value)}
+                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[13px] text-muted-foreground/70 font-light">
                 Se você souber seu % de gordura, usamos a fórmula Katch-McArdle, mais precisa.
               </p>
             </div>
           </div>
 
 
-          <div className="space-y-2">
-            <Label>Nível de atividade</Label>
+          <div className="space-y-3 relative z-10">
+            <Label className="text-muted-foreground font-medium">Nível de atividade</Label>
             <Select value={activity} onValueChange={setActivity}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-2xl h-12">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-2xl border-white/10 bg-surface/80 backdrop-blur-xl">
                 {ACTIVITY_LEVELS.map((a) => (
-                  <SelectItem key={a.value} value={String(a.value)}>
+                  <SelectItem key={a.value} value={String(a.value)} className="rounded-xl">
                     {a.label} — {a.hint}
                   </SelectItem>
                 ))}
@@ -242,15 +247,15 @@ export function ProfilePage() {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label>Objetivo</Label>
+          <div className="space-y-3 relative z-10">
+            <Label className="text-muted-foreground font-medium">Objetivo</Label>
             <Select value={goalType} onValueChange={setGoalType}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-2xl h-12">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-2xl border-white/10 bg-surface/80 backdrop-blur-xl">
                 {GOAL_PRESETS.map((g) => (
-                  <SelectItem key={g.id} value={g.id}>
+                  <SelectItem key={g.id} value={g.id} className="rounded-xl">
                     {g.label} — {g.hint}
                   </SelectItem>
                 ))}
@@ -259,19 +264,20 @@ export function ProfilePage() {
           </div>
 
           {goalType === "custom" && (
-            <div className="space-y-2">
-              <Label htmlFor="manual">Meta manual (kcal/dia)</Label>
+            <div className="space-y-3 relative z-10">
+              <Label htmlFor="manual" className="text-muted-foreground font-medium">Meta manual (kcal/dia)</Label>
               <Input
                 id="manual"
                 type="number"
                 value={manual}
                 onChange={(e) => setManual(e.target.value)}
+                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
               />
             </div>
           )}
 
           <Button
-            className="w-full"
+            className="w-full rounded-2xl h-12 mt-4 text-base font-medium shadow-xl shadow-primary/20 active:scale-[0.98] transition-all relative z-10"
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending || !user}
           >
@@ -279,52 +285,64 @@ export function ProfilePage() {
           </Button>
         </div>
 
-        <div className="panel space-y-4 p-6">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">TMB (basal)</p>
-            <p className="stat-number text-3xl">{bmr} kcal</p>
-            <p className="text-xs text-muted-foreground">{methodLabel}</p>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
-              Gasto diário (TMB × atividade)
-            </p>
-            <p className="stat-number text-3xl">{tdee} kcal</p>
-          </div>
-          <div className="rounded-xl bg-primary p-4 text-primary-foreground">
-            <p className="text-xs font-semibold uppercase tracking-widest">Meta diária</p>
-            <p className="stat-number text-4xl">{target} kcal</p>
-            <p className="text-xs opacity-90">
-              {weekly === 0
-                ? "Manutenção de peso"
-                : `${weekly > 0 ? "+" : ""}${weekly} kg por semana (estimativa)`}
-            </p>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="rounded-lg bg-secondary/50 p-3 text-center">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.6_0.15_250)]">Proteína</p>
-              <p className="stat-number text-lg">{macros.protein}g</p>
+        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-2xl space-y-6 p-6 sm:p-8 flex flex-col justify-between">
+          <div className="space-y-6">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1">TMB (basal)</p>
+              <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{bmr} kcal</p>
+              <p className="text-[13px] text-muted-foreground/70 font-light mt-1">{methodLabel}</p>
             </div>
-            <div className="rounded-lg bg-secondary/50 p-3 text-center">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.7_0.18_70)]">Carbo</p>
-              <p className="stat-number text-lg">{macros.carbs}g</p>
-            </div>
-            <div className="rounded-lg bg-secondary/50 p-3 text-center">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.6_0.2_15)]">Gordura</p>
-              <p className="stat-number text-lg">{macros.fat}g</p>
+            <div className="h-px w-full bg-white/5" />
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                Gasto diário (TMB × atividade)
+              </p>
+              <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{tdee} kcal</p>
             </div>
           </div>
-          {capped && (
-            <p className="rounded-lg border border-border/70 p-3 text-xs text-muted-foreground">
-              Ajustamos a meta para o limite seguro de {safeFloor(bmr, sex)} kcal (nunca abaixo da
-              sua TMB) ou do teto de superávit.
-            </p>
-          )}
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">IMC</p>
-            <p className="stat-number text-xl">
-              {bmi} <span className="text-sm font-normal text-muted-foreground">{bmiLabel(bmi)}</span>
-            </p>
+          
+          <div className="space-y-6">
+            <div className="rounded-3xl bg-gradient-to-br from-primary to-primary/80 p-6 sm:p-8 text-primary-foreground shadow-2xl shadow-primary/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay" />
+              <div className="relative z-10">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-white/80 mb-2">Meta diária</p>
+                <p className="stat-number text-5xl sm:text-6xl text-white font-medium tracking-tighter drop-shadow-md">{target} kcal</p>
+                <p className="text-[13px] text-white/90 font-light mt-3 bg-black/10 inline-block px-3 py-1 rounded-full">
+                  {weekly === 0
+                    ? "Manutenção de peso"
+                    : `${weekly > 0 ? "+" : ""}${weekly} kg por semana (estimativa)`}
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-4 text-center shadow-inner">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.7_0.15_250)] mb-1">Proteína</p>
+                <p className="stat-number text-2xl font-medium">{macros.protein}g</p>
+              </div>
+              <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-4 text-center shadow-inner">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.8_0.18_70)] mb-1">Carbo</p>
+                <p className="stat-number text-2xl font-medium">{macros.carbs}g</p>
+              </div>
+              <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-4 text-center shadow-inner">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.7_0.2_15)] mb-1">Gordura</p>
+                <p className="stat-number text-2xl font-medium">{macros.fat}g</p>
+              </div>
+            </div>
+            
+            {capped && (
+              <p className="rounded-2xl bg-warning/10 border border-warning/20 p-4 text-[13px] text-warning font-medium">
+                Ajustamos a meta para o limite seguro de {safeFloor(bmr, sex)} kcal (nunca abaixo da
+                sua TMB) ou do teto de superávit.
+              </p>
+            )}
+            
+            <div className="flex items-center justify-between rounded-2xl bg-white/[0.02] border border-white/5 p-5">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">IMC</p>
+              <p className="stat-number text-2xl flex items-baseline gap-2">
+                {bmi} <span className="text-[15px] font-medium text-foreground/80">{bmiLabel(bmi)}</span>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -332,12 +350,14 @@ export function ProfilePage() {
 
       {user && <CustomFoods userId={user.id} />}
 
-      <div className="panel space-y-4 p-6 border-destructive/20 bg-destructive/5 mt-8">
-        <div>
-          <h2 className="text-xl text-destructive flex items-center gap-2">
+      <div className="bg-destructive/[0.03] border border-destructive/20 backdrop-blur-3xl rounded-[32px] shadow-xl space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-destructive/10 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
+        
+        <div className="relative z-10">
+          <h2 className="text-xl text-destructive flex items-center gap-2 font-medium tracking-tight">
             <AlertTriangle className="size-5" /> Zona de Perigo
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-[15px] text-muted-foreground/80 mt-2 leading-relaxed">
             A exclusão da sua conta apagará permanentemente todos os seus registros de refeições, metas e informações pessoais.
             Esta ação não pode ser desfeita.
           </p>
@@ -345,19 +365,23 @@ export function ProfilePage() {
         
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive">Excluir minha conta</Button>
+            <Button variant="destructive" className="rounded-2xl h-12 px-8 text-base font-medium active:scale-[0.98] transition-transform relative z-10">
+              Excluir minha conta
+            </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
-              <AlertDialogDescription>
+          <AlertDialogContent className="bg-surface/95 backdrop-blur-3xl border-white/10 rounded-[32px] p-8 shadow-2xl">
+            <AlertDialogHeader className="space-y-3">
+              <AlertDialogTitle className="text-2xl font-medium tracking-tight">Você tem certeza absoluta?</AlertDialogTitle>
+              <AlertDialogDescription className="text-base text-muted-foreground/80 leading-relaxed">
                 Isso apagará permanentemente sua conta e removerá todos os seus dados e registros alimentares dos nossos servidores. Esta ação é irreversível.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogFooter className="gap-3 mt-6">
+              <AlertDialogCancel className="rounded-2xl h-12 px-8 text-base font-medium border-white/10 hover:bg-white/5 transition-colors m-0">
+                Cancelar
+              </AlertDialogCancel>
               <AlertDialogAction 
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="rounded-2xl h-12 px-8 text-base font-medium bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-xl shadow-destructive/20 active:scale-[0.98] transition-all m-0"
                 onClick={() => deleteAccountMutation.mutate()}
                 disabled={deleteAccountMutation.isPending}
               >
@@ -403,23 +427,23 @@ function CustomFoods({ userId }: { userId: string }) {
   });
 
   return (
-    <div className="panel space-y-4 p-6">
+    <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-xl space-y-6 p-6 sm:p-8">
       <div>
-        <h2 className="text-xl">Meus alimentos</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-2xl font-medium tracking-tight">Meus alimentos</h2>
+        <p className="text-[15px] text-muted-foreground/80 mt-1">
           Cadastre itens que não estão na base de mais de 1.100 alimentos.
         </p>
       </div>
-      <div className="grid gap-3 sm:grid-cols-[1fr_150px_170px_auto]">
-        <Input placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} />
-        <div className="flex rounded-lg border border-border/70 p-1">
+      <div className="grid gap-3 sm:grid-cols-[1fr_180px_170px_auto] bg-white/[0.01] p-2 rounded-[28px] border border-white/5">
+        <Input placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} className="bg-transparent border-white/10 rounded-2xl h-12" />
+        <div className="flex rounded-2xl border border-white/10 p-1 bg-black/10">
           {(["g", "ml"] as const).map((u) => (
             <button
               key={u}
               type="button"
               onClick={() => setUnit(u)}
-              className={`flex-1 rounded-md py-1.5 text-sm font-medium transition-colors ${
-                unit === u ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+              className={`flex-1 rounded-xl py-1.5 text-[13px] font-medium transition-all ${
+                unit === u ? "bg-white/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground/80"
               }`}
             >
               {u === "g" ? "Sólido (g)" : "Líquido (ml)"}
@@ -431,27 +455,30 @@ function CustomFoods({ userId }: { userId: string }) {
           type="number"
           value={kcal}
           onChange={(e) => setKcal(e.target.value)}
+          className="bg-transparent border-white/10 rounded-2xl h-12"
         />
         <Button
           onClick={() => create.mutate()}
           disabled={!name.trim() || !Number(kcal) || create.isPending}
+          className="rounded-2xl h-12 px-8 active:scale-[0.98] transition-transform"
         >
           Cadastrar
         </Button>
       </div>
       {(foods ?? []).length > 0 && (
-        <ul className="divide-y divide-border/60">
+        <ul className="divide-y divide-white/5 bg-white/[0.01] rounded-[24px] border border-white/5 p-2">
           {foods!.map((f) => (
-            <li key={f.id} className="flex items-center gap-3 py-2">
-              <span className="flex-1 truncate text-sm">{f.name}</span>
-              <span className="stat-number text-sm">
-                {Math.round(Number(f.kcal_per_100g))} kcal/100{f.unit === "ml" ? "ml" : "g"}
+            <li key={f.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/[0.02] transition-colors">
+              <span className="flex-1 truncate text-[15px] font-medium">{f.name}</span>
+              <span className="stat-number text-base">
+                {Math.round(Number(f.kcal_per_100g))} <span className="text-sm font-normal text-muted-foreground">kcal/100{f.unit === "ml" ? "ml" : "g"}</span>
               </span>
               <Button
                 variant="ghost"
                 size="icon"
                 aria-label={`Remover ${f.name}`}
                 onClick={() => remove.mutate(f.id)}
+                className="size-9 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
               >
                 <Trash2 className="size-4" />
               </Button>

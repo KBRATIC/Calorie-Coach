@@ -81,46 +81,43 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="fixed inset-0 overflow-hidden">
       <div className="aurora-layer" aria-hidden />
       
-      <header className="liquid-glass sticky top-0 z-40 w-full">
-        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-4 py-3 md:px-8">
-          <Link to="/hoje" className="flex min-w-0 items-center gap-2">
+      <header className="fixed top-0 z-40 w-full transition-all">
+        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-4 py-4 md:px-8">
+          <Link to="/hoje" className="flex items-center gap-3 active:scale-[0.98] transition-transform">
             <img 
               src="/icon.png" 
               alt="KcalTrack Logo" 
-              className="size-9 rounded-full shadow-[var(--shadow-glow)] object-cover"
+              className="size-8 rounded-full shadow-[var(--shadow-glow)] object-cover"
             />
-            <span className="text-display truncate text-lg">KcalTrack</span>
+            <span className="text-display font-medium tracking-tight text-xl">KcalTrack</span>
           </Link>
 
-          <nav className="ml-6 hidden items-center gap-1 rounded-full border border-border/60 bg-secondary/40 p-1 md:flex">
+          <nav className="hidden items-center gap-1 rounded-full border border-white/5 bg-white/[0.02] p-1.5 md:flex backdrop-blur-3xl">
             {NAV.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="relative rounded-full px-5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground active:scale-[0.98]"
                 activeProps={{
-                  className:
-                    "bg-primary text-primary-foreground shadow-[var(--shadow-glow)] hover:text-primary-foreground",
+                  className: "text-foreground",
                 }}
               >
-                {item.label}
+                {location.pathname === item.to || location.pathname.startsWith(item.to) ? (
+                  <motion.div
+                    layoutId="desktopTab"
+                    className="absolute inset-0 rounded-full bg-white/10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                ) : null}
+                <span className="relative z-10">{item.label}</span>
               </Link>
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden md:flex gap-2 rounded-full border-primary/50 text-primary hover:bg-primary/10"
-              onClick={() => setIsChatOpen(true)}
-            >
-              <Sparkles className="size-4" />
-              <span className="text-xs font-semibold">Assistente IA</span>
-            </Button>
+          <div className="flex items-center gap-3">
             <ThemeToggle />
-            <Button variant="ghost" size="icon" className="size-9 rounded-full" onClick={signOut}>
-              <LogOut className="size-4" />
+            <Button variant="ghost" size="icon" className="size-9 rounded-full active:scale-[0.98] transition-transform" onClick={signOut}>
+              <LogOut className="size-4 text-muted-foreground" />
               <span className="sr-only">Sair</span>
             </Button>
           </div>
@@ -162,50 +159,44 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </main>
 
-      <div className="absolute inset-x-0 bottom-6 z-40 mx-4 md:hidden">
-        {/* FAB Assistente IA Central */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
-          <button
-            onClick={() => setIsChatOpen(true)}
-            className="group relative flex h-[72px] w-[72px] items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] shadow-lg shadow-purple-500/30 transition-transform active:scale-95 hover:scale-105 border-4 border-background"
-          >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] blur opacity-60" />
-            <Sparkles className="size-7 text-white relative z-10" />
-          </button>
-        </div>
-
-        <nav className="liquid-glass rounded-full relative">
-        <div className="relative flex items-center p-1.5 overflow-hidden rounded-full">
+      <div className="absolute inset-x-0 bottom-6 z-40 mx-4 md:hidden flex justify-center">
+        <nav className="relative flex items-center p-1.5 overflow-hidden rounded-full border border-white/10 bg-surface/60 backdrop-blur-3xl shadow-2xl">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             return (
-              <Fragment key={item.to}>
-                {idx === 2 && (
-                  <div className="flex-1" />
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`relative z-10 flex h-14 w-[72px] flex-col items-center justify-center gap-1 rounded-full transition-colors active:scale-[0.95] ${
+                  isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground/80"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeMobileTab"
+                    className="absolute inset-0 rounded-full bg-white/10"
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  />
                 )}
-                <Link
-                  to={item.to}
-                  className={`relative z-10 flex h-14 flex-1 flex-col items-center justify-center gap-1 rounded-full transition-colors ${
-                    isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 rounded-full bg-primary shadow-[var(--shadow-glow)]"
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    />
-                  )}
-                  <item.icon className={`relative z-10 size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
-                  <span className={`relative z-10 text-[10px] font-semibold tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-                    {item.label}
-                  </span>
-                </Link>
-              </Fragment>
+                <item.icon className={`relative z-10 size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
+                <span className={`relative z-10 text-[10px] font-medium tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                  {item.label}
+                </span>
+              </Link>
             );
           })}
-        </div>
-      </nav>
+        </nav>
+      </div>
+
+      {/* Floating AI Orb */}
+      <div className="fixed bottom-28 right-6 z-50 md:bottom-8 md:right-8">
+        <button
+          onClick={() => setIsChatOpen(true)}
+          className="group relative flex size-14 items-center justify-center rounded-full bg-primary/10 backdrop-blur-md border border-primary/20 text-primary shadow-[0_0_30px_rgb(0,0,0,0.1)] shadow-primary/20 transition-transform active:scale-[0.95] hover:scale-105 overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-150 animate-pulse" />
+          <Sparkles className="size-6 relative z-10" />
+        </button>
       </div>
 
       <ChatDrawer open={isChatOpen} onOpenChange={setIsChatOpen} />

@@ -192,21 +192,21 @@ export function FoodsPage() {
             suffix: " kcal",
           },
         ].map((stat) => (
-          <div key={stat.label} className="panel p-5">
-            <stat.icon className="size-5 text-primary" />
-            <p className="stat-number mt-3 text-3xl">
+          <div key={stat.label} className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-xl flex flex-col transition-all hover:bg-white/[0.03]">
+            <stat.icon className="size-6 text-primary" />
+            <p className="stat-number mt-4 text-3xl font-bold tracking-tight text-foreground">
               {stat.value}
-              {stat.suffix}
+              <span className="text-xl text-muted-foreground font-medium ml-1">{stat.suffix}</span>
             </p>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mt-1">
               {stat.label}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="panel overflow-hidden">
-        <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-3 border-b border-border/70 p-4 sm:flex sm:flex-wrap sm:justify-between">
+      <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-2xl overflow-hidden">
+        <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-4 border-b border-white/5 p-5 sm:flex sm:flex-wrap sm:justify-between bg-white/[0.01]">
           <div className="relative min-w-0 sm:w-80">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -269,35 +269,35 @@ export function FoodsPage() {
               {visible.map((food) => {
                 const tone = densityTone(food.kcalPer100g);
                 return (
-                  <TableRow key={food.id} className="border-border/60">
-                    <TableCell className="max-w-[320px]">
+                  <TableRow key={food.id} className="border-white/5 hover:bg-white/[0.02] transition-colors">
+                    <TableCell className="max-w-[320px] py-4">
                       <div className="flex min-w-0 items-center gap-2">
-                        <span className="truncate font-medium">{food.name}</span>
+                        <span className="truncate font-medium text-[15px] text-foreground/90">{food.name}</span>
                         {food.custom && (
-                          <Badge variant="outline" className="shrink-0 border-primary/40 text-primary">
+                          <Badge variant="outline" className="shrink-0 border-primary/40 text-primary bg-primary/5">
                             meu
                           </Badge>
                         )}
                       </div>
-                      <span className="text-xs text-muted-foreground md:hidden">
+                      <span className="text-sm text-muted-foreground/80 md:hidden mt-0.5 block">
                         {food.category}
                       </span>
                       {(food.proteinPer100g !== undefined || food.carbsPer100g !== undefined || food.fatPer100g !== undefined) && (
-                        <div className="flex items-center gap-3 mt-1.5 text-[10px] font-medium text-muted-foreground">
+                        <div className="flex items-center gap-3 mt-2 text-[11px] font-medium text-muted-foreground">
                           {food.proteinPer100g !== undefined && (
-                            <span className="flex items-center gap-1">
+                            <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full">
                               <div className="size-1.5 rounded-full bg-[oklch(0.6_0.15_250)]" />
                               P: {food.proteinPer100g}g
                             </span>
                           )}
                           {food.carbsPer100g !== undefined && (
-                            <span className="flex items-center gap-1">
+                            <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full">
                               <div className="size-1.5 rounded-full bg-[oklch(0.7_0.18_70)]" />
                               C: {food.carbsPer100g}g
                             </span>
                           )}
                           {food.fatPer100g !== undefined && (
-                            <span className="flex items-center gap-1">
+                            <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full">
                               <div className="size-1.5 rounded-full bg-[oklch(0.6_0.2_15)]" />
                               G: {food.fatPer100g}g
                             </span>
@@ -305,22 +305,22 @@ export function FoodsPage() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="hidden text-sm text-muted-foreground md:table-cell">
+                    <TableCell className="hidden text-[15px] text-muted-foreground md:table-cell py-4">
                       {food.category}
                     </TableCell>
-                    <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
+                    <TableCell className="hidden text-[15px] text-muted-foreground sm:table-cell py-4">
                       {food.measure} · {Math.round(food.measureGrams)} {unitFor(food)}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <span className="stat-number">{Math.round(food.kcalPer100g)}</span>
-                        <Badge variant="outline" className={`shrink-0 ${tone.className}`}>
+                    <TableCell className="text-right py-4">
+                      <div className="flex items-center justify-end gap-3">
+                        <span className="stat-number text-[15px]">{Math.round(food.kcalPer100g)}</span>
+                        <Badge variant="outline" className={`shrink-0 border-transparent bg-white/5 ${tone.className}`}>
                           {tone.label}
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell className="hidden text-right lg:table-cell">
-                      <span className="stat-number text-muted-foreground">
+                    <TableCell className="hidden text-right lg:table-cell py-4">
+                      <span className="stat-number text-[15px] text-muted-foreground/60">
                         {Math.round(portionKcal(food))}
                       </span>
                     </TableCell>
@@ -339,29 +339,29 @@ export function FoodsPage() {
           </Table>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/70 p-4">
-          <p className="text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/5 p-5 bg-white/[0.01]">
+          <p className="text-[13px] font-medium text-muted-foreground">
             {rows.length ? current * PAGE_SIZE + 1 : 0}–
             {Math.min((current + 1) * PAGE_SIZE, rows.length)} de {rows.length} alimentos
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Button
               variant="secondary"
               size="sm"
-              className="gap-1"
+              className="gap-2 rounded-full border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-md transition-colors"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={current === 0}
             >
               <ChevronLeft className="size-4" />
               Anterior
             </Button>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-[13px] font-medium text-muted-foreground">
               {current + 1} / {pageCount}
             </span>
             <Button
               variant="secondary"
               size="sm"
-              className="gap-1"
+              className="gap-2 rounded-full border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-md transition-colors"
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
               disabled={current >= pageCount - 1}
             >

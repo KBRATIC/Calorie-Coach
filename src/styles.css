@@ -1,18 +1,24 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "@fontsource/geist-sans";
+@import "@fontsource/geist-mono";
 
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design system — "Escuro atlético".
- * Fundo carvão esverdeado, acento verde-limão, tipografia forte.
- * Todas as cores em oklch e sempre via tokens semânticos.
+ * Design system — "Premium Taste" Tinted Dark
  */
 
 @theme inline {
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* Custom Easings for Premium Animations */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -67,57 +73,58 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 
-  --background: oklch(0.17 0.014 158);
-  --foreground: oklch(0.95 0.015 140);
+  /* Tinted Dark - Midnight Slate */
+  --background: oklch(0.15 0.015 260);
+  --foreground: oklch(0.95 0.01 260);
 
-  --surface: oklch(0.22 0.018 158);
-  --surface-strong: oklch(0.26 0.02 158);
+  --surface: oklch(0.18 0.015 260);
+  --surface-strong: oklch(0.22 0.015 260);
 
-  --card: oklch(0.22 0.018 158);
-  --card-foreground: oklch(0.95 0.015 140);
-  --popover: oklch(0.22 0.018 158);
-  --popover-foreground: oklch(0.95 0.015 140);
+  --card: oklch(0.18 0.015 260);
+  --card-foreground: oklch(0.95 0.01 260);
+  --popover: oklch(0.18 0.015 260);
+  --popover-foreground: oklch(0.95 0.01 260);
 
-  --primary: oklch(0.88 0.21 124);
-  --primary-foreground: oklch(0.19 0.05 145);
+  --primary: oklch(0.98 0 0);
+  --primary-foreground: oklch(0.15 0.015 260);
 
-  --secondary: oklch(0.28 0.02 158);
-  --secondary-foreground: oklch(0.95 0.015 140);
+  --secondary: oklch(0.25 0.015 260);
+  --secondary-foreground: oklch(0.95 0.01 260);
 
-  --muted: oklch(0.26 0.018 158);
-  --muted-foreground: oklch(0.72 0.02 150);
+  --muted: oklch(0.20 0.015 260);
+  --muted-foreground: oklch(0.65 0.01 260);
 
-  --accent: oklch(0.31 0.045 150);
-  --accent-foreground: oklch(0.93 0.05 130);
+  --accent: oklch(0.25 0.015 260);
+  --accent-foreground: oklch(0.95 0.01 260);
 
-  --destructive: oklch(0.62 0.2 25);
-  --destructive-foreground: oklch(0.97 0.01 90);
+  --destructive: oklch(0.6 0.18 20);
+  --destructive-foreground: oklch(0.98 0.01 20);
 
-  --success: oklch(0.78 0.16 150);
-  --success-foreground: oklch(0.19 0.05 145);
-  --warning: oklch(0.82 0.16 78);
+  --success: oklch(0.65 0.15 150);
+  --success-foreground: oklch(0.98 0.01 150);
+  --warning: oklch(0.8 0.15 75);
   --warning-foreground: oklch(0.2 0.04 80);
 
-  --border: oklch(0.31 0.02 158);
-  --input: oklch(0.31 0.02 158);
-  --ring: oklch(0.88 0.21 124);
+  --border: oklch(0.25 0.015 260);
+  --input: oklch(0.22 0.015 260);
+  --ring: oklch(0.98 0 0);
 
-  --chart-1: oklch(0.88 0.21 124);
-  --chart-2: oklch(0.78 0.16 150);
-  --chart-3: oklch(0.82 0.16 78);
-  --chart-4: oklch(0.68 0.13 200);
-  --chart-5: oklch(0.62 0.2 25);
+  --chart-1: oklch(0.98 0 0);
+  --chart-2: oklch(0.65 0.15 150);
+  --chart-3: oklch(0.8 0.15 75);
+  --chart-4: oklch(0.6 0.12 220);
+  --chart-5: oklch(0.6 0.18 20);
 
-  --sidebar: oklch(0.2 0.016 158);
-  --sidebar-foreground: oklch(0.95 0.015 140);
-  --sidebar-primary: oklch(0.88 0.21 124);
-  --sidebar-primary-foreground: oklch(0.19 0.05 145);
-  --sidebar-accent: oklch(0.28 0.02 158);
-  --sidebar-accent-foreground: oklch(0.95 0.015 140);
-  --sidebar-border: oklch(0.31 0.02 158);
-  --sidebar-ring: oklch(0.88 0.21 124);
+  --sidebar: oklch(0.15 0.015 260);
+  --sidebar-foreground: oklch(0.95 0.01 260);
+  --sidebar-primary: oklch(0.98 0 0);
+  --sidebar-primary-foreground: oklch(0.15 0.015 260);
+  --sidebar-accent: oklch(0.22 0.015 260);
+  --sidebar-accent-foreground: oklch(0.95 0.01 260);
+  --sidebar-border: oklch(0.25 0.015 260);
+  --sidebar-ring: oklch(0.98 0 0);
 
   /* Camadas visuais (painéis, aurora, grid) — tematizáveis */
   --panel-from: oklch(0.26 0.02 158 / 0.92);
@@ -227,12 +234,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    background-image:
-      radial-gradient(60rem 32rem at 12% -10%, var(--body-glow-1), transparent 60%),
-      radial-gradient(45rem 28rem at 92% 6%, var(--body-glow-2), transparent 65%);
-    transition:
-      background-color 250ms ease,
-      color 250ms ease;
+    background-image: none; /* Removed the old body glow to be cleaner */
   }
 
   h1,
@@ -242,6 +244,22 @@
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
+}
+
+/* Page Entry Animation */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-in {
+  animation: slideUpFade 0.5s var(--ease-out-expo) forwards;
 }
 
 
@@ -312,13 +330,8 @@
 
 @utility panel {
   position: relative;
-  background-color: var(--glass-bg);
-  @apply backdrop-blur-[8px] transform-gpu;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  box-shadow: 
-    inset 0 1px 1px var(--glass-highlight),
-    0 4px 12px -2px var(--glass-shadow);
+  /* Instead of a hard box, use whitespace/blur strategy */
+  background-color: transparent;
 }
 
 

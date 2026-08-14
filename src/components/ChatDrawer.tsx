@@ -232,43 +232,44 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
         onInteractOutside={(e) => {
           if (isCameraOpen) e.preventDefault();
         }}
-        className="sm:max-w-md w-[calc(100vw-10px)] h-[calc(100dvh-10px)] liquid-glass p-0 gap-0 overflow-hidden border border-primary/20 shadow-xl shadow-black/40 rounded-2xl mx-auto flex flex-col"
+        className="sm:max-w-2xl w-full h-[100dvh] sm:h-[80vh] bg-surface/30 backdrop-blur-3xl p-0 gap-0 overflow-hidden border-x-0 sm:border border-white/5 sm:border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] sm:rounded-[32px] mx-auto flex flex-col"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-background/40 to-background/90 pointer-events-none -z-10" />
+        <div className="absolute inset-0 bg-background/40 pointer-events-none -z-10" />
         
-        <DialogHeader className="p-4 border-b border-border/10 shrink-0">
-          <DialogTitle className="flex items-center gap-2 text-lg">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary shadow-[var(--shadow-glow)]">
-              <Sparkles className="size-4" />
+        <DialogHeader className="p-5 sm:p-6 border-b border-white/5 shrink-0 bg-white/[0.02]">
+          <DialogTitle className="flex items-center gap-3 text-xl font-medium tracking-tight">
+            <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary shadow-[var(--shadow-glow)]">
+              <Sparkles className="size-5" />
             </div>
-            Assistente Nutricional
+            KcalTrack Assistant
           </DialogTitle>
           <DialogDescription className="hidden">Assistente de Nutrição</DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-hidden flex flex-col px-4 pt-4">
           <ScrollArea className="flex-1 pr-4 -mr-4" ref={scrollRef}>
-            <div className="flex flex-col gap-5 pb-4">
+            <div className="flex flex-col gap-6 pb-6">
               <AnimatePresence initial={false}>
                 {messages.map((msg, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 15, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
                     className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-[85%] rounded-3xl px-4 py-3 text-sm flex flex-col gap-2 ${
+                      className={`max-w-[85%] rounded-[24px] px-5 py-4 text-[15px] leading-relaxed flex flex-col gap-3 ${
                         msg.role === "user"
-                          ? "bg-primary text-primary-foreground rounded-br-sm shadow-[var(--shadow-glow)] shadow-primary/20"
-                          : "bg-secondary/40 backdrop-blur-md text-secondary-foreground rounded-bl-sm border border-border/30"
+                          ? "bg-primary text-primary-foreground rounded-br-sm shadow-[0_4px_20px_rgb(0,0,0,0.1)] shadow-primary/20"
+                          : "bg-white/5 text-foreground rounded-bl-sm border border-white/5"
                       }`}
                     >
                       {msg.imageBase64 && (
                         <img 
                           src={msg.imageBase64} 
                           alt="Enviada pelo usuário" 
-                          className="w-full max-w-[200px] rounded-xl object-cover shadow-sm border border-black/10" 
+                          className="w-full max-w-[240px] rounded-2xl object-cover shadow-sm border border-white/10" 
                         />
                       )}
                       
@@ -284,12 +285,16 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 ))}
                 {isLoading && (
                   <motion.div
-                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 15, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className="flex justify-start"
                   >
-                    <div className="max-w-[85%] rounded-3xl rounded-bl-sm bg-secondary/40 backdrop-blur-md px-5 py-4 text-secondary-foreground border border-border/30">
-                      <Loader2 className="size-5 animate-spin text-primary" />
+                    <div className="max-w-[85%] rounded-[24px] rounded-bl-sm bg-white/5 px-6 py-5 text-foreground border border-white/5">
+                      <div className="flex gap-1.5 items-center">
+                        <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }} className="size-2 rounded-full bg-primary" />
+                        <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.2 }} className="size-2 rounded-full bg-primary" />
+                        <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.4 }} className="size-2 rounded-full bg-primary" />
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -298,22 +303,22 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
           </ScrollArea>
         </div>
 
-        <div className="p-4 pt-2 flex flex-col gap-2 bg-background/20 backdrop-blur-xl border-t border-border/10 shrink-0">
+        <div className="p-3 sm:p-5 flex flex-col gap-3 bg-black/20 border-t border-white/5 shrink-0">
           <AnimatePresence>
             {imageBase64Preview && (
               <motion.div 
                 initial={{ opacity: 0, y: 10, height: 0 }}
                 animate={{ opacity: 1, y: 0, height: 'auto' }}
                 exit={{ opacity: 0, scale: 0.9, height: 0 }}
-                className="relative self-start"
+                className="relative self-start ml-2 mt-2"
               >
-                <div className="relative rounded-xl overflow-hidden border border-border/50 shadow-md">
-                  <img src={imageBase64Preview} alt="Preview" className="h-20 w-20 object-cover" />
+                <div className="relative rounded-[20px] overflow-hidden border border-white/10 shadow-lg">
+                  <img src={imageBase64Preview} alt="Preview" className="h-24 w-24 object-cover" />
                   <div className="absolute inset-0 bg-black/20" />
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/40 text-white hover:bg-black/60 hover:text-white"
+                    className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/40 text-white hover:bg-black/60 active:scale-[0.95] transition-transform"
                     onClick={removeImage}
                   >
                     <X className="size-3" />
@@ -329,10 +334,10 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 initial={{ opacity: 0, y: 10, height: 0 }}
                 animate={{ opacity: 1, y: 0, height: 'auto' }}
                 exit={{ opacity: 0, scale: 0.9, height: 0 }}
-                className="mb-3 px-4 py-3 bg-secondary/40 rounded-2xl border border-primary/20 flex flex-col gap-2 relative overflow-hidden"
+                className="mb-2 mx-2 px-5 py-4 bg-white/5 rounded-3xl border border-primary/20 flex flex-col gap-2 relative overflow-hidden backdrop-blur-md"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent bg-[length:200%_100%] animate-[gradient_2s_linear_infinite]" />
-                <div className="flex items-center gap-3 relative z-10">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent bg-[length:200%_100%] animate-[gradient_2s_linear_infinite]" />
+                <div className="flex items-center gap-4 relative z-10">
                   <div className="flex gap-1 h-4 items-center justify-center">
                     <motion.div animate={{ height: [4, 16, 4] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1 bg-primary rounded-full" />
                     <motion.div animate={{ height: [4, 24, 4] }} transition={{ repeat: Infinity, duration: 1.2 }} className="w-1 bg-primary rounded-full" />
@@ -342,7 +347,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   <span className="text-xs font-semibold uppercase tracking-wider text-primary">Ouvindo...</span>
                 </div>
                 {interimText && (
-                  <p className="text-sm text-foreground/90 italic relative z-10">
+                  <p className="text-base text-foreground/90 font-light relative z-10">
                     "{interimText}"
                   </p>
                 )}
@@ -350,7 +355,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             )}
           </AnimatePresence>
           
-          <form onSubmit={handleSend} className="relative flex items-center gap-2">
+          <form onSubmit={handleSend} className="relative flex items-center gap-2 bg-white/5 border border-white/10 rounded-[32px] p-1 shadow-inner focus-within:border-primary/50 transition-colors">
             <input 
               id="chat-image-upload"
               name="chat-image-upload"
@@ -368,40 +373,40 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-12 w-12 rounded-full bg-transparent hover:bg-secondary/40 shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                  className="h-12 w-12 rounded-full bg-transparent hover:bg-white/10 shrink-0 text-muted-foreground hover:text-foreground transition-colors active:scale-[0.95]"
                   disabled={isLoading}
                   aria-label="Anexar arquivo"
                 >
-                  <Paperclip className="size-5" />
+                  <Paperclip className="size-[22px]" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent 
                 side="top" 
                 align="start" 
-                className="w-56 p-2 rounded-2xl liquid-glass border-glass-border shadow-lg mb-2"
+                className="w-56 p-2 rounded-3xl bg-surface/80 backdrop-blur-xl border-white/10 shadow-2xl mb-4"
               >
                 <div className="flex flex-col gap-1">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-3 rounded-xl hover:bg-white/10"
+                    className="w-full justify-start gap-3 rounded-2xl hover:bg-white/10 h-12"
                     onClick={() => {
                       setIsPopoverOpen(false);
                       fileInputRef.current?.click();
                     }}
                   >
                     <ImagePlus className="size-5 text-indigo-400" />
-                    <span>Galeria</span>
+                    <span className="font-medium">Galeria</span>
                   </Button>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-3 rounded-xl hover:bg-white/10"
+                    className="w-full justify-start gap-3 rounded-2xl hover:bg-white/10 h-12"
                     onClick={() => {
                       setIsPopoverOpen(false);
                       setIsCameraOpen(true);
                     }}
                   >
                     <Camera className="size-5 text-fuchsia-400" />
-                    <span>Câmera do App</span>
+                    <span className="font-medium">Câmera</span>
                   </Button>
                 </div>
               </PopoverContent>
@@ -415,32 +420,32 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 value={input}
                 onChange={(e) => {
                   setInput(e.target.value);
-                  e.target.style.height = '48px';
-                  e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                  e.target.style.height = '50px';
+                  e.target.style.height = Math.min(e.target.scrollHeight, 160) + 'px';
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Pergunte ou envie uma foto..."
-                className="pr-20 min-h-[48px] rounded-[24px] py-3 resize-none bg-secondary/20 hover:bg-secondary/30 focus:bg-secondary/30 transition-colors border-transparent focus-visible:ring-1 focus-visible:ring-primary/30 shadow-none placeholder:text-muted-foreground/60 scrollbar-hide"
+                placeholder="Como posso te ajudar?"
+                className="pr-24 min-h-[50px] rounded-none py-3.5 resize-none bg-transparent hover:bg-transparent focus:bg-transparent transition-colors border-transparent focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/50 text-base sm:text-lg font-light scrollbar-hide"
                 disabled={isLoading}
                 rows={1}
                 style={{ overflowY: 'auto' }}
               />
-              <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
+              <div className="absolute right-2 top-1.5 flex items-center gap-1.5">
                 <Button
                   type="button"
                   size="icon"
                   variant="ghost"
-                  className={`h-9 w-9 rounded-full transition-transform active:scale-95 ${isListening ? "text-destructive animate-pulse bg-destructive/10" : "text-muted-foreground hover:bg-secondary/40 hover:text-foreground"}`}
+                  className={`h-10 w-10 rounded-full transition-transform active:scale-[0.95] ${isListening ? "text-destructive animate-pulse bg-destructive/10" : "text-muted-foreground hover:bg-white/10 hover:text-foreground"}`}
                   onClick={toggleListening}
                   disabled={isLoading}
                   aria-label="Ativar microfone"
                 >
-                  <Mic className="size-4" />
+                  <Mic className="size-5" />
                 </Button>
                 <Button
                   type="submit"
                   size="icon"
-                  className="h-9 w-9 rounded-full transition-transform active:scale-95 bg-primary/90 hover:bg-primary text-primary-foreground shadow-sm"
+                  className="h-10 w-10 rounded-full transition-transform active:scale-[0.95] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
                   disabled={(!input.trim() && !imageBase64Preview) || isLoading}
                   aria-label="Enviar mensagem"
                 >

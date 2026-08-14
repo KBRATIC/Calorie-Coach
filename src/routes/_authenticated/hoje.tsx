@@ -191,28 +191,30 @@ export function TodayPage() {
       </div>
 
       {!goalsQuery.isLoading && !goalsQuery.data && (
-        <div className="panel flex flex-wrap items-center justify-between gap-3 p-5">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-2xl flex flex-wrap items-center justify-between gap-4">
+          <p className="text-[15px] font-medium text-foreground/80 leading-relaxed">
             Você ainda não calculou sua TMB. Defina sua meta para acompanhar com precisão.
           </p>
-          <Button asChild size="sm">
+          <Button asChild size="sm" className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90">
             <Link to="/perfil">Calcular minha meta</Link>
           </Button>
         </div>
       )}
 
-      <div className="panel flex flex-col gap-6 p-6 sm:p-8">
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-2xl flex flex-col gap-8 p-6 sm:p-10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
+        
+        <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-center sm:justify-between z-10">
           <CalorieRing consumed={consumed} goal={goal} />
-          <div className="grid w-full max-w-xs gap-3">
+          <div className="grid w-full max-w-xs gap-4">
             {MEALS.map((meal) => {
               const total = entries
                 .filter((e) => e.meal === meal.id)
                 .reduce((s, e) => s + Number(e.kcal), 0);
               return (
-                <div key={meal.id} className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{meal.label}</span>
-                  <span className="stat-number">{Math.round(total)} kcal</span>
+                <div key={meal.id} className="flex items-center justify-between text-[15px]">
+                  <span className="text-muted-foreground font-medium">{meal.label}</span>
+                  <span className="stat-number text-foreground">{Math.round(total)} kcal</span>
                 </div>
               );
             })}
@@ -220,41 +222,41 @@ export function TodayPage() {
         </div>
 
         {/* Macro Progress Bars */}
-        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/40">
-          <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-white/5 z-10">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-[oklch(0.6_0.15_250)] tracking-wide uppercase">Proteína</span>
+              <span className="text-[oklch(0.7_0.15_250)] tracking-widest uppercase">Proteína</span>
               <span className="text-foreground">{Math.round(consumedProtein)} <span className="text-muted-foreground font-medium">/ {goalProtein}g</span></span>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-secondary/80 overflow-hidden">
+            <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden shadow-inner">
               <div 
-                className="h-full bg-[oklch(0.6_0.15_250)] transition-all shadow-[0_0_10px_oklch(0.6_0.15_250_/_0.5)]" 
+                className="h-full bg-gradient-to-r from-[oklch(0.6_0.15_250)] to-[oklch(0.7_0.15_250)] transition-all duration-1000 ease-out shadow-[0_0_12px_oklch(0.6_0.15_250_/_0.6)]" 
                 style={{ width: `${Math.min(100, (consumedProtein / goalProtein) * 100)}%` }} 
               />
             </div>
           </div>
           
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-[oklch(0.7_0.18_70)] tracking-wide uppercase">Carbo</span>
+              <span className="text-[oklch(0.8_0.18_70)] tracking-widest uppercase">Carbo</span>
               <span className="text-foreground">{Math.round(consumedCarbs)} <span className="text-muted-foreground font-medium">/ {goalCarbs}g</span></span>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-secondary/80 overflow-hidden">
+            <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden shadow-inner">
               <div 
-                className="h-full bg-[oklch(0.7_0.18_70)] transition-all shadow-[0_0_10px_oklch(0.7_0.18_70_/_0.5)]" 
+                className="h-full bg-gradient-to-r from-[oklch(0.7_0.18_70)] to-[oklch(0.8_0.18_70)] transition-all duration-1000 ease-out shadow-[0_0_12px_oklch(0.7_0.18_70_/_0.6)]" 
                 style={{ width: `${Math.min(100, (consumedCarbs / goalCarbs) * 100)}%` }} 
               />
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-[oklch(0.6_0.2_15)] tracking-wide uppercase">Gordura</span>
+              <span className="text-[oklch(0.7_0.2_15)] tracking-widest uppercase">Gordura</span>
               <span className="text-foreground">{Math.round(consumedFat)} <span className="text-muted-foreground font-medium">/ {goalFat}g</span></span>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-secondary/80 overflow-hidden">
+            <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden shadow-inner">
               <div 
-                className="h-full bg-[oklch(0.6_0.2_15)] transition-all shadow-[0_0_10px_oklch(0.6_0.2_15_/_0.5)]" 
+                className="h-full bg-gradient-to-r from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)] transition-all duration-1000 ease-out shadow-[0_0_12px_oklch(0.6_0.2_15_/_0.6)]" 
                 style={{ width: `${Math.min(100, (consumedFat / goalFat) * 100)}%` }} 
               />
             </div>
@@ -312,53 +314,53 @@ export function TodayPage() {
           <Loader2 className="size-6 animate-spin text-primary" />
         </div>
       ) : entries.length === 0 ? (
-        <div className="panel p-8 text-center text-sm text-muted-foreground">
+        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-12 text-center text-[15px] text-muted-foreground/80 shadow-inner">
           Nenhum alimento registrado neste dia.
         </div>
       ) : (
-        <Accordion type="multiple" className="space-y-4" defaultValue={MEALS.map(m => m.id)}>
+        <Accordion type="multiple" className="space-y-6" defaultValue={MEALS.map(m => m.id)}>
           {MEALS.filter((m) => entries.some((e) => e.meal === m.id)).map((meal) => {
             const mealEntries = entries.filter((e) => e.meal === meal.id);
             const totalKcal = Math.round(mealEntries.reduce((s, e) => s + Number(e.kcal), 0));
             
             return (
-            <AccordionItem key={meal.id} value={meal.id} className="panel overflow-hidden border-none px-0">
-              <div className="flex items-center justify-between gap-2 border-b border-border/40 px-5">
-                <AccordionTrigger className="hover:no-underline py-4 flex-1">
+            <AccordionItem key={meal.id} value={meal.id} className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] overflow-hidden shadow-xl shadow-black/10 transition-all hover:bg-white/[0.03]">
+              <div className="flex items-center justify-between gap-4 px-6 sm:px-8 border-b border-white/5 bg-white/[0.01]">
+                <AccordionTrigger className="hover:no-underline py-5 flex-1">
                   <div className="flex flex-1 items-center justify-between pr-4">
-                    <span className="text-sm font-bold uppercase tracking-wider text-primary">
+                    <span className="text-sm font-bold uppercase tracking-widest text-primary">
                       {meal.label}
                     </span>
-                    <span className="stat-number text-sm">{totalKcal} kcal</span>
+                    <span className="stat-number text-[15px] font-medium text-foreground">{totalKcal} kcal</span>
                   </div>
                 </AccordionTrigger>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="gap-1.5 text-xs text-muted-foreground hover:text-destructive shrink-0"
+                  size="icon"
+                  className="size-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
                   onClick={() => clearMealMutation.mutate(meal.id)}
                   disabled={clearMealMutation.isPending}
                 >
-                  <Eraser className="size-3.5" />
+                  <Eraser className="size-4" />
                 </Button>
               </div>
-              <AccordionContent className="pt-0 pb-0">
-                <ul className="divide-y divide-border/60">
+              <AccordionContent className="pt-2 pb-4">
+                <ul className="divide-y divide-white/5 px-2">
                   {mealEntries.map((entry) => (
-                    <li key={entry.id} className="flex items-center gap-3 px-5 py-3 hover:bg-muted/20 transition-colors">
+                    <li key={entry.id} className="flex items-center gap-4 px-4 sm:px-6 py-4 rounded-2xl transition-colors hover:bg-white/[0.04]">
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">{entry.name}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="truncate text-[15px] font-medium text-foreground/90">{entry.name}</p>
+                        <p className="text-sm text-muted-foreground/80 font-light mt-0.5">
                           {entry.grams ? `${Math.round(Number(entry.grams))} ${entry.unit === "ml" ? "ml" : "g"}` : "porção"}
                         </p>
                       </div>
-                      <span className="stat-number text-sm">{Math.round(Number(entry.kcal))}</span>
+                      <span className="stat-number text-base font-medium">{Math.round(Number(entry.kcal))}</span>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => removeMutation.mutate(entry.id)}
                         aria-label={`Remover ${entry.name}`}
-                        className="text-muted-foreground hover:text-destructive"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 size-8 rounded-full ml-2"
                       >
                         <Trash2 className="size-4" />
                       </Button>
@@ -415,17 +417,18 @@ function QuickActions({ userId, day }: { userId: string; day: string }) {
   const recents = recentQuery.data ?? [];
 
   return (
-    <div className="panel space-y-4 p-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary">
+    <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] space-y-5 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-64 h-64 bg-fuchsia-500/5 rounded-full blur-[80px] -z-10 pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+      
+      <div className="flex flex-wrap items-center gap-3 relative z-10">
+        <span className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary">
           <Zap className="size-4" /> Lançamento rápido
         </span>
         <div className="ml-auto flex flex-wrap gap-2">
-
           <Button
             variant="secondary"
             size="sm"
-            className="gap-2"
+            className="gap-2 rounded-full border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-md"
             onClick={() => repeat.mutate()}
             disabled={repeat.isPending}
           >
@@ -435,19 +438,19 @@ function QuickActions({ userId, day }: { userId: string; day: string }) {
       </div>
 
       {recents.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2.5 relative z-10">
           {recents.map((food) => (
             <button
               key={food.name}
               type="button"
               onClick={() => quickAdd.mutate(food)}
               disabled={quickAdd.isPending}
-              className="rounded-full border border-border/70 px-3 py-1.5 text-xs transition-colors hover:border-primary hover:text-primary"
+              className="rounded-full bg-white/[0.03] border border-white/5 px-4 py-2 text-[13px] font-medium transition-all hover:border-primary/50 hover:bg-primary/5 active:scale-[0.98] shadow-sm"
             >
-              {food.name}
-              <span className="ml-2 text-muted-foreground">
+              <span className="text-foreground/90">{food.name}</span>
+              <span className="ml-2 text-muted-foreground font-light">
                 {food.grams ? `${Math.round(Number(food.grams))} ${food.unit === "ml" ? "ml" : "g"} · ` : ""}
-                {Math.round(Number(food.kcal))} kcal
+                <span className="stat-number">{Math.round(Number(food.kcal))} kcal</span>
               </span>
             </button>
           ))}
