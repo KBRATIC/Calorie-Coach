@@ -138,7 +138,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <div className="absolute inset-x-0 bottom-6 md:bottom-10 z-40 mx-4 flex justify-center pointer-events-none">
-        <nav className="relative flex items-center p-2 md:p-3 gap-2 rounded-full bg-surface/80 backdrop-blur-2xl shadow-2xl pointer-events-auto border border-border">
+        <nav className="relative flex items-center p-2 md:p-3 gap-2 rounded-full bg-surface/90 backdrop-blur-md shadow-2xl pointer-events-auto border border-border">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             const navLink = (
@@ -169,7 +169,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   {navLink}
                   <button
                     onClick={() => setIsChatOpen(true)}
-                    className="group relative flex size-12 md:size-14 items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-2 shrink-0 shadow-xl"
+                    className="group relative flex size-[52px] md:size-[60px] items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-2 shrink-0 shadow-xl"
                     aria-label="Assistente Inteligente"
                   >
                     {/* Ambient Glow */}
@@ -185,8 +185,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <div className="absolute inset-[1px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500" />
 
                     {/* The Dark Core with Low Opacity */}
-                    <div className="absolute inset-[2px] md:inset-[3px] bg-black/80 backdrop-blur-sm rounded-full z-10 flex items-center justify-center transition-transform group-hover:scale-[0.98]">
-                      <Sparkles className="size-[18px] md:size-5 text-white/90 animate-pulse [animation-duration:3s]" />
+                    <div className="absolute inset-[2px] md:inset-[3px] bg-black/40 backdrop-blur-[2px] rounded-full z-10 flex items-center justify-center transition-transform group-hover:scale-[0.98]">
+                      <Sparkles className="size-5 md:size-6 text-white/90 animate-pulse [animation-duration:3s]" />
                     </div>
                   </button>
                 </Fragment>
