@@ -181,21 +181,21 @@ export function HistoryPage() {
               <AreaChart data={totals} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="oklch(var(--primary))" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="oklch(var(--primary))" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <XAxis 
                   dataKey="shortDate" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} 
+                  tick={{ fontSize: 12, fill: 'oklch(var(--muted-foreground))' }} 
                   dy={10}
                 />
                 <YAxis 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} 
+                  tick={{ fontSize: 12, fill: 'oklch(var(--muted-foreground))' }} 
                 />
                 <Tooltip 
                   content={({ active, payload, label }) => {
@@ -213,22 +213,22 @@ export function HistoryPage() {
                     }
                     return null;
                   }}
-                  cursor={{ stroke: 'hsl(var(--border))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                  cursor={{ stroke: 'oklch(var(--border))', strokeWidth: 1, strokeDasharray: '4 4' }}
                 />
                 <ReferenceLine 
                   y={goal} 
-                  stroke="hsl(var(--muted-foreground))" 
+                  stroke="oklch(var(--muted-foreground))" 
                   strokeDasharray="4 4" 
                   strokeOpacity={0.5}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="total" 
-                  stroke="hsl(var(--primary))" 
+                  stroke="oklch(var(--primary))" 
                   strokeWidth={3}
                   fillOpacity={1} 
                   fill="url(#colorTotal)" 
-                  activeDot={{ r: 6, fill: "hsl(var(--primary))", stroke: "hsl(var(--background))", strokeWidth: 3 }}
+                  activeDot={{ r: 6, fill: "oklch(var(--primary))", stroke: "oklch(var(--background))", strokeWidth: 3 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
