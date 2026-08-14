@@ -5,15 +5,7 @@ import { Loader2, PiggyBank, TrendingUp, TrendingDown, Sparkles } from "lucide-r
 import { fetchEntries, fetchGoals } from "@/lib/api";
 import { addDays, formatDayLabel, todayISO } from "@/lib/nutrition";
 import { Button } from "@/components/ui/button";
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  ReferenceLine,
-} from "recharts";
+import { motion } from "motion/react";
 
 export const Route = createFileRoute("/_authenticated/historico")({
   head: () => ({
@@ -51,6 +43,9 @@ export function HistoryPage() {
   });
 
   const goal = goalsQuery.data?.daily_calorie_goal ?? 2000;
+  const goalProtein = goalsQuery.data?.daily_protein_goal ?? 150;
+  const goalCarbs = goalsQuery.data?.daily_carbs_goal ?? 200;
+  const goalFat = goalsQuery.data?.daily_fat_goal ?? 65;
   const entries = entriesQuery.data ?? [];
 
   const days: string[] = [];
@@ -168,98 +163,62 @@ export function HistoryPage() {
         )}
       </div>
 
-      <div className="bento-card p-6 sm:p-8 space-y-6">
-        <h2 className="text-xl font-medium tracking-tight">Curva de Consumo</h2>
-        
+      <div className="space-y-4">
         {entriesQuery.isLoading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="size-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div 
-            className="h-72 w-full mt-4 overflow-x-auto no-scrollbar touch-pan-x"
-            onPointerDown={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
-          >
-            <div style={{ minWidth: period === "mes" ? "1000px" : "100%", height: "100%", paddingRight: "10px" }}>
-              <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={totals} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={2} barCategoryGap="20%">
-                <XAxis 
-                  dataKey="shortDate" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fontSize: 12, fill: 'oklch(var(--muted-foreground))' }} 
-                  dy={10}
-                />
-                <YAxis 
-                  yAxisId="left"
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fontSize: 12, fill: 'oklch(var(--muted-foreground))' }} 
-                />
-                <YAxis 
-                  yAxisId="right"
-                  orientation="right"
-                  axisLine={false} 
-                  tickLine={false} 
-                  hide={true}
-                />
-                <Tooltip 
-                  cursor={{ fill: 'oklch(var(--muted))', opacity: 0.1 }}
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const data = payload[0].payload;
-                      const overGoal = data.total > goal;
-                      return (
-                        <div className="bg-surface/90 border border-white/10 backdrop-blur-md p-4 rounded-2xl shadow-xl flex flex-col gap-2 min-w-[150px]">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{formatDayLabel(data.day)}</p>
-                          <div className="flex justify-between items-baseline gap-4">
-                            <span className="text-xs text-muted-foreground font-medium">Kcal</span>
-                            <span className={`stat-number text-xl font-medium tracking-tight ${overGoal ? 'text-destructive' : 'text-primary'}`}>
-                              {Math.round(data.total)}
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-baseline gap-4">
-                            <span className="text-xs text-muted-foreground font-medium">Proteína</span>
-                            <span className="stat-number text-sm font-medium tracking-tight text-[oklch(0.6_0.15_250)]">
-                              {Math.round(data.protein)}g
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-baseline gap-4">
-                            <span className="text-xs text-muted-foreground font-medium">Carbo</span>
-                            <span className="stat-number text-sm font-medium tracking-tight text-[oklch(0.7_0.18_70)]">
-                              {Math.round(data.carbs)}g
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-baseline gap-4">
-                            <span className="text-xs text-muted-foreground font-medium">Gordura</span>
-                            <span className="stat-number text-sm font-medium tracking-tight text-[oklch(0.6_0.2_15)]">
-                              {Math.round(data.fat)}g
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <ReferenceLine 
-                  yAxisId="left"
-                  y={goal} 
-                  stroke="oklch(var(--muted-foreground))" 
-                  strokeDasharray="4 4" 
-                  strokeOpacity={0.5}
-                />
-                <Bar yAxisId="left" dataKey="total" fill="oklch(var(--primary))" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="right" dataKey="protein" fill="oklch(0.6 0.15 250)" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="right" dataKey="carbs" fill="oklch(0.7 0.18 70)" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="right" dataKey="fat" fill="oklch(0.6 0.2 15)" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-            </div>
-          </div>
+          totals.slice().reverse().map((data) => {
+            const overGoal = data.total > goal;
+            return (
+              <motion.div 
+                key={data.day} 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bento-card p-5 sm:p-6 flex flex-col gap-4"
+              >
+                <div className="flex justify-between items-center border-b border-white/5 pb-3">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-foreground">
+                    {formatDayLabel(data.day)}
+                  </h3>
+                  <span className={`text-sm font-medium tracking-tight ${overGoal ? 'text-destructive' : 'text-primary'}`}>
+                    <span className="text-lg">{Math.round(data.total)}</span>
+                    <span className="text-[10px] text-muted-foreground ml-1">/ {goal} kcal</span>
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  <MiniProgressBar value={data.total} max={goal} color="bg-primary" label="Kcal" suffix="" />
+                  <MiniProgressBar value={data.protein} max={goalProtein} color="bg-[oklch(0.6_0.15_250)]" label="Proteína" suffix="g" />
+                  <MiniProgressBar value={data.carbs} max={goalCarbs} color="bg-[oklch(0.7_0.18_70)]" label="Carbo" suffix="g" />
+                  <MiniProgressBar value={data.fat} max={goalFat} color="bg-[oklch(0.6_0.2_15)]" label="Gordura" suffix="g" />
+                </div>
+              </motion.div>
+            );
+          })
         )}
       </div>
+    </div>
+  );
+}
+
+function MiniProgressBar({ value, max, color, label, suffix }: { value: number, max: number, color: string, label: string, suffix: string }) {
+  const pct = Math.min(100, (value / Math.max(1, max)) * 100);
+  return (
+    <div className="flex items-center gap-3 w-full">
+      <span className="w-16 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</span>
+      <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
+        <motion.div 
+           initial={{ width: 0 }}
+           animate={{ width: `${pct}%` }}
+           transition={{ type: "spring", stiffness: 60, damping: 15 }}
+           className={`h-full rounded-full ${color}`}
+        />
+      </div>
+      <span className="w-16 text-right text-[11px] font-medium text-foreground">
+        {Math.round(value)}<span className="text-[9px] text-muted-foreground ml-0.5">{suffix}</span>
+      </span>
     </div>
   );
 }
