@@ -194,9 +194,9 @@ export function TodayPage() {
                     <motion.h1 
                       key={day}
                       custom={direction}
-                      initial={(d: number) => ({ y: 15 * d, opacity: 0 })}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={(d: number) => ({ y: -15 * d, opacity: 0 })}
+                      initial={(d: number) => ({ x: 30 * d, opacity: 0 })}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={(d: number) => ({ x: -30 * d, opacity: 0 })}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       className="absolute text-[15px] font-bold uppercase tracking-widest text-foreground transition-colors group-hover:text-primary active:scale-95"
                     >
