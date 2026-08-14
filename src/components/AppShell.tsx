@@ -184,9 +184,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     {/* Sharp Solid Ring Edge */}
                     <div className="absolute inset-[1px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500" />
 
-                    {/* The White Core with Icon */}
-                    <div className="absolute inset-[4px] md:inset-[5px] bg-white rounded-full z-10 shadow-[inset_0_-2px_10px_rgba(0,0,0,0.15)] flex items-center justify-center transition-transform group-hover:scale-[0.98]">
-                      <Sparkles className="size-[18px] md:size-5 text-fuchsia-600 animate-pulse [animation-duration:3s]" />
+                    {/* The Dark Core with Low Opacity */}
+                    <div className="absolute inset-[2px] md:inset-[3px] bg-black/80 backdrop-blur-sm rounded-full z-10 flex items-center justify-center transition-transform group-hover:scale-[0.98]">
+                      <Sparkles className="size-[18px] md:size-5 text-white/90 animate-pulse [animation-duration:3s]" />
                     </div>
                   </button>
                 </Fragment>

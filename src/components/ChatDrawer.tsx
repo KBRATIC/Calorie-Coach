@@ -252,8 +252,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
               <Drawer.Title className="flex items-center gap-3 text-xl font-medium tracking-tight w-full px-2">
                 <div className="relative flex size-10 items-center justify-center rounded-full shrink-0 shadow-md">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-fuchsia-500 to-purple-500 animate-spin [animation-duration:3s]" />
-                  <div className="absolute inset-[2px] bg-white rounded-full z-10 flex items-center justify-center">
-                    <Sparkles className="size-[18px] text-fuchsia-600" />
+                  <div className="absolute inset-[2px] bg-black/80 backdrop-blur-sm rounded-full z-10 flex items-center justify-center">
+                    <Sparkles className="size-[18px] text-white/90" />
                   </div>
                 </div>
                 KcalTrack Assistant
