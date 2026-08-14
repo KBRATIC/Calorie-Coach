@@ -138,7 +138,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <div className="absolute inset-x-0 bottom-6 md:bottom-10 z-40 mx-4 flex justify-center pointer-events-none">
-        <nav className="relative flex items-center p-2 md:p-3 gap-2 overflow-hidden rounded-full bg-surface/80 backdrop-blur-2xl shadow-2xl pointer-events-auto border border-border">
+        <nav className="relative flex items-center p-2 md:p-3 gap-2 rounded-full bg-surface/80 backdrop-blur-2xl shadow-2xl pointer-events-auto border border-border">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             const navLink = (
@@ -169,12 +169,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   {navLink}
                   <button
                     onClick={() => setIsChatOpen(true)}
-                    className="group relative flex size-12 md:size-14 items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-2 shrink-0 shadow-xl"
+                    className="group relative flex size-16 md:size-20 items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-3 shrink-0 shadow-2xl -translate-y-3"
                     aria-label="Assistente Inteligente"
                   >
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-fuchsia-500 to-purple-500 blur-md animate-spin [animation-duration:3s]" />
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-fuchsia-500 to-purple-500 animate-spin [animation-duration:3s]" />
-                    <div className="absolute inset-[4px] md:inset-[5px] bg-white rounded-full z-10 shadow-inner" />
+                    {/* Ambient Glow */}
+                    <div className="absolute inset-[-10px] rounded-full bg-gradient-to-tr from-blue-600 via-purple-500 to-fuchsia-500 blur-xl animate-spin [animation-duration:6s] opacity-70" />
+                    
+                    {/* Layer 1: Chaotic Reverse Spin */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 blur-md animate-spin [animation-duration:4s] [animation-direction:reverse]" />
+                    
+                    {/* Layer 2: Pulse and Distort */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-bl from-cyan-400 via-purple-500 to-rose-500 blur-sm animate-pulse [animation-duration:3s]" />
+                    
+                    {/* Sharp Solid Ring Edge */}
+                    <div className="absolute inset-[1px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500" />
+
+                    {/* The White Core */}
+                    <div className="absolute inset-[6px] md:inset-[8px] bg-white rounded-full z-10 shadow-[inset_0_-2px_10px_rgba(0,0,0,0.15)] transition-transform group-hover:scale-[0.98]" />
                   </button>
                 </Fragment>
               );
