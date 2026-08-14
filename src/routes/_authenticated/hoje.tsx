@@ -170,7 +170,7 @@ export function TodayPage() {
         <MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" />
         
         {/* Quick Add floating trigger */}
-        <div className="col-span-1 bento-card p-4 flex items-center justify-center">
+        <div className="col-span-1 bento-card p-4 flex items-center justify-center h-32 sm:h-36">
           {user && <QuickAddDrawer userId={user.id} day={day} />}
         </div>
       </div>
@@ -220,13 +220,16 @@ export function TodayPage() {
 // ----------------------------------------
 
 function MacroBento({ title, consumed, goal, color }: { title: string, consumed: number, goal: number, color: string }) {
-  const progress = Math.min(100, (consumed / goal) * 100);
+  const progress = Math.min(100, (consumed / Math.max(1, goal)) * 100);
   return (
-    <div className="col-span-1 bento-card p-5 flex flex-col justify-between h-36">
+    <div className="col-span-1 bento-card p-4 sm:p-5 flex flex-col justify-between h-32 sm:h-36">
       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
       <div>
-        <p className="stat-number text-2xl font-medium tracking-tight text-foreground">{Math.round(consumed)}<span className="text-xs text-muted-foreground/60 ml-0.5">g</span></p>
-        <div className="h-1.5 w-full rounded-full bg-white/5 mt-3 overflow-hidden">
+        <div className="flex items-baseline gap-1">
+          <p className="stat-number text-2xl font-medium tracking-tight text-foreground">{Math.round(consumed)}<span className="text-[11px] text-muted-foreground/60 ml-0.5">g</span></p>
+          <span className="text-[11px] font-medium text-muted-foreground/50">/ {Math.round(goal)}g</span>
+        </div>
+        <div className="h-1.5 w-full rounded-full bg-secondary mt-3 overflow-hidden">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
