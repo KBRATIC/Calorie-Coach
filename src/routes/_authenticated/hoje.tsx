@@ -67,10 +67,44 @@ export function TodayPage() {
   const { user } = useSession();
   const queryClient = useQueryClient();
   const [day, setDayState] = useState(activeDayState.date);
+  const [direction, setDirection] = useState(1);
   
   const setDay = (d: string) => {
+    setDirection(d > day ? 1 : -1);
     setDayState(d);
     activeDayState.date = d;
+  };
+  
+  const animateToToday = () => {
+    setCalendarOpen(false);
+    const target = todayISO();
+    if (day === target) return;
+
+    const isForward = day < target;
+    let current = day;
+    
+    // Jump closer if too far to avoid endless animation loop
+    const targetDate = new Date(target + 'T12:00:00Z');
+    const currentDate = new Date(day + 'T12:00:00Z');
+    const diffDays = Math.abs((targetDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
+    
+    if (diffDays > 7) {
+      current = addDays(target, isForward ? -7 : 7);
+      setDirection(isForward ? 1 : -1);
+      setDayState(current);
+      activeDayState.date = current;
+    }
+
+    const loop = setInterval(() => {
+      current = addDays(current, isForward ? 1 : -1);
+      setDirection(isForward ? 1 : -1);
+      setDayState(current);
+      activeDayState.date = current;
+      
+      if (current === target) {
+        clearInterval(loop);
+      }
+    }, 120);
   };
   const [calendarOpen, setCalendarOpen] = useState(false);
 
@@ -154,18 +188,16 @@ export function TodayPage() {
               <PopoverTrigger asChild>
                 <div 
                   className="cursor-pointer group flex flex-col items-center select-none py-1 relative h-6 w-full overflow-hidden"
-                  onDoubleClick={() => {
-                    setDay(todayISO());
-                    setCalendarOpen(false);
-                  }}
+                  onDoubleClick={animateToToday}
                 >
-                  <AnimatePresence mode="popLayout">
+                  <AnimatePresence mode="popLayout" custom={direction}>
                     <motion.h1 
                       key={day}
-                      initial={{ y: 15, opacity: 0 }}
+                      custom={direction}
+                      initial={(d: number) => ({ y: 15 * d, opacity: 0 })}
                       animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -15, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      exit={(d: number) => ({ y: -15 * d, opacity: 0 })}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       className="absolute text-[15px] font-bold uppercase tracking-widest text-foreground transition-colors group-hover:text-primary active:scale-95"
                     >
                       {formatDayLabel(day)}
