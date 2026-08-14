@@ -130,7 +130,7 @@ export function TodayPage() {
           </Button>
           <div className="text-center w-40">
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              {day === todayISO() ? "Hoje" : "Diário"}
+              Diário
             </h1>
             <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground/80">{formatDayLabel(day)}</p>
           </div>
