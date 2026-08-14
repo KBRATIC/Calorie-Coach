@@ -169,11 +169,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   {navLink}
                   <button
                     onClick={() => setIsChatOpen(true)}
-                    className="group relative flex size-16 md:size-20 items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-3 shrink-0 shadow-2xl -translate-y-3"
+                    className="group relative flex size-12 md:size-14 items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-2 shrink-0 shadow-xl"
                     aria-label="Assistente Inteligente"
                   >
                     {/* Ambient Glow */}
-                    <div className="absolute inset-[-10px] rounded-full bg-gradient-to-tr from-blue-600 via-purple-500 to-fuchsia-500 blur-xl animate-spin [animation-duration:6s] opacity-70" />
+                    <div className="absolute inset-[-6px] rounded-full bg-gradient-to-tr from-blue-600 via-purple-500 to-fuchsia-500 blur-lg animate-spin [animation-duration:6s] opacity-80" />
                     
                     {/* Layer 1: Chaotic Reverse Spin */}
                     <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 blur-md animate-spin [animation-duration:4s] [animation-direction:reverse]" />
@@ -184,8 +184,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     {/* Sharp Solid Ring Edge */}
                     <div className="absolute inset-[1px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500" />
 
-                    {/* The White Core */}
-                    <div className="absolute inset-[6px] md:inset-[8px] bg-white rounded-full z-10 shadow-[inset_0_-2px_10px_rgba(0,0,0,0.15)] transition-transform group-hover:scale-[0.98]" />
+                    {/* The White Core with Icon */}
+                    <div className="absolute inset-[4px] md:inset-[5px] bg-white rounded-full z-10 shadow-[inset_0_-2px_10px_rgba(0,0,0,0.15)] flex items-center justify-center transition-transform group-hover:scale-[0.98]">
+                      <Sparkles className="size-[18px] md:size-5 text-fuchsia-600 animate-pulse [animation-duration:3s]" />
+                    </div>
                   </button>
                 </Fragment>
               );
