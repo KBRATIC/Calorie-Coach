@@ -142,7 +142,7 @@ REGRAS CRÍTICAS DE COMPORTAMENTO:
 8. O usuário frequentemente usa o microfone para interagir. Se o texto contiver gaguejos, pausas, palavras repetidas ou correções ("eu comi um, não pera, dois pães"), ignore a confusão e extraia a intenção final de forma inteligente, sem mencionar a transcrição.`;
 
 export async function chatAssistant(
-  messages: { role: "user" | "model"; text: string; imageBase64?: string }[],
+  messages: { role: "user" | "model"; text: string; images?: string[] }[],
   contextStr: string = ""
 ): Promise<string> {
   const googleKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_AI_STUDIO_API_KEY"];
@@ -165,26 +165,27 @@ export async function chatAssistant(
     if (textToSend) {
       parts.push({ text: textToSend });
     }
-    if (m.imageBase64) {
-      // Basic detection of mime type based on the base64 prefix
-      // If the client strips the prefix, default to jpeg. Let's assume the client sends only the base64 data, or we strip it here.
-      let mimeType = "image/jpeg";
-      let base64Data = m.imageBase64;
-      
-      if (base64Data.startsWith("data:")) {
-        const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-        if (matches && matches.length === 3) {
-          mimeType = matches[1];
-          base64Data = matches[2];
+    
+    if (m.images && m.images.length > 0) {
+      for (const imgBase64 of m.images) {
+        let mimeType = "image/jpeg";
+        let base64Data = imgBase64;
+        
+        if (base64Data.startsWith("data:")) {
+          const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+          if (matches && matches.length === 3) {
+            mimeType = matches[1];
+            base64Data = matches[2];
+          }
         }
-      }
 
-      parts.push({
-        inlineData: {
-          mimeType: mimeType,
-          data: base64Data,
-        },
-      });
+        parts.push({
+          inlineData: {
+            mimeType: mimeType,
+            data: base64Data,
+          },
+        });
+      }
     }
 
     return {

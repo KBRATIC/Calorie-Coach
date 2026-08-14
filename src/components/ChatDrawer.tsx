@@ -16,7 +16,7 @@ import { Drawer } from "vaul";
 interface Message {
   role: "user" | "model";
   text: string;
-  imageBase64?: string;
+  images?: string[];
 }
 
 export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -27,8 +27,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     },
   ]);
   const [input, setInput] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageBase64Preview, setImageBase64Preview] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const ask = useServerFn(askAssistant);
@@ -100,7 +100,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, isLoading, imageBase64Preview]);
+  }, [messages, isLoading, imagePreviews]);
 
   const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -144,14 +144,24 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   };
 
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      try {
-        const compressedBase64 = await compressImage(file);
-        setImageBase64Preview(compressedBase64);
-      } catch (error) {
-        console.error("Erro ao comprimir imagem:", error);
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      const availableSlots = 10 - imageFiles.length;
+      const filesToProcess = files.slice(0, availableSlots);
+      
+      if (files.length > availableSlots) {
+        toast.error(`Limite de 10 imagens por mensagem. Apenas ${availableSlots} foram adicionadas.`);
+      }
+
+      setImageFiles(prev => [...prev, ...filesToProcess]);
+      
+      for (const file of filesToProcess) {
+        try {
+          const compressedBase64 = await compressImage(file);
+          setImagePreviews(prev => [...prev, compressedBase64]);
+        } catch (error) {
+          console.error("Erro ao comprimir imagem:", error);
+        }
       }
     }
     // reset input so the same file can be selected again if needed
@@ -160,25 +170,25 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     }
   };
 
-  const removeImage = () => {
-    setImageFile(null);
-    setImageBase64Preview(null);
+  const removeImage = (index: number) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if ((!input.trim() && !imageBase64Preview) || isLoading) return;
+    if ((!input.trim() && imagePreviews.length === 0) || isLoading) return;
 
     const userMessage = input.trim();
-    const imageToSend = imageBase64Preview;
+    const imagesToSend = [...imagePreviews];
     
     setInput("");
-    setImageFile(null);
-    setImageBase64Preview(null);
+    setImageFiles([]);
+    setImagePreviews([]);
 
     const newMessages: Message[] = [
       ...messages,
-      { role: "user", text: userMessage, imageBase64: imageToSend || undefined },
+      { role: "user", text: userMessage, images: imagesToSend.length > 0 ? imagesToSend : undefined },
     ];
     setMessages(newMessages);
     setIsLoading(true);
@@ -265,12 +275,12 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                             : "bg-surface-strong text-foreground rounded-bl-sm border border-border"
                         }`}
                       >
-                        {msg.imageBase64 && (
-                          <img 
-                            src={msg.imageBase64} 
-                            alt="Enviada pelo usuário" 
-                            className="w-full max-w-[240px] rounded-2xl object-cover shadow-sm border border-border" 
-                          />
+                        {msg.images && msg.images.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {msg.images.map((img, i) => (
+                              <img key={i} src={img} alt="Enviada pelo usuário" className="w-full max-w-[200px] rounded-lg border border-white/10" />
+                            ))}
+                          </div>
                         )}
                         
                         {msg.role === "model" ? (
@@ -304,25 +314,25 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
 
             <div className="p-3 sm:p-5 flex flex-col gap-3 bg-surface border-t border-border shrink-0">
               <AnimatePresence>
-                {imageBase64Preview && (
+                {imagePreviews.length > 0 && (
                   <motion.div 
-                    initial={{ opacity: 0, y: 10, height: 0 }}
-                    animate={{ opacity: 1, y: 0, height: 'auto' }}
-                    exit={{ opacity: 0, scale: 0.9, height: 0 }}
-                    className="relative self-start ml-2 mt-2"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="flex gap-2 p-3 border-b border-border/50 bg-background/50 overflow-x-auto"
                   >
-                    <div className="relative rounded-[20px] overflow-hidden border border-border shadow-lg">
-                      <img src={imageBase64Preview} alt="Preview" className="h-24 w-24 object-cover" />
-                      <div className="absolute inset-0 bg-black/20" />
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/40 text-white hover:bg-black/60 active:scale-[0.95] transition-transform"
-                        onClick={removeImage}
-                      >
-                        <X className="size-3" />
-                      </Button>
-                    </div>
+                    {imagePreviews.map((preview, i) => (
+                      <div key={i} className="relative shrink-0">
+                        <img src={preview} alt="Preview" className="h-16 w-16 object-cover rounded-lg border border-border" />
+                        <button 
+                          type="button"
+                          onClick={() => removeImage(i)}
+                          className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-0.5 shadow-md hover:scale-110 transition-transform"
+                        >
+                          <X className="size-3" />
+                        </button>
+                      </div>
+                    ))}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -355,13 +365,13 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
               </AnimatePresence>
               
               <form onSubmit={handleSend} className="relative flex items-center gap-2 bg-surface-strong border border-border rounded-[32px] p-1 shadow-inner focus-within:border-primary/50 transition-colors">
-                <input 
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
                   id="chat-image-upload"
                   name="chat-image-upload"
-                  aria-label="Upload de imagem"
-                  type="file" 
-                  accept="image/*"
-                  className="hidden" 
                   ref={fileInputRef}
                   onChange={handleImageSelect}
                 />
@@ -372,7 +382,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="h-12 w-12 rounded-full bg-transparent hover:bg-surface-strong shrink-0 text-muted-foreground hover:text-foreground transition-colors active:scale-[0.95]"
+                      className={`h-12 w-12 rounded-full bg-transparent hover:bg-surface-strong shrink-0 transition-colors active:scale-[0.95] ${imageFiles.length > 0 ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                       disabled={isLoading}
                       aria-label="Anexar arquivo"
                     >

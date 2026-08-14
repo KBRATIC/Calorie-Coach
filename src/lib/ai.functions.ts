@@ -18,8 +18,8 @@ export const parseMeal = createServerFn({ method: "POST" })
 const ChatInput = z.object({
   messages: z.array(z.object({
     role: z.enum(["user", "model"]),
-    text: z.string().min(1),
-    imageBase64: z.string().optional()
+    text: z.string(),
+    images: z.array(z.string()).optional()
   })).max(20),
   date: z.string().optional()
 });
