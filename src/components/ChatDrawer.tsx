@@ -434,7 +434,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     }}
                     onKeyDown={handleKeyDown}
                     placeholder="Como posso te ajudar?"
-                    className="pr-24 min-h-[50px] rounded-none py-3.5 resize-none bg-transparent hover:bg-transparent focus:bg-transparent transition-colors border-transparent focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/50 text-base sm:text-lg font-light scrollbar-hide"
+                    className="pr-24 min-h-[50px] rounded-none py-3.5 resize-none bg-transparent hover:bg-transparent focus:bg-transparent transition-colors border-transparent focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/50 text-base sm:text-lg font-light [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                     disabled={isLoading}
                     rows={1}
                     style={{ overflowY: 'auto' }}
