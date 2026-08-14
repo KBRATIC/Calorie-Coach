@@ -128,11 +128,10 @@ export function TodayPage() {
           <Button variant="ghost" size="icon" className="size-8 rounded-full text-muted-foreground" onClick={() => setDay(addDays(day, -1))}>
             <ChevronRight className="size-5 rotate-180" />
           </Button>
-          <div className="text-center w-40">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Diário
+          <div className="text-center min-w-[160px]">
+            <h1 className="text-[15px] font-bold uppercase tracking-widest text-foreground">
+              {formatDayLabel(day)}
             </h1>
-            <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground/80">{formatDayLabel(day)}</p>
           </div>
           <Button variant="ghost" size="icon" className="size-8 rounded-full text-muted-foreground" onClick={() => setDay(addDays(day, 1))} disabled={day >= todayISO()}>
             <ChevronRight className="size-5" />
