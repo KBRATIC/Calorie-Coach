@@ -220,40 +220,40 @@ export function TodayPage() {
 
         {/* Macro Progress Bars */}
         <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/40">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-medium text-[oklch(0.6_0.15_250)]">Proteína</span>
-              <span className="text-muted-foreground">{Math.round(consumedProtein)}/{goalProtein}g</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-[oklch(0.6_0.15_250)] tracking-wide uppercase">Proteína</span>
+              <span className="text-foreground">{Math.round(consumedProtein)} <span className="text-muted-foreground font-medium">/ {goalProtein}g</span></span>
             </div>
-            <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
+            <div className="h-2.5 w-full rounded-full bg-secondary/80 overflow-hidden">
               <div 
-                className="h-full bg-[oklch(0.6_0.15_250)] transition-all" 
+                className="h-full bg-[oklch(0.6_0.15_250)] transition-all shadow-[0_0_10px_oklch(0.6_0.15_250_/_0.5)]" 
                 style={{ width: `${Math.min(100, (consumedProtein / goalProtein) * 100)}%` }} 
               />
             </div>
           </div>
           
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-medium text-[oklch(0.7_0.18_70)]">Carbo</span>
-              <span className="text-muted-foreground">{Math.round(consumedCarbs)}/{goalCarbs}g</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-[oklch(0.7_0.18_70)] tracking-wide uppercase">Carbo</span>
+              <span className="text-foreground">{Math.round(consumedCarbs)} <span className="text-muted-foreground font-medium">/ {goalCarbs}g</span></span>
             </div>
-            <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
+            <div className="h-2.5 w-full rounded-full bg-secondary/80 overflow-hidden">
               <div 
-                className="h-full bg-[oklch(0.7_0.18_70)] transition-all" 
+                className="h-full bg-[oklch(0.7_0.18_70)] transition-all shadow-[0_0_10px_oklch(0.7_0.18_70_/_0.5)]" 
                 style={{ width: `${Math.min(100, (consumedCarbs / goalCarbs) * 100)}%` }} 
               />
             </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-medium text-[oklch(0.6_0.2_15)]">Gordura</span>
-              <span className="text-muted-foreground">{Math.round(consumedFat)}/{goalFat}g</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-[oklch(0.6_0.2_15)] tracking-wide uppercase">Gordura</span>
+              <span className="text-foreground">{Math.round(consumedFat)} <span className="text-muted-foreground font-medium">/ {goalFat}g</span></span>
             </div>
-            <div className="h-1.5 w-full rounded-full bg-secondary/60 overflow-hidden">
+            <div className="h-2.5 w-full rounded-full bg-secondary/80 overflow-hidden">
               <div 
-                className="h-full bg-[oklch(0.6_0.2_15)] transition-all" 
+                className="h-full bg-[oklch(0.6_0.2_15)] transition-all shadow-[0_0_10px_oklch(0.6_0.2_15_/_0.5)]" 
                 style={{ width: `${Math.min(100, (consumedFat / goalFat) * 100)}%` }} 
               />
             </div>

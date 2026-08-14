@@ -135,7 +135,7 @@ export async function undoLastEntry(day: string): Promise<string | null> {
 export async function fetchCustomFoods(): Promise<CustomFood[]> {
   const { data, error } = await supabase
     .from("foods")
-    .select("id, name, category, kcal_per_100g, default_measure, default_grams, unit")
+    .select("id, name, category, kcal_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, default_measure, default_grams, unit")
     .not("user_id", "is", null)
     .order("name");
   if (error) throw error;

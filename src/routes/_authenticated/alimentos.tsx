@@ -92,6 +92,9 @@ export function FoodsPage() {
       name: f.name,
       category: f.category ?? "Meus alimentos",
       kcalPer100g: Number(f.kcal_per_100g),
+      proteinPer100g: f.protein_per_100g !== null ? Number(f.protein_per_100g) : undefined,
+      carbsPer100g: f.carbs_per_100g !== null ? Number(f.carbs_per_100g) : undefined,
+      fatPer100g: f.fat_per_100g !== null ? Number(f.fat_per_100g) : undefined,
       measure: f.default_measure ?? "1 porção",
       measureGrams: Number(f.default_grams ?? 100),
       custom: true,
@@ -279,6 +282,28 @@ export function FoodsPage() {
                       <span className="text-xs text-muted-foreground md:hidden">
                         {food.category}
                       </span>
+                      {(food.proteinPer100g !== undefined || food.carbsPer100g !== undefined || food.fatPer100g !== undefined) && (
+                        <div className="flex items-center gap-3 mt-1.5 text-[10px] font-medium text-muted-foreground">
+                          {food.proteinPer100g !== undefined && (
+                            <span className="flex items-center gap-1">
+                              <div className="size-1.5 rounded-full bg-[oklch(0.6_0.15_250)]" />
+                              P: {food.proteinPer100g}g
+                            </span>
+                          )}
+                          {food.carbsPer100g !== undefined && (
+                            <span className="flex items-center gap-1">
+                              <div className="size-1.5 rounded-full bg-[oklch(0.7_0.18_70)]" />
+                              C: {food.carbsPer100g}g
+                            </span>
+                          )}
+                          {food.fatPer100g !== undefined && (
+                            <span className="flex items-center gap-1">
+                              <div className="size-1.5 rounded-full bg-[oklch(0.6_0.2_15)]" />
+                              G: {food.fatPer100g}g
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell className="hidden text-sm text-muted-foreground md:table-cell">
                       {food.category}

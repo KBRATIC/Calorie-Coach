@@ -128,6 +128,7 @@ export function ProfilePage() {
   });
   const bmi = calcBmi(Number(weight) || 0, Number(height) || 0);
   const weekly = weeklyWeightChangeKg(target, tdee);
+  const macros = calcMacroGoals(target);
 
   const methodLabel =
     method === "katch"
@@ -298,6 +299,20 @@ export function ProfilePage() {
                 ? "Manutenção de peso"
                 : `${weekly > 0 ? "+" : ""}${weekly} kg por semana (estimativa)`}
             </p>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="rounded-lg bg-secondary/50 p-3 text-center">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.6_0.15_250)]">Proteína</p>
+              <p className="stat-number text-lg">{macros.protein}g</p>
+            </div>
+            <div className="rounded-lg bg-secondary/50 p-3 text-center">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.7_0.18_70)]">Carbo</p>
+              <p className="stat-number text-lg">{macros.carbs}g</p>
+            </div>
+            <div className="rounded-lg bg-secondary/50 p-3 text-center">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.6_0.2_15)]">Gordura</p>
+              <p className="stat-number text-lg">{macros.fat}g</p>
+            </div>
           </div>
           {capped && (
             <p className="rounded-lg border border-border/70 p-3 text-xs text-muted-foreground">

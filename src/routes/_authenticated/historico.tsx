@@ -139,7 +139,7 @@ export function HistoryPage() {
                   {isPositive ? '+' : ''}{Math.round(netBalance)} <span className="text-xl font-bold">kcal</span>
                 </h3>
                 <div className={`flex items-center justify-center size-8 rounded-full ${isPositive ? 'bg-primary/20 text-primary' : 'bg-destructive/20 text-destructive'}`}>
-                  {isPositive ? <TrendingDown className="size-5" /> : <TrendingUp className="size-5" />}
+                  {isPositive ? <TrendingUp className="size-5" /> : <TrendingDown className="size-5" />}
                 </div>
               </div>
               <p className="mt-2 text-sm text-muted-foreground text-center sm:text-left max-w-md">
@@ -185,20 +185,19 @@ export function HistoryPage() {
                 </span>
               </div>
               
-              {/* Macro breakdown for the day */}
               {t.total > 0 && (
-                <div className="flex items-center gap-2 pl-24 text-[10px] text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <div className="size-1.5 rounded-full bg-[oklch(0.6_0.15_250)]" />
-                    P: {Math.round(t.protein)}g
+                <div className="flex items-center gap-4 pl-[92px] text-[11px] font-bold">
+                  <span className="flex items-center gap-1.5 text-[oklch(0.6_0.15_250)]">
+                    <div className="size-2 rounded-full bg-[oklch(0.6_0.15_250)] shadow-[0_0_5px_oklch(0.6_0.15_250_/_0.5)]" />
+                    P: <span className="text-foreground font-semibold">{Math.round(t.protein)}g</span>
                   </span>
-                  <span className="flex items-center gap-1">
-                    <div className="size-1.5 rounded-full bg-[oklch(0.7_0.18_70)]" />
-                    C: {Math.round(t.carbs)}g
+                  <span className="flex items-center gap-1.5 text-[oklch(0.7_0.18_70)]">
+                    <div className="size-2 rounded-full bg-[oklch(0.7_0.18_70)] shadow-[0_0_5px_oklch(0.7_0.18_70_/_0.5)]" />
+                    C: <span className="text-foreground font-semibold">{Math.round(t.carbs)}g</span>
                   </span>
-                  <span className="flex items-center gap-1">
-                    <div className="size-1.5 rounded-full bg-[oklch(0.6_0.2_15)]" />
-                    G: {Math.round(t.fat)}g
+                  <span className="flex items-center gap-1.5 text-[oklch(0.6_0.2_15)]">
+                    <div className="size-2 rounded-full bg-[oklch(0.6_0.2_15)] shadow-[0_0_5px_oklch(0.6_0.2_15_/_0.5)]" />
+                    G: <span className="text-foreground font-semibold">{Math.round(t.fat)}g</span>
                   </span>
                 </div>
               )}
