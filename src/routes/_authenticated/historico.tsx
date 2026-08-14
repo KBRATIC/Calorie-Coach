@@ -94,11 +94,11 @@ export function HistoryPage() {
             Sua meta diária é de <span className="text-foreground font-medium">{goal} kcal</span>
           </p>
         </div>
-        <div className="flex gap-2 bg-surface/60 p-1.5 rounded-2xl border border-white/5 backdrop-blur-3xl shadow-inner">
+    <div className="flex gap-2 bento-card p-1.5 shadow-inner">
           <Button
             size="sm"
             variant="ghost"
-            className={`rounded-xl px-6 transition-all ${period === "semana" ? "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
+            className={`rounded-xl px-6 transition-all ${period === "semana" ? "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-surface-strong"}`}
             onClick={() => setPeriod("semana")}
           >
             Semana
@@ -106,7 +106,7 @@ export function HistoryPage() {
           <Button
             size="sm"
             variant="ghost"
-            className={`rounded-xl px-6 transition-all ${period === "mes" ? "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
+            className={`rounded-xl px-6 transition-all ${period === "mes" ? "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-surface-strong"}`}
             onClick={() => setPeriod("mes")}
           >
             Mês
@@ -115,17 +115,17 @@ export function HistoryPage() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col justify-center transition-transform hover:scale-[1.02]">
+        <div className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Média diária</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{average} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
         </div>
-        <div className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col justify-center transition-transform hover:scale-[1.02]">
+        <div className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Dias na meta</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">
             {onTarget}<span className="text-sm text-muted-foreground font-normal">/{logged.length}</span>
           </p>
         </div>
-        <div className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col justify-center transition-transform hover:scale-[1.02]">
+        <div className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Total consumido</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{total} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
         </div>
@@ -168,7 +168,7 @@ export function HistoryPage() {
         )}
       </div>
 
-      <div className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)] space-y-6">
+      <div className="bento-card p-6 sm:p-8 space-y-6">
         <h2 className="text-xl font-medium tracking-tight">Curva de Consumo</h2>
         
         {entriesQuery.isLoading ? (

@@ -92,7 +92,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="text-display font-medium tracking-tighter text-2xl drop-shadow-sm">KcalTrack</span>
           </div>
 
-          <div className="flex items-center gap-3 pointer-events-auto bg-surface/50 backdrop-blur-2xl border border-white/10 rounded-full p-1.5 shadow-xl">
+          <div className="flex items-center gap-3 pointer-events-auto bento-card rounded-full p-1.5">
             <ThemeToggle />
             <Button variant="ghost" size="icon" className="size-10 rounded-full active:scale-[0.95] transition-transform hover:bg-white/10" onClick={signOut}>
               <LogOut className="size-5 text-muted-foreground" />
@@ -138,7 +138,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <div className="absolute inset-x-0 bottom-6 md:bottom-10 z-40 mx-4 flex justify-center pointer-events-none">
-        <nav className="relative flex items-center p-2 md:p-3 gap-2 overflow-hidden rounded-full border border-white/10 bg-surface/80 backdrop-blur-3xl shadow-[0_20px_40px_rgba(0,0,0,0.4)] pointer-events-auto">
+        <nav className="relative flex items-center p-2 md:p-3 gap-2 overflow-hidden rounded-full bento-card shadow-2xl pointer-events-auto">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             return (

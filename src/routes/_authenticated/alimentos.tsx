@@ -180,7 +180,7 @@ export function FoodsPage() {
             suffix: " kcal",
           },
         ].map((stat) => (
-          <div key={stat.label} className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-xl flex flex-col transition-transform hover:scale-[1.02]">
+          <div key={stat.label} className="bento-card p-6 flex flex-col transition-transform hover:scale-[1.02]">
             <stat.icon className="size-6 text-primary" />
             <p className="stat-number mt-4 text-3xl font-medium tracking-tight text-foreground drop-shadow-sm">
               {stat.value}
@@ -193,9 +193,9 @@ export function FoodsPage() {
         ))}
       </div>
 
-      <div className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden">
+      <div className="bento-card overflow-hidden">
         {/* Filter & Search Header */}
-        <div className="flex flex-col md:flex-row items-center gap-4 p-6 bg-white/[0.01] border-b border-white/5">
+        <div className="flex flex-col md:flex-row items-center gap-4 p-6 bg-surface border-b border-border">
           <div className="relative w-full flex-1">
             <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
             <input
@@ -205,7 +205,7 @@ export function FoodsPage() {
                 setPage(0);
               }}
               placeholder="Buscar alimento…"
-              className="w-full bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] focus:border-primary/50 transition-colors rounded-2xl h-14 pl-12 pr-4 text-base outline-none shadow-inner"
+              className="w-full bg-surface border border-border hover:bg-surface-strong focus:border-primary/50 transition-colors rounded-2xl h-14 pl-12 pr-4 text-base outline-none shadow-inner"
               aria-label="Buscar alimento"
             />
           </div>
@@ -217,10 +217,10 @@ export function FoodsPage() {
               setPage(0);
             }}
           >
-            <SelectTrigger className="w-full md:w-64 h-14 rounded-2xl bg-white/[0.03] border-white/10 text-base shadow-inner">
+            <SelectTrigger className="w-full md:w-64 h-14 rounded-2xl bg-surface border border-border text-base shadow-inner">
               <SelectValue placeholder="Categoria" />
             </SelectTrigger>
-            <SelectContent className="rounded-2xl border-white/10 max-h-72">
+            <SelectContent className="rounded-2xl border-border bg-surface max-h-72">
               <SelectItem value="all" className="rounded-xl my-1">Todas as categorias</SelectItem>
               {categories.map((c) => (
                 <SelectItem key={c} value={c} className="rounded-xl my-1">
@@ -232,7 +232,7 @@ export function FoodsPage() {
         </div>
 
         {/* Sorting Pills */}
-        <div className="px-6 py-4 border-b border-white/5 flex flex-wrap items-center gap-2 overflow-x-auto no-scrollbar">
+        <div className="px-6 py-4 border-b border-border flex flex-wrap items-center gap-2 overflow-x-auto no-scrollbar">
           <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mr-2 shrink-0">Ordenar:</span>
           <SortButton label="Nome" sortKey="name" />
           <SortButton label="Categoria" sortKey="category" />
@@ -257,14 +257,14 @@ export function FoodsPage() {
               const hasMacros = food.proteinPer100g !== undefined || food.carbsPer100g !== undefined || food.fatPer100g !== undefined;
               
               return (
-                <motion.div 
-                  key={food.id} 
-                  variants={{
-                    hidden: { opacity: 0, y: 10, scale: 0.98 },
-                    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 400, damping: 30 } }
-                  }}
-                  className="bg-surface/60 border border-white/5 hover:border-white/10 hover:bg-surface/80 rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group"
-                >
+                  <motion.div 
+                    key={food.id} 
+                    variants={{
+                      hidden: { opacity: 0, y: 10, scale: 0.98 },
+                      visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 400, damping: 30 } }
+                    }}
+                    className="bento-card hover:bg-surface-strong rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group"
+                  >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-lg font-semibold tracking-tight text-foreground/90 truncate">{food.name}</h3>
@@ -276,7 +276,7 @@ export function FoodsPage() {
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground">
-                      <span className="px-2 py-1 rounded-lg bg-white/5 border border-white/5">{food.category}</span>
+                      <span className="px-2 py-1 rounded-lg bg-surface border border-border">{food.category}</span>
                       <span>•</span>
                       <span>{food.measure} <span className="opacity-60">({Math.round(food.measureGrams)} {unitFor(food)})</span></span>
                     </div>
@@ -327,31 +327,27 @@ export function FoodsPage() {
           )}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/5 p-5 bg-white/[0.01]">
-          <p className="text-[13px] font-medium text-muted-foreground">
-            {rows.length ? current * PAGE_SIZE + 1 : 0}–
-            {Math.min((current + 1) * PAGE_SIZE, rows.length)} de {rows.length} alimentos
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border p-5 bg-surface">
+          <p className="text-sm text-muted-foreground/80 font-medium">
+            Página <span className="text-foreground">{page + 1}</span> de <span className="text-foreground">{pageCount || 1}</span>
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex gap-2">
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
-              className="gap-2 rounded-full border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-md transition-colors"
+              className="gap-2 rounded-full border border-border bg-surface hover:bg-surface-strong transition-colors"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={current === 0}
+              disabled={page === 0}
             >
               <ChevronLeft className="size-4" />
               Anterior
             </Button>
-            <span className="text-[13px] font-medium text-muted-foreground">
-              {current + 1} / {pageCount}
-            </span>
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
-              className="gap-2 rounded-full border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-md transition-colors"
+              className="gap-2 rounded-full border border-border bg-surface hover:bg-surface-strong transition-colors"
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-              disabled={current >= pageCount - 1}
+              disabled={page >= pageCount - 1 || pageCount === 0}
             >
               Próxima
               <ChevronRight className="size-4" />

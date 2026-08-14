@@ -141,7 +141,7 @@ export function TodayPage() {
       </div>
 
       {!goalsQuery.isLoading && !goalsQuery.data && (
-        <div className="bg-surface/50 border border-white/10 backdrop-blur-3xl rounded-3xl p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="bento-card p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[14px] text-foreground/80 text-center sm:text-left">
             Você ainda não calculou sua TMB. Defina sua meta para acompanhar com precisão.
           </p>
@@ -155,7 +155,7 @@ export function TodayPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 relative z-10">
         
         {/* Calorie Hero - Takes up full width on mobile, 2 cols on desktop */}
-        <div className="col-span-2 sm:col-span-2 row-span-2 bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col items-center justify-center transition-transform relative overflow-hidden">
+        <div className="col-span-2 sm:col-span-2 row-span-2 bento-card p-6 flex flex-col items-center justify-center transition-transform relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-[50px] -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2" />
           <CalorieRing consumed={consumed} goal={goal} />
           <div className="mt-5 text-center flex flex-col">
@@ -170,7 +170,7 @@ export function TodayPage() {
         <MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" />
         
         {/* Quick Add floating trigger */}
-        <div className="col-span-1 bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-4 flex items-center justify-center">
+        <div className="col-span-1 bento-card p-4 flex items-center justify-center">
           {user && <QuickAddDrawer userId={user.id} day={day} />}
         </div>
       </div>
@@ -222,7 +222,7 @@ export function TodayPage() {
 function MacroBento({ title, consumed, goal, color }: { title: string, consumed: number, goal: number, color: string }) {
   const progress = Math.min(100, (consumed / goal) * 100);
   return (
-    <div className="col-span-1 bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col justify-between h-36">
+    <div className="col-span-1 bento-card p-5 flex flex-col justify-between h-36">
       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
       <div>
         <p className="stat-number text-2xl font-medium tracking-tight text-foreground">{Math.round(consumed)}<span className="text-xs text-muted-foreground/60 ml-0.5">g</span></p>
@@ -245,7 +245,7 @@ function MealDrawer({ mealId, mealLabel, totalKcal, entries, hasItems, onDelete,
   return (
     <Drawer.Root open={open} onOpenChange={setOpen}>
       <Drawer.Trigger asChild>
-        <button className="w-full text-left bg-surface/40 hover:bg-surface/60 border border-white/5 backdrop-blur-3xl rounded-[32px] p-5 sm:p-6 transition-colors shadow-sm active:scale-[0.98]">
+        <button className="w-full text-left bento-card hover:bg-surface-strong p-5 sm:p-6 transition-colors active:scale-[0.98]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="size-10 rounded-full bg-white/5 flex items-center justify-center">
@@ -267,7 +267,7 @@ function MealDrawer({ mealId, mealLabel, totalKcal, entries, hasItems, onDelete,
       
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
-        <Drawer.Content className="bg-surface border-t border-white/10 flex flex-col rounded-t-[32px] h-[85vh] mt-24 fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-3xl outline-none">
+        <Drawer.Content className="bg-surface border-t border-border flex flex-col rounded-t-[32px] h-[85vh] mt-24 fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-3xl outline-none">
           <div className="p-4 bg-surface rounded-t-[32px] flex-1 overflow-y-auto no-scrollbar">
             <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-white/20 mb-8" />
             
@@ -292,7 +292,7 @@ function MealDrawer({ mealId, mealLabel, totalKcal, entries, hasItems, onDelete,
             {hasItems ? (
               <ul className="space-y-2">
                 {entries.map((entry: any) => (
-                  <li key={entry.id} className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                  <li key={entry.id} className="flex items-center justify-between p-4 rounded-2xl bg-surface-strong border border-border shadow-sm">
                     <div>
                       <p className="text-[15px] font-medium">{entry.name}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
@@ -364,7 +364,7 @@ function QuickAddDrawer({ userId, day }: { userId: string; day: string }) {
       
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
-        <Drawer.Content className="bg-surface border-t border-white/10 flex flex-col rounded-t-[32px] fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-3xl outline-none">
+        <Drawer.Content className="bg-surface border-t border-border flex flex-col rounded-t-[32px] fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-3xl outline-none">
           <div className="p-4 pb-12 bg-surface rounded-t-[32px]">
             <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-white/20 mb-6" />
             <Drawer.Title className="text-xl font-medium tracking-tight mb-4 px-2">Lançamento Rápido</Drawer.Title>
@@ -375,7 +375,7 @@ function QuickAddDrawer({ userId, day }: { userId: string; day: string }) {
                   key={food.name}
                   onClick={() => quickAdd.mutate(food)}
                   disabled={quickAdd.isPending}
-                  className="rounded-full bg-white/[0.04] border border-white/5 px-4 py-2.5 text-sm font-medium transition-all hover:bg-white/[0.08] active:scale-95"
+                  className="rounded-full bg-surface border border-border px-4 py-2.5 text-sm font-medium transition-all hover:bg-surface-strong active:scale-95"
                 >
                   <span className="text-foreground/90">{food.name}</span>
                   <span className="ml-2 text-muted-foreground font-light text-xs">
@@ -451,9 +451,9 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
       
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]" />
-        <Drawer.Content className="bg-surface border-t border-white/10 flex flex-col rounded-t-[32px] h-[90vh] mt-24 fixed bottom-0 left-0 right-0 z-[60] mx-auto max-w-3xl outline-none">
+        <Drawer.Content className="bg-surface border-t border-border flex flex-col rounded-t-[32px] h-[90vh] mt-24 fixed bottom-0 left-0 right-0 z-[60] mx-auto max-w-3xl outline-none">
           <div className="p-4 bg-surface rounded-t-[32px] flex-1 overflow-y-auto no-scrollbar">
-            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-white/20 mb-6" />
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-secondary mb-6" />
             
             <Drawer.Title className="sr-only">Buscar Alimento</Drawer.Title>
             
@@ -464,7 +464,7 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                   <input
                     autoFocus
                     placeholder="Buscar alimento (ex.: arroz, pizza)"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-2xl h-14 pl-12 pr-4 text-lg outline-none focus:border-primary transition-colors"
+                    className="w-full bg-surface border border-border rounded-2xl h-14 pl-12 pr-4 text-lg outline-none focus:border-primary transition-colors"
                     value={term}
                     onChange={(e) => setTerm(e.target.value)}
                   />
@@ -478,7 +478,7 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                           setSelected(food);
                           setGrams(String(food.measureGrams || 100));
                         }}
-                        className="w-full rounded-2xl px-4 py-3 text-left transition-colors hover:bg-white/[0.04] active:scale-[0.98] border border-transparent flex items-center justify-between"
+                        className="w-full rounded-2xl px-4 py-3 text-left transition-colors hover:bg-surface-strong active:scale-[0.98] border border-transparent flex items-center justify-between"
                       >
                         <div>
                           <p className="text-[15px] font-medium">{food.name}</p>
@@ -499,8 +499,8 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
               </div>
             ) : (
               <div className="space-y-6 px-2 animate-in fade-in zoom-in-95 duration-200">
-                <div className="rounded-2xl bg-white/[0.02] border border-white/5 p-6 text-center">
-                  <p className="text-2xl font-bold tracking-tight">{selected.name}</p>
+                <div className="rounded-2xl bg-surface border border-border p-6 text-center">
+                  <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">{selected.name}</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {Math.round(selected.kcalPer100g)} kcal por 100 {unit}
                   </p>
@@ -515,7 +515,7 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                         min={1}
                         value={grams}
                         onChange={(e) => setGrams(e.target.value)}
-                        className="h-14 rounded-2xl text-lg font-medium bg-white/[0.04] border-white/10"
+                        className="h-14 rounded-2xl text-lg font-medium bg-surface border-border"
                       />
                     </div>
                     
@@ -525,7 +525,7 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                           key={n}
                           type="button"
                           onClick={() => setGrams(String(Math.round(selected.measureGrams * n)))}
-                          className="rounded-full bg-white/[0.04] hover:bg-white/[0.08] px-4 py-2 text-xs font-medium transition-colors"
+                          className="rounded-full bg-surface border border-border hover:bg-surface-strong px-4 py-2 text-xs font-medium transition-colors"
                         >
                           {n}× {selected.measure}
                         </button>
@@ -536,10 +536,10 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                   <div className="space-y-3">
                     <Label className="text-xs uppercase tracking-widest text-muted-foreground ml-1">Refeição</Label>
                     <Select value={meal} onValueChange={setMeal}>
-                      <SelectTrigger className="h-14 rounded-2xl bg-white/[0.04] border-white/10 text-base">
-                        <SelectValue />
+                      <SelectTrigger className="h-14 rounded-2xl bg-surface border border-border text-base">
+                        <SelectValue placeholder="Refeição" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-2xl border-white/10">
+                      <SelectContent className="rounded-2xl border-border bg-surface">
                         {MEALS.map((m) => (
                           <SelectItem key={m.id} value={m.id} className="rounded-xl my-1">
                             {mealLabel(m.id)}
@@ -550,7 +550,7 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                   </div>
                 </div>
                 
-                <div className="pt-6 border-t border-white/5">
+                <div className="pt-6 border-t border-border">
                   <div className="flex items-center justify-between mb-6 px-2">
                     <span className="text-sm font-medium text-muted-foreground">Total</span>
                     <p className="stat-number text-3xl text-primary">{kcal} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>

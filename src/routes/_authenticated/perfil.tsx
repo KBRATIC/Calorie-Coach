@@ -172,17 +172,17 @@ export function ProfilePage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+        <div className="bento-card p-6 sm:p-8 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
           
           <div className="grid gap-6 sm:grid-cols-2 relative z-10">
             <div className="space-y-3">
               <Label className="text-muted-foreground font-medium">Sexo biológico</Label>
               <Select value={sex} onValueChange={(v) => setSex(v as Sex)}>
-                <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-2xl h-12">
-                  <SelectValue />
+                <SelectTrigger className="bg-surface border-border rounded-2xl h-12">
+                  <SelectValue placeholder="Selecione o sexo" />
                 </SelectTrigger>
-                <SelectContent className="rounded-2xl border-white/10 bg-surface/80 backdrop-blur-xl">
+                <SelectContent className="rounded-2xl border-border bg-surface">
                   <SelectItem value="male" className="rounded-xl">Masculino</SelectItem>
                   <SelectItem value="female" className="rounded-xl">Feminino</SelectItem>
                 </SelectContent>
@@ -190,7 +190,7 @@ export function ProfilePage() {
             </div>
             <div className="space-y-3">
               <Label htmlFor="age" className="text-muted-foreground font-medium">Idade</Label>
-              <Input id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} className="bg-white/[0.03] border-white/10 rounded-2xl h-12" />
+              <Input id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} className="bg-surface border-border rounded-2xl h-12" />
             </div>
             <div className="space-y-3">
               <Label htmlFor="height" className="text-muted-foreground font-medium">Altura (cm)</Label>
@@ -199,7 +199,7 @@ export function ProfilePage() {
                 type="number"
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
-                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
+                className="bg-surface border-border rounded-2xl h-12"
               />
             </div>
             <div className="space-y-3">
@@ -210,7 +210,7 @@ export function ProfilePage() {
                 step="0.1"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
+                className="bg-surface border-border rounded-2xl h-12"
               />
             </div>
             <div className="space-y-3 sm:col-span-2">
@@ -222,7 +222,7 @@ export function ProfilePage() {
                 placeholder="Ex.: 18"
                 value={bodyFat}
                 onChange={(e) => setBodyFat(e.target.value)}
-                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
+                className="bg-surface border-border rounded-2xl h-12"
               />
               <p className="text-[13px] text-muted-foreground/70 font-light">
                 Se você souber seu % de gordura, usamos a fórmula Katch-McArdle, mais precisa.
@@ -234,10 +234,10 @@ export function ProfilePage() {
           <div className="space-y-3 relative z-10">
             <Label className="text-muted-foreground font-medium">Nível de atividade</Label>
             <Select value={activity} onValueChange={setActivity}>
-              <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-2xl h-12">
+              <SelectTrigger className="bg-surface border-border rounded-2xl h-12">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="rounded-2xl border-white/10 bg-surface/80 backdrop-blur-xl">
+              <SelectContent className="rounded-2xl border-border bg-surface">
                 {ACTIVITY_LEVELS.map((a) => (
                   <SelectItem key={a.value} value={String(a.value)} className="rounded-xl">
                     {a.label} — {a.hint}
@@ -250,10 +250,10 @@ export function ProfilePage() {
           <div className="space-y-3 relative z-10">
             <Label className="text-muted-foreground font-medium">Objetivo</Label>
             <Select value={goalType} onValueChange={setGoalType}>
-              <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-2xl h-12">
+              <SelectTrigger className="bg-surface border-border rounded-2xl h-12">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="rounded-2xl border-white/10 bg-surface/80 backdrop-blur-xl">
+              <SelectContent className="rounded-2xl border-border bg-surface">
                 {GOAL_PRESETS.map((g) => (
                   <SelectItem key={g.id} value={g.id} className="rounded-xl">
                     {g.label} — {g.hint}
@@ -271,7 +271,7 @@ export function ProfilePage() {
                 type="number"
                 value={manual}
                 onChange={(e) => setManual(e.target.value)}
-                className="bg-white/[0.03] border-white/10 rounded-2xl h-12"
+                className="bg-surface border-border rounded-2xl h-12"
               />
             </div>
           )}
@@ -285,14 +285,14 @@ export function ProfilePage() {
           </Button>
         </div>
 
-        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-2xl space-y-6 p-6 sm:p-8 flex flex-col justify-between">
+        <div className="bento-card p-6 sm:p-8 space-y-6 flex flex-col justify-between">
           <div className="space-y-6">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1">TMB (basal)</p>
               <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{bmr} kcal</p>
               <p className="text-[13px] text-muted-foreground/70 font-light mt-1">{methodLabel}</p>
             </div>
-            <div className="h-px w-full bg-white/5" />
+            <div className="h-px w-full bg-border" />
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
                 Gasto diário (TMB × atividade)
@@ -316,15 +316,15 @@ export function ProfilePage() {
             </div>
             
             <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-4 text-center shadow-inner">
+              <div className="rounded-2xl bg-surface border border-border p-4 text-center shadow-inner">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.7_0.15_250)] mb-1">Proteína</p>
                 <p className="stat-number text-2xl font-medium">{macros.protein}g</p>
               </div>
-              <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-4 text-center shadow-inner">
+              <div className="rounded-2xl bg-surface border border-border p-4 text-center shadow-inner">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.8_0.18_70)] mb-1">Carbo</p>
                 <p className="stat-number text-2xl font-medium">{macros.carbs}g</p>
               </div>
-              <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-4 text-center shadow-inner">
+              <div className="rounded-2xl bg-surface border border-border p-4 text-center shadow-inner">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[oklch(0.7_0.2_15)] mb-1">Gordura</p>
                 <p className="stat-number text-2xl font-medium">{macros.fat}g</p>
               </div>
@@ -337,7 +337,7 @@ export function ProfilePage() {
               </p>
             )}
             
-            <div className="flex items-center justify-between rounded-2xl bg-white/[0.02] border border-white/5 p-5">
+            <div className="flex items-center justify-between rounded-2xl bg-surface border border-border p-5">
               <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">IMC</p>
               <p className="stat-number text-2xl flex items-baseline gap-2">
                 {bmi} <span className="text-[15px] font-medium text-foreground/80">{bmiLabel(bmi)}</span>
@@ -350,7 +350,7 @@ export function ProfilePage() {
 
       {user && <CustomFoods userId={user.id} />}
 
-      <div className="bg-destructive/[0.03] border border-destructive/20 backdrop-blur-3xl rounded-[32px] shadow-xl space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
+      <div className="bento-card border-destructive/20 bg-destructive/5 space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-destructive/10 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
         
         <div className="relative z-10">
@@ -365,11 +365,11 @@ export function ProfilePage() {
         
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="rounded-2xl h-12 px-8 text-base font-medium active:scale-[0.98] transition-transform relative z-10">
-              Excluir minha conta
+            <Button variant="destructive" className="w-full sm:w-auto rounded-2xl h-12 shadow-lg shadow-destructive/20 active:scale-[0.98] transition-all font-medium">
+              <Trash2 className="size-4 mr-2" /> Excluir permanentemente
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-surface/95 backdrop-blur-3xl border-white/10 rounded-[32px] p-8 shadow-2xl">
+          <AlertDialogContent className="bg-surface border-border rounded-[32px] p-8 shadow-2xl">
             <AlertDialogHeader className="space-y-3">
               <AlertDialogTitle className="text-2xl font-medium tracking-tight">Você tem certeza absoluta?</AlertDialogTitle>
               <AlertDialogDescription className="text-base text-muted-foreground/80 leading-relaxed">
@@ -427,16 +427,16 @@ function CustomFoods({ userId }: { userId: string }) {
   });
 
   return (
-    <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-xl space-y-6 p-6 sm:p-8">
+    <div className="bento-card p-6 sm:p-8 space-y-6">
       <div>
         <h2 className="text-2xl font-medium tracking-tight">Meus alimentos</h2>
         <p className="text-[15px] text-muted-foreground/80 mt-1">
           Cadastre itens que não estão na base de mais de 1.100 alimentos.
         </p>
       </div>
-      <div className="grid gap-3 sm:grid-cols-[1fr_180px_170px_auto] bg-white/[0.01] p-2 rounded-[28px] border border-white/5">
-        <Input placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} className="bg-transparent border-white/10 rounded-2xl h-12" />
-        <div className="flex rounded-2xl border border-white/10 p-1 bg-black/10">
+      <div className="grid gap-3 sm:grid-cols-[1fr_180px_170px_auto] bg-surface p-2 rounded-[28px] border border-border">
+        <Input placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} className="bg-transparent border-border rounded-2xl h-12" />
+        <div className="flex rounded-2xl border border-border p-1 bg-surface-strong">
           {(["g", "ml"] as const).map((u) => (
             <button
               key={u}
@@ -455,7 +455,7 @@ function CustomFoods({ userId }: { userId: string }) {
           type="number"
           value={kcal}
           onChange={(e) => setKcal(e.target.value)}
-          className="bg-transparent border-white/10 rounded-2xl h-12"
+          className="bg-transparent border-border rounded-2xl h-12"
         />
         <Button
           onClick={() => create.mutate()}
@@ -466,7 +466,7 @@ function CustomFoods({ userId }: { userId: string }) {
         </Button>
       </div>
       {(foods ?? []).length > 0 && (
-        <ul className="divide-y divide-white/5 bg-white/[0.01] rounded-[24px] border border-white/5 p-2">
+        <ul className="divide-y divide-border bg-surface rounded-[24px] border border-border p-2">
           {foods!.map((f) => (
             <li key={f.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/[0.02] transition-colors">
               <span className="flex-1 truncate text-[15px] font-medium">{f.name}</span>

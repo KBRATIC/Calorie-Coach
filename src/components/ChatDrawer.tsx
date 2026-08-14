@@ -233,12 +233,12 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             onInteractOutside={(e) => {
               if (isCameraOpen) e.preventDefault();
             }}
-            className="bg-surface border-t border-white/10 flex flex-col rounded-t-[32px] h-[95vh] fixed bottom-0 left-0 right-0 z-50 mx-auto sm:max-w-3xl outline-none"
+            className="bg-surface border-t border-border flex flex-col rounded-t-[32px] h-[95vh] fixed bottom-0 left-0 right-0 z-50 mx-auto sm:max-w-3xl outline-none"
           >
             <div className="absolute inset-0 bg-background/40 pointer-events-none -z-10 rounded-t-[32px]" />
             
-            <div className="p-4 sm:p-5 border-b border-white/5 shrink-0 bg-white/[0.02] rounded-t-[32px] flex flex-col items-center">
-              <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-white/20 mb-4" />
+            <div className="p-4 sm:p-5 border-b border-border shrink-0 bg-surface rounded-t-[32px] flex flex-col items-center">
+              <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-border mb-4" />
               <Drawer.Title className="flex items-center gap-3 text-xl font-medium tracking-tight w-full px-2">
                 <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary shadow-[var(--shadow-glow)]">
                   <Sparkles className="size-5" />
@@ -262,14 +262,14 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                         className={`max-w-[85%] rounded-[24px] px-5 py-4 text-[15px] leading-relaxed flex flex-col gap-3 ${
                           msg.role === "user"
                             ? "bg-primary text-primary-foreground rounded-br-sm shadow-[0_4px_20px_rgb(0,0,0,0.1)] shadow-primary/20"
-                            : "bg-white/5 text-foreground rounded-bl-sm border border-white/5"
+                            : "bg-surface-strong text-foreground rounded-bl-sm border border-border"
                         }`}
                       >
                         {msg.imageBase64 && (
                           <img 
                             src={msg.imageBase64} 
                             alt="Enviada pelo usuário" 
-                            className="w-full max-w-[240px] rounded-2xl object-cover shadow-sm border border-white/10" 
+                            className="w-full max-w-[240px] rounded-2xl object-cover shadow-sm border border-border" 
                           />
                         )}
                         
@@ -289,7 +289,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       className="flex justify-start"
                     >
-                      <div className="max-w-[85%] rounded-[24px] rounded-bl-sm bg-white/5 px-6 py-5 text-foreground border border-white/5">
+                      <div className="max-w-[85%] rounded-[24px] rounded-bl-sm bg-surface-strong px-6 py-5 text-foreground border border-border">
                         <div className="flex gap-1.5 items-center">
                           <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }} className="size-2 rounded-full bg-primary" />
                           <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.2 }} className="size-2 rounded-full bg-primary" />
@@ -302,7 +302,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
               </div>
             </div>
 
-            <div className="p-3 sm:p-5 flex flex-col gap-3 bg-black/20 border-t border-white/5 shrink-0">
+            <div className="p-3 sm:p-5 flex flex-col gap-3 bg-surface border-t border-border shrink-0">
               <AnimatePresence>
                 {imageBase64Preview && (
                   <motion.div 
@@ -311,7 +311,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     exit={{ opacity: 0, scale: 0.9, height: 0 }}
                     className="relative self-start ml-2 mt-2"
                   >
-                    <div className="relative rounded-[20px] overflow-hidden border border-white/10 shadow-lg">
+                    <div className="relative rounded-[20px] overflow-hidden border border-border shadow-lg">
                       <img src={imageBase64Preview} alt="Preview" className="h-24 w-24 object-cover" />
                       <div className="absolute inset-0 bg-black/20" />
                       <Button
@@ -333,7 +333,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     initial={{ opacity: 0, y: 10, height: 0 }}
                     animate={{ opacity: 1, y: 0, height: 'auto' }}
                     exit={{ opacity: 0, scale: 0.9, height: 0 }}
-                    className="mb-2 mx-2 px-5 py-4 bg-white/5 rounded-3xl border border-primary/20 flex flex-col gap-2 relative overflow-hidden backdrop-blur-md"
+                    className="mb-2 mx-2 px-5 py-4 bg-surface-strong rounded-3xl border border-primary/20 flex flex-col gap-2 relative overflow-hidden backdrop-blur-md"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent bg-[length:200%_100%] animate-[gradient_2s_linear_infinite]" />
                     <div className="flex items-center gap-4 relative z-10">
@@ -354,7 +354,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 )}
               </AnimatePresence>
               
-              <form onSubmit={handleSend} className="relative flex items-center gap-2 bg-white/5 border border-white/10 rounded-[32px] p-1 shadow-inner focus-within:border-primary/50 transition-colors">
+              <form onSubmit={handleSend} className="relative flex items-center gap-2 bg-surface-strong border border-border rounded-[32px] p-1 shadow-inner focus-within:border-primary/50 transition-colors">
                 <input 
                   id="chat-image-upload"
                   name="chat-image-upload"
@@ -372,7 +372,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="h-12 w-12 rounded-full bg-transparent hover:bg-white/10 shrink-0 text-muted-foreground hover:text-foreground transition-colors active:scale-[0.95]"
+                      className="h-12 w-12 rounded-full bg-transparent hover:bg-surface-strong shrink-0 text-muted-foreground hover:text-foreground transition-colors active:scale-[0.95]"
                       disabled={isLoading}
                       aria-label="Anexar arquivo"
                     >
@@ -382,12 +382,12 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   <PopoverContent 
                     side="top" 
                     align="start" 
-                    className="w-56 p-2 rounded-3xl bg-surface/80 backdrop-blur-xl border-white/10 shadow-2xl mb-4"
+                    className="w-56 p-2 rounded-3xl bg-surface border-border shadow-2xl mb-4"
                   >
                     <div className="flex flex-col gap-1">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start gap-3 rounded-2xl hover:bg-white/10 h-12"
+                        className="w-full justify-start gap-3 rounded-2xl hover:bg-surface-strong h-12"
                         onClick={() => {
                           setIsPopoverOpen(false);
                           fileInputRef.current?.click();
@@ -398,7 +398,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       </Button>
                       <Button
                         variant="ghost"
-                        className="w-full justify-start gap-3 rounded-2xl hover:bg-white/10 h-12"
+                        className="w-full justify-start gap-3 rounded-2xl hover:bg-surface-strong h-12"
                         onClick={() => {
                           setIsPopoverOpen(false);
                           setIsCameraOpen(true);
@@ -434,7 +434,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       type="button"
                       size="icon"
                       variant="ghost"
-                      className={`h-10 w-10 rounded-full transition-transform active:scale-[0.95] ${isListening ? "text-destructive animate-pulse bg-destructive/10" : "text-muted-foreground hover:bg-white/10 hover:text-foreground"}`}
+                      className={`h-10 w-10 rounded-full transition-transform active:scale-[0.95] ${isListening ? "text-destructive animate-pulse bg-destructive/10" : "text-muted-foreground hover:bg-surface-strong hover:text-foreground"}`}
                       onClick={toggleListening}
                       disabled={isLoading}
                       aria-label="Ativar microfone"
