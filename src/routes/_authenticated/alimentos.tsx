@@ -232,12 +232,14 @@ export function FoodsPage() {
         </div>
 
         {/* Sorting Pills */}
-        <div className="px-6 py-4 border-b border-border flex flex-wrap items-center gap-2 overflow-x-auto no-scrollbar">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mr-2 shrink-0">Ordenar:</span>
-          <SortButton label="Nome" sortKey="name" />
-          <SortButton label="Categoria" sortKey="category" />
-          <SortButton label="Calorias (100g)" sortKey="kcalPer100g" />
-          <SortButton label="Calorias (Porção)" sortKey="portion" />
+        <div className="px-4 sm:px-6 py-4 border-b border-border overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-2 min-w-max">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mr-2 shrink-0">Ordenar:</span>
+            <SortButton label="Nome" sortKey="name" />
+            <SortButton label="Categoria" sortKey="category" />
+            <SortButton label="Calorias (100g)" sortKey="kcalPer100g" />
+            <SortButton label="Calorias (Porção)" sortKey="portion" />
+          </div>
         </div>
 
         {/* Rich List View */}
@@ -265,8 +267,8 @@ export function FoodsPage() {
                     }}
                     className="bento-card hover:bg-surface-strong rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group"
                   >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                  <div className="flex-1 min-w-0 w-full">
+                    <div className="flex items-center gap-2 mb-1 w-full">
                       <h3 className="text-lg font-semibold tracking-tight text-foreground/90 truncate">{food.name}</h3>
                       {food.custom && (
                         <Badge variant="outline" className="shrink-0 border-primary/30 text-primary bg-primary/5 text-[10px] px-2 py-0">
@@ -275,26 +277,26 @@ export function FoodsPage() {
                       )}
                     </div>
                     
-                    <div className="flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground w-full">
                       <span className="px-2 py-1 rounded-lg bg-surface border border-border">{food.category}</span>
                       <span>•</span>
                       <span>{food.measure} <span className="opacity-60">({Math.round(food.measureGrams)} {unitFor(food)})</span></span>
                     </div>
 
                     {hasMacros && (
-                      <div className="flex items-center gap-2 mt-3 text-[11px] font-bold tracking-widest uppercase">
+                      <div className="flex flex-wrap items-center gap-2 mt-3 text-[11px] font-bold tracking-widest uppercase w-full">
                         {food.proteinPer100g !== undefined && (
-                          <span className="flex items-center gap-1.5 bg-[oklch(0.6_0.15_250)]/10 text-[oklch(0.7_0.15_250)] px-2.5 py-1 rounded-full border border-[oklch(0.6_0.15_250)]/20">
+                          <span className="flex items-center gap-1.5 bg-[oklch(0.6_0.15_250)]/10 text-[oklch(0.7_0.15_250)] px-2.5 py-1 rounded-full border border-[oklch(0.6_0.15_250)]/20 whitespace-nowrap">
                             P <span className="text-foreground ml-0.5">{food.proteinPer100g}g</span>
                           </span>
                         )}
                         {food.carbsPer100g !== undefined && (
-                          <span className="flex items-center gap-1.5 bg-[oklch(0.7_0.18_70)]/10 text-[oklch(0.8_0.18_70)] px-2.5 py-1 rounded-full border border-[oklch(0.7_0.18_70)]/20">
+                          <span className="flex items-center gap-1.5 bg-[oklch(0.7_0.18_70)]/10 text-[oklch(0.8_0.18_70)] px-2.5 py-1 rounded-full border border-[oklch(0.7_0.18_70)]/20 whitespace-nowrap">
                             C <span className="text-foreground ml-0.5">{food.carbsPer100g}g</span>
                           </span>
                         )}
                         {food.fatPer100g !== undefined && (
-                          <span className="flex items-center gap-1.5 bg-[oklch(0.6_0.2_15)]/10 text-[oklch(0.7_0.2_15)] px-2.5 py-1 rounded-full border border-[oklch(0.6_0.2_15)]/20">
+                          <span className="flex items-center gap-1.5 bg-[oklch(0.6_0.2_15)]/10 text-[oklch(0.7_0.2_15)] px-2.5 py-1 rounded-full border border-[oklch(0.6_0.2_15)]/20 whitespace-nowrap">
                             G <span className="text-foreground ml-0.5">{food.fatPer100g}g</span>
                           </span>
                         )}
@@ -302,7 +304,7 @@ export function FoodsPage() {
                     )}
                   </div>
 
-                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-3 sm:pt-0 border-t border-white/5 sm:border-0 mt-2 sm:mt-0">
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-3 sm:pt-0 border-t border-white/5 sm:border-0 mt-2 sm:mt-0 w-full sm:w-auto shrink-0">
                     <div className="flex items-baseline gap-1.5">
                       <span className="stat-number text-3xl font-medium text-foreground tracking-tight">{Math.round(food.kcalPer100g)}</span>
                       <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">kcal/100g</span>
