@@ -138,7 +138,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <div className="absolute inset-x-0 bottom-6 md:bottom-10 z-40 mx-4 flex justify-center pointer-events-none">
-        <nav className="relative flex items-center p-2 md:p-3 gap-2 overflow-hidden rounded-full bento-card shadow-2xl pointer-events-auto">
+        <nav className="relative flex items-center p-2 md:p-3 gap-2 overflow-hidden rounded-full bg-surface/80 backdrop-blur-2xl shadow-2xl pointer-events-auto border border-border">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             return (
