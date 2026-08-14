@@ -81,43 +81,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="fixed inset-0 overflow-hidden">
       <div className="aurora-layer" aria-hidden />
       
-      <header className="fixed top-0 z-40 w-full transition-all">
-        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-4 py-4 md:px-8">
-          <Link to="/hoje" className="flex items-center gap-3 active:scale-[0.98] transition-transform">
+      <header className="fixed top-0 z-40 w-full transition-all pointer-events-none">
+        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-6 py-6 md:px-10">
+          <div className="flex items-center gap-3 pointer-events-auto">
             <img 
               src="/icon.png" 
               alt="KcalTrack Logo" 
-              className="size-8 rounded-full shadow-[var(--shadow-glow)] object-cover"
+              className="size-10 rounded-full shadow-2xl object-cover"
             />
-            <span className="text-display font-medium tracking-tight text-xl">KcalTrack</span>
-          </Link>
+            <span className="text-display font-medium tracking-tighter text-2xl drop-shadow-sm">KcalTrack</span>
+          </div>
 
-          <nav className="hidden items-center gap-1 rounded-full border border-white/5 bg-white/[0.02] p-1.5 md:flex backdrop-blur-3xl">
-            {NAV.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="relative rounded-full px-5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground active:scale-[0.98]"
-                activeProps={{
-                  className: "text-foreground",
-                }}
-              >
-                {location.pathname === item.to || location.pathname.startsWith(item.to) ? (
-                  <motion.div
-                    layoutId="desktopTab"
-                    className="absolute inset-0 rounded-full bg-white/10"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                ) : null}
-                <span className="relative z-10">{item.label}</span>
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pointer-events-auto bg-surface/50 backdrop-blur-2xl border border-white/10 rounded-full p-1.5 shadow-xl">
             <ThemeToggle />
-            <Button variant="ghost" size="icon" className="size-9 rounded-full active:scale-[0.98] transition-transform" onClick={signOut}>
-              <LogOut className="size-4 text-muted-foreground" />
+            <Button variant="ghost" size="icon" className="size-10 rounded-full active:scale-[0.95] transition-transform hover:bg-white/10" onClick={signOut}>
+              <LogOut className="size-5 text-muted-foreground" />
               <span className="sr-only">Sair</span>
             </Button>
           </div>
@@ -129,22 +107,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="embla h-full overflow-hidden" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full">
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
                   {activeIndex === 0 || deferred ? <TodayPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
                   {activeIndex === 1 || deferred ? <FoodsPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
                   {activeIndex === 2 || deferred ? <HistoryPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
                   {activeIndex === 3 || deferred ? <ProfilePage /> : null}
                 </div>
               </div>
@@ -152,34 +130,34 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         ) : (
           <div className="h-full overflow-y-auto overscroll-contain no-scrollbar">
-            <div className="px-4 pt-28 pb-32 md:pt-24 md:pb-8 min-h-full">
+            <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
               {children}
             </div>
           </div>
         )}
       </main>
 
-      <div className="absolute inset-x-0 bottom-6 z-40 mx-4 md:hidden flex justify-center">
-        <nav className="relative flex items-center p-1.5 overflow-hidden rounded-full border border-white/10 bg-surface/60 backdrop-blur-3xl shadow-2xl">
+      <div className="absolute inset-x-0 bottom-6 md:bottom-10 z-40 mx-4 flex justify-center pointer-events-none">
+        <nav className="relative flex items-center p-2 md:p-3 gap-2 overflow-hidden rounded-full border border-white/10 bg-surface/80 backdrop-blur-3xl shadow-[0_20px_40px_rgba(0,0,0,0.4)] pointer-events-auto">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`relative z-10 flex h-14 w-[72px] flex-col items-center justify-center gap-1 rounded-full transition-colors active:scale-[0.95] ${
+                className={`relative z-10 flex flex-col md:flex-row h-14 md:h-16 w-[72px] md:w-auto md:px-6 items-center justify-center gap-1.5 md:gap-3 rounded-full transition-colors active:scale-[0.95] hover:bg-white/[0.05] ${
                   isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground/80"
                 }`}
               >
                 {isActive && (
                   <motion.div
-                    layoutId="activeMobileTab"
-                    className="absolute inset-0 rounded-full bg-white/10"
+                    layoutId="activeDockTab"
+                    className="absolute inset-0 rounded-full bg-white/10 shadow-inner"
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                   />
                 )}
-                <item.icon className={`relative z-10 size-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
-                <span className={`relative z-10 text-[10px] font-medium tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                <item.icon className={`relative z-10 size-5 md:size-6 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
+                <span className={`relative z-10 text-[10px] md:text-sm font-medium tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 md:opacity-100 md:w-auto h-0 md:h-auto overflow-hidden'}`}>
                   {item.label}
                 </span>
               </Link>

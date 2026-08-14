@@ -6,13 +6,13 @@ import {
   Search,
   Trash2,
   Loader2,
-  Sparkles,
-  CopyCheck,
   Zap,
   Undo2,
   Eraser,
+  ChevronRight
 } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
+import { Drawer } from "vaul";
+import { motion } from "motion/react";
 
 import { toast } from "sonner";
 import {
@@ -36,26 +36,7 @@ import { useSession } from "@/hooks/useSession";
 import { CalorieRing } from "@/components/CalorieRing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import {
   Select,
   SelectContent,
@@ -63,14 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Onboarding } from "@/components/Onboarding";
-
 
 export const Route = createFileRoute("/_authenticated/hoje")({
   head: () => ({
@@ -79,11 +53,6 @@ export const Route = createFileRoute("/_authenticated/hoje")({
       {
         name: "description",
         content: "Registre os alimentos consumidos no dia e acompanhe quanto falta para a sua meta.",
-      },
-      { property: "og:title", content: "Diário de hoje — KcalTrack" },
-      {
-        property: "og:description",
-        content: "Registre os alimentos do dia e acompanhe sua meta calórica.",
       },
     ],
   }),
@@ -140,15 +109,6 @@ export function TodayPage() {
     onError: (e: Error) => toast.error("Erro ao desfazer", { description: e.message }),
   });
 
-  const clearDayMutation = useMutation({
-    mutationFn: () => clearDay(day),
-    onSuccess: (count) => {
-      invalidateEntries();
-      toast.success(count ? `${count} lançamentos apagados` : "O dia já estava vazio");
-    },
-    onError: (e: Error) => toast.error("Erro ao limpar", { description: e.message }),
-  });
-
   const clearMealMutation = useMutation({
     mutationFn: (meal: string) => clearMeal(day, meal),
     onSuccess: (count) => {
@@ -158,241 +118,216 @@ export function TodayPage() {
     onError: (e: Error) => toast.error("Erro ao limpar", { description: e.message }),
   });
 
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 pb-10">
       <Onboarding />
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-3xl">Diário</h1>
-          <p className="text-sm text-muted-foreground">{formatDayLabel(day)}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" onClick={() => setDay(addDays(day, -1))}>
-            Dia anterior
+      
+      {/* Native-style Header */}
+      <div className="flex flex-col gap-1 items-center justify-center pt-2 pb-4 relative">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" className="size-8 rounded-full text-muted-foreground" onClick={() => setDay(addDays(day, -1))}>
+            <ChevronRight className="size-5 rotate-180" />
           </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setDay(todayISO())}
-            disabled={day === todayISO()}
-          >
-            Hoje
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setDay(addDays(day, 1))}
-            disabled={day >= todayISO()}
-          >
-            Próximo
+          <div className="text-center w-40">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              {day === todayISO() ? "Hoje" : "Diário"}
+            </h1>
+            <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground/80">{formatDayLabel(day)}</p>
+          </div>
+          <Button variant="ghost" size="icon" className="size-8 rounded-full text-muted-foreground" onClick={() => setDay(addDays(day, 1))} disabled={day >= todayISO()}>
+            <ChevronRight className="size-5" />
           </Button>
         </div>
       </div>
 
       {!goalsQuery.isLoading && !goalsQuery.data && (
-        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-2xl flex flex-wrap items-center justify-between gap-4">
-          <p className="text-[15px] font-medium text-foreground/80 leading-relaxed">
+        <div className="bg-surface/50 border border-white/10 backdrop-blur-3xl rounded-3xl p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[14px] text-foreground/80 text-center sm:text-left">
             Você ainda não calculou sua TMB. Defina sua meta para acompanhar com precisão.
           </p>
-          <Button asChild size="sm" className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link to="/perfil">Calcular minha meta</Link>
+          <Button asChild size="sm" className="rounded-full px-6 shadow-lg shadow-primary/20">
+            <Link to="/perfil">Calcular meta</Link>
           </Button>
         </div>
       )}
 
-      <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-2xl flex flex-col gap-8 p-6 sm:p-10 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
+      {/* Bento Box Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 relative z-10">
         
-        <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-center sm:justify-between z-10">
+        {/* Calorie Hero - Takes up full width on mobile, 2 cols on desktop */}
+        <div className="col-span-2 sm:col-span-2 row-span-2 bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col items-center justify-center transition-transform relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-[50px] -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2" />
           <CalorieRing consumed={consumed} goal={goal} />
-          <div className="grid w-full max-w-xs gap-4">
-            {MEALS.map((meal) => {
-              const total = entries
-                .filter((e) => e.meal === meal.id)
-                .reduce((s, e) => s + Number(e.kcal), 0);
-              return (
-                <div key={meal.id} className="flex items-center justify-between text-[15px]">
-                  <span className="text-muted-foreground font-medium">{meal.label}</span>
-                  <span className="stat-number text-foreground">{Math.round(total)} kcal</span>
-                </div>
-              );
-            })}
+          <div className="mt-5 text-center flex flex-col">
+            <span className="stat-number text-5xl font-light tracking-tighter text-foreground drop-shadow-sm">{Math.max(0, Math.round(goal - consumed))}</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mt-1">kcal restantes</span>
           </div>
         </div>
 
-        {/* Macro Progress Bars */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-white/5 z-10">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-[oklch(0.7_0.15_250)] tracking-widest uppercase">Proteína</span>
-              <span className="text-foreground">{Math.round(consumedProtein)} <span className="text-muted-foreground font-medium">/ {goalProtein}g</span></span>
-            </div>
-            <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden shadow-inner">
-              <div 
-                className="h-full bg-gradient-to-r from-[oklch(0.6_0.15_250)] to-[oklch(0.7_0.15_250)] transition-all duration-1000 ease-out shadow-[0_0_12px_oklch(0.6_0.15_250_/_0.6)]" 
-                style={{ width: `${Math.min(100, (consumedProtein / goalProtein) * 100)}%` }} 
-              />
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-[oklch(0.8_0.18_70)] tracking-widest uppercase">Carbo</span>
-              <span className="text-foreground">{Math.round(consumedCarbs)} <span className="text-muted-foreground font-medium">/ {goalCarbs}g</span></span>
-            </div>
-            <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden shadow-inner">
-              <div 
-                className="h-full bg-gradient-to-r from-[oklch(0.7_0.18_70)] to-[oklch(0.8_0.18_70)] transition-all duration-1000 ease-out shadow-[0_0_12px_oklch(0.7_0.18_70_/_0.6)]" 
-                style={{ width: `${Math.min(100, (consumedCarbs / goalCarbs) * 100)}%` }} 
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-[oklch(0.7_0.2_15)] tracking-widest uppercase">Gordura</span>
-              <span className="text-foreground">{Math.round(consumedFat)} <span className="text-muted-foreground font-medium">/ {goalFat}g</span></span>
-            </div>
-            <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden shadow-inner">
-              <div 
-                className="h-full bg-gradient-to-r from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)] transition-all duration-1000 ease-out shadow-[0_0_12px_oklch(0.6_0.2_15_/_0.6)]" 
-                style={{ width: `${Math.min(100, (consumedFat / goalFat) * 100)}%` }} 
-              />
-            </div>
-          </div>
+        {/* Macro Widgets - Bento small cards */}
+        <MacroBento title="Proteína" consumed={consumedProtein} goal={goalProtein} color="from-[oklch(0.6_0.15_250)] to-[oklch(0.7_0.15_250)]" />
+        <MacroBento title="Carbo" consumed={consumedCarbs} goal={goalCarbs} color="from-[oklch(0.7_0.18_70)] to-[oklch(0.8_0.18_70)]" />
+        <MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" />
+        
+        {/* Quick Add floating trigger */}
+        <div className="col-span-1 bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-4 flex items-center justify-center">
+          {user && <QuickAddDrawer userId={user.id} day={day} />}
         </div>
       </div>
 
-      {user && <QuickActions userId={user.id} day={day} />}
-
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl">Alimentos do dia</h2>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="gap-2"
-            onClick={() => undoMutation.mutate()}
-            disabled={undoMutation.isPending || entries.length === 0}
-          >
-            <Undo2 className="size-4" /> Desfazer último
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="gap-2 text-destructive hover:text-destructive"
-                disabled={entries.length === 0 || clearDayMutation.isPending}
-              >
-                <Eraser className="size-4" /> Limpar dia
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Limpar todos os lançamentos?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Os {entries.length} registros de {formatDayLabel(day)} serão apagados. Não é
-                  possível desfazer.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={() => clearDayMutation.mutate()}>
-                  Limpar dia
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          {user && <AddFoodDialog userId={user.id} day={day} />}
-        </div>
+      <div className="flex items-center justify-between pt-6">
+        <h2 className="text-xl font-medium tracking-tight">Refeições</h2>
+        <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" onClick={() => undoMutation.mutate()} disabled={undoMutation.isPending || entries.length === 0}>
+          <Undo2 className="size-3.5 mr-1.5" /> Desfazer
+        </Button>
       </div>
 
+      {/* Rich Meal Cards Instead of Accordion */}
       {entriesQuery.isLoading ? (
         <div className="flex justify-center py-10">
           <Loader2 className="size-6 animate-spin text-primary" />
         </div>
-      ) : entries.length === 0 ? (
-        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-12 text-center text-[15px] text-muted-foreground/80 shadow-inner">
-          Nenhum alimento registrado neste dia.
-        </div>
       ) : (
-        <Accordion type="multiple" className="space-y-6" defaultValue={MEALS.map(m => m.id)}>
-          {MEALS.filter((m) => entries.some((e) => e.meal === m.id)).map((meal) => {
+        <div className="grid gap-3 sm:grid-cols-2">
+          {MEALS.map((meal) => {
             const mealEntries = entries.filter((e) => e.meal === meal.id);
             const totalKcal = Math.round(mealEntries.reduce((s, e) => s + Number(e.kcal), 0));
+            const hasItems = mealEntries.length > 0;
             
             return (
-            <AccordionItem key={meal.id} value={meal.id} className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] overflow-hidden shadow-xl shadow-black/10 transition-all hover:bg-white/[0.03]">
-              <div className="flex items-center justify-between gap-4 px-6 sm:px-8 border-b border-white/5 bg-white/[0.01]">
-                <AccordionTrigger className="hover:no-underline py-5 flex-1">
-                  <div className="flex flex-1 items-center justify-between pr-4">
-                    <span className="text-sm font-bold uppercase tracking-widest text-primary">
-                      {meal.label}
-                    </span>
-                    <span className="stat-number text-[15px] font-medium text-foreground">{totalKcal} kcal</span>
-                  </div>
-                </AccordionTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
-                  onClick={() => clearMealMutation.mutate(meal.id)}
-                  disabled={clearMealMutation.isPending}
-                >
-                  <Eraser className="size-4" />
-                </Button>
-              </div>
-              <AccordionContent className="pt-2 pb-4">
-                <ul className="divide-y divide-white/5 px-2">
-                  {mealEntries.map((entry) => (
-                    <li key={entry.id} className="flex items-center gap-4 px-4 sm:px-6 py-4 rounded-2xl transition-colors hover:bg-white/[0.04]">
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-[15px] font-medium text-foreground/90">{entry.name}</p>
-                        <p className="text-sm text-muted-foreground/80 font-light mt-0.5">
-                          {entry.grams ? `${Math.round(Number(entry.grams))} ${entry.unit === "ml" ? "ml" : "g"}` : "porção"}
-                        </p>
-                      </div>
-                      <span className="stat-number text-base font-medium">{Math.round(Number(entry.kcal))}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeMutation.mutate(entry.id)}
-                        aria-label={`Remover ${entry.name}`}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 size-8 rounded-full ml-2"
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          )})}
-        </Accordion>
+              <MealDrawer
+                key={meal.id}
+                mealId={meal.id}
+                mealLabel={meal.label}
+                totalKcal={totalKcal}
+                entries={mealEntries}
+                hasItems={hasItems}
+                onDelete={(id) => removeMutation.mutate(id)}
+                onClear={() => clearMealMutation.mutate(meal.id)}
+                userId={user?.id}
+                day={day}
+              />
+            );
+          })}
+        </div>
       )}
     </div>
   );
 }
 
-function QuickActions({ userId, day }: { userId: string; day: string }) {
+// ----------------------------------------
+// Sub-components for Native Feel
+// ----------------------------------------
+
+function MacroBento({ title, consumed, goal, color }: { title: string, consumed: number, goal: number, color: string }) {
+  const progress = Math.min(100, (consumed / goal) * 100);
+  return (
+    <div className="col-span-1 bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col justify-between h-36">
+      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
+      <div>
+        <p className="stat-number text-2xl font-medium tracking-tight text-foreground">{Math.round(consumed)}<span className="text-xs text-muted-foreground/60 ml-0.5">g</span></p>
+        <div className="h-1.5 w-full rounded-full bg-white/5 mt-3 overflow-hidden">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ type: "spring", stiffness: 60, damping: 15 }}
+            className={`h-full bg-gradient-to-r ${color} rounded-full`}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MealDrawer({ mealId, mealLabel, totalKcal, entries, hasItems, onDelete, onClear, userId, day }: any) {
+  const [open, setOpen] = useState(false);
+  
+  return (
+    <Drawer.Root open={open} onOpenChange={setOpen}>
+      <Drawer.Trigger asChild>
+        <button className="w-full text-left bg-surface/40 hover:bg-surface/60 border border-white/5 backdrop-blur-3xl rounded-[32px] p-5 sm:p-6 transition-colors shadow-sm active:scale-[0.98]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="size-10 rounded-full bg-white/5 flex items-center justify-center">
+                <Plus className="size-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-foreground/90">{mealLabel}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {hasItems ? `${entries.length} itens registrados` : "Adicionar alimento"}
+                </p>
+              </div>
+            </div>
+            {hasItems && (
+              <span className="stat-number text-lg font-medium text-foreground">{totalKcal} <span className="text-xs text-muted-foreground">kcal</span></span>
+            )}
+          </div>
+        </button>
+      </Drawer.Trigger>
+      
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
+        <Drawer.Content className="bg-surface border-t border-white/10 flex flex-col rounded-t-[32px] h-[85vh] mt-24 fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-3xl outline-none">
+          <div className="p-4 bg-surface rounded-t-[32px] flex-1 overflow-y-auto no-scrollbar">
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-white/20 mb-8" />
+            
+            <div className="flex items-center justify-between mb-8 px-2">
+              <div>
+                <Drawer.Title className="text-3xl font-bold tracking-tight text-foreground">{mealLabel}</Drawer.Title>
+                <Drawer.Description className="text-sm text-muted-foreground mt-1">
+                  {totalKcal} kcal totais
+                </Drawer.Description>
+              </div>
+              
+              <div className="flex gap-2">
+                {hasItems && (
+                  <Button variant="secondary" size="icon" className="rounded-full size-10" onClick={() => { onClear(); setOpen(false); }}>
+                    <Eraser className="size-4 text-destructive" />
+                  </Button>
+                )}
+                {userId && <AddFoodDialog userId={userId} day={day} defaultMeal={mealId} onAdded={() => setOpen(false)} />}
+              </div>
+            </div>
+            
+            {hasItems ? (
+              <ul className="space-y-2">
+                {entries.map((entry: any) => (
+                  <li key={entry.id} className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <div>
+                      <p className="text-[15px] font-medium">{entry.name}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {entry.grams ? `${Math.round(Number(entry.grams))} ${entry.unit === "ml" ? "ml" : "g"}` : "porção"}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="stat-number text-base">{Math.round(Number(entry.kcal))}</span>
+                      <Button variant="ghost" size="icon" onClick={() => onDelete(entry.id)} className="size-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="size-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                  <Search className="size-6 text-muted-foreground/50" />
+                </div>
+                <p className="text-muted-foreground">Nenhum alimento registrado aqui ainda.</p>
+              </div>
+            )}
+          </div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
+  );
+}
+
+function QuickAddDrawer({ userId, day }: { userId: string; day: string }) {
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
   const recentQuery = useQuery({ queryKey: ["recentFoods"], queryFn: () => fetchRecentFoods(12) });
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["entries"] });
-    queryClient.invalidateQueries({ queryKey: ["recentFoods"] });
-  };
-
-  const repeat = useMutation({
-    mutationFn: () => copyDay(userId, addDays(day, -1), day),
-    onSuccess: (count) => {
-      invalidate();
-      toast.success(count ? `${count} itens copiados do dia anterior` : "Dia anterior está vazio");
-    },
-    onError: (e: Error) => toast.error("Erro ao copiar", { description: e.message }),
-  });
-
+  
   const quickAdd = useMutation({
     mutationFn: (food: RecentFood) =>
       addEntry({
@@ -408,66 +343,64 @@ function QuickActions({ userId, day }: { userId: string; day: string }) {
         consumed_on: day,
       }),
     onSuccess: () => {
-      invalidate();
-      toast.success("Registrado em 1 toque");
+      queryClient.invalidateQueries({ queryKey: ["entries"] });
+      queryClient.invalidateQueries({ queryKey: ["recentFoods"] });
+      toast.success("Registrado");
+      setOpen(false);
     },
     onError: (e: Error) => toast.error("Erro ao registrar", { description: e.message }),
   });
 
-  const recents = recentQuery.data ?? [];
-
   return (
-    <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] space-y-5 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-64 h-64 bg-fuchsia-500/5 rounded-full blur-[80px] -z-10 pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+    <Drawer.Root open={open} onOpenChange={setOpen}>
+      <Drawer.Trigger asChild>
+        <button className="flex flex-col items-center justify-center gap-2 text-primary hover:scale-105 transition-transform active:scale-95">
+          <div className="size-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shadow-lg shadow-primary/20">
+            <Zap className="size-5" />
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80">Rápido</span>
+        </button>
+      </Drawer.Trigger>
       
-      <div className="flex flex-wrap items-center gap-3 relative z-10">
-        <span className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary">
-          <Zap className="size-4" /> Lançamento rápido
-        </span>
-        <div className="ml-auto flex flex-wrap gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="gap-2 rounded-full border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-md"
-            onClick={() => repeat.mutate()}
-            disabled={repeat.isPending}
-          >
-            <CopyCheck className="size-4" /> Repetir dia anterior
-          </Button>
-        </div>
-      </div>
-
-      {recents.length > 0 && (
-        <div className="flex flex-wrap gap-2.5 relative z-10">
-          {recents.map((food) => (
-            <button
-              key={food.name}
-              type="button"
-              onClick={() => quickAdd.mutate(food)}
-              disabled={quickAdd.isPending}
-              className="rounded-full bg-white/[0.03] border border-white/5 px-4 py-2 text-[13px] font-medium transition-all hover:border-primary/50 hover:bg-primary/5 active:scale-[0.98] shadow-sm"
-            >
-              <span className="text-foreground/90">{food.name}</span>
-              <span className="ml-2 text-muted-foreground font-light">
-                {food.grams ? `${Math.round(Number(food.grams))} ${food.unit === "ml" ? "ml" : "g"} · ` : ""}
-                <span className="stat-number">{Math.round(Number(food.kcal))} kcal</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
+        <Drawer.Content className="bg-surface border-t border-white/10 flex flex-col rounded-t-[32px] fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-3xl outline-none">
+          <div className="p-4 pb-12 bg-surface rounded-t-[32px]">
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-white/20 mb-6" />
+            <Drawer.Title className="text-xl font-medium tracking-tight mb-4 px-2">Lançamento Rápido</Drawer.Title>
+            
+            <div className="flex flex-wrap gap-2 px-2">
+              {recentQuery.data?.map((food) => (
+                <button
+                  key={food.name}
+                  onClick={() => quickAdd.mutate(food)}
+                  disabled={quickAdd.isPending}
+                  className="rounded-full bg-white/[0.04] border border-white/5 px-4 py-2.5 text-sm font-medium transition-all hover:bg-white/[0.08] active:scale-95"
+                >
+                  <span className="text-foreground/90">{food.name}</span>
+                  <span className="ml-2 text-muted-foreground font-light text-xs">
+                    {Math.round(Number(food.kcal))} kcal
+                  </span>
+                </button>
+              ))}
+              {(!recentQuery.data || recentQuery.data.length === 0) && (
+                <p className="text-sm text-muted-foreground p-4">Nenhum histórico recente. Adicione alimentos primeiro.</p>
+              )}
+            </div>
+          </div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }
 
-
-function AddFoodDialog({ userId, day }: { userId: string; day: string }) {
+function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; day: string, defaultMeal: string, onAdded: () => void }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState("");
   const [selected, setSelected] = useState<SearchableFood | null>(null);
   const [grams, setGrams] = useState("100");
-  const [meal, setMeal] = useState<string>("breakfast");
+  const [meal, setMeal] = useState<string>(defaultMeal);
 
   const customQuery = useQuery({ queryKey: ["customFoods"], queryFn: fetchCustomFoods });
   const results = useMemo(
@@ -498,136 +431,150 @@ function AddFoodDialog({ userId, day }: { userId: string; day: string }) {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries"] });
-      toast.success("Alimento registrado");
+      toast.success("Adicionado");
       setOpen(false);
       setSelected(null);
       setTerm("");
       setGrams("100");
+      onAdded();
     },
-    onError: (e: Error) => toast.error("Erro ao registrar", { description: e.message }),
+    onError: (e: Error) => toast.error("Erro", { description: e.message }),
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm" className="gap-2">
-          <Plus className="size-4" /> Adicionar
+    <Drawer.Root open={open} onOpenChange={setOpen}>
+      <Drawer.Trigger asChild>
+        <Button size="sm" className="rounded-full px-6 shadow-lg shadow-primary/20">
+          <Plus className="size-4 mr-2" /> Buscar
         </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Adicionar alimento</DialogTitle>
-        </DialogHeader>
-
-        {!selected ? (
-          <div className="space-y-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                autoFocus
-                placeholder="Buscar alimento (ex.: arroz, pizza, banana)"
-                className="pl-9"
-                value={term}
-                onChange={(e) => setTerm(e.target.value)}
-              />
-            </div>
-            <ul className="max-h-80 space-y-1 overflow-y-auto pr-1">
-              {results.map((food) => (
-                <li key={food.id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelected(food);
-                      setGrams(String(food.measureGrams || 100));
-                    }}
-                    className="w-full rounded-lg px-3 py-2 text-left transition-colors hover:bg-secondary"
-                  >
-                    <p className="text-sm font-medium">{food.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {food.category} · {Math.round(food.kcalPer100g)} kcal/100{" "}
-                      {food.unit ?? unitFor(food)}
-                    </p>
-                  </button>
-                </li>
-              ))}
-              {results.length === 0 && (
-                <li className="px-3 py-6 text-center text-sm text-muted-foreground">
-                  Nada encontrado. Cadastre em Perfil &amp; Meta.
-                </li>
-              )}
-            </ul>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="rounded-xl bg-secondary p-4">
-              <p className="font-medium">{selected.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {Math.round(selected.kcalPer100g)} kcal por 100 {unit} · referência:{" "}
-                {selected.measure} ({selected.measureGrams} {unit})
-              </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="grams">Quantidade ({unit})</Label>
-                <Input
-                  id="grams"
-                  type="number"
-                  min={1}
-                  value={grams}
-                  onChange={(e) => setGrams(e.target.value)}
-                />
-                <div className="flex flex-wrap gap-2">
-                  {[1, 2, 3].map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setGrams(String(Math.round(selected.measureGrams * n)))}
-                      className="rounded-full border border-border/70 px-2.5 py-1 text-xs transition-colors hover:border-primary hover:text-primary"
-                    >
-                      {n}× {selected.measure}
-                    </button>
+      </Drawer.Trigger>
+      
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]" />
+        <Drawer.Content className="bg-surface border-t border-white/10 flex flex-col rounded-t-[32px] h-[90vh] mt-24 fixed bottom-0 left-0 right-0 z-[60] mx-auto max-w-3xl outline-none">
+          <div className="p-4 bg-surface rounded-t-[32px] flex-1 overflow-y-auto no-scrollbar">
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-white/20 mb-6" />
+            
+            <Drawer.Title className="sr-only">Buscar Alimento</Drawer.Title>
+            
+            {!selected ? (
+              <div className="space-y-4 px-2">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    autoFocus
+                    placeholder="Buscar alimento (ex.: arroz, pizza)"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-2xl h-14 pl-12 pr-4 text-lg outline-none focus:border-primary transition-colors"
+                    value={term}
+                    onChange={(e) => setTerm(e.target.value)}
+                  />
+                </div>
+                <ul className="space-y-1">
+                  {results.map((food) => (
+                    <li key={food.id}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelected(food);
+                          setGrams(String(food.measureGrams || 100));
+                        }}
+                        className="w-full rounded-2xl px-4 py-3 text-left transition-colors hover:bg-white/[0.04] active:scale-[0.98] border border-transparent flex items-center justify-between"
+                      >
+                        <div>
+                          <p className="text-[15px] font-medium">{food.name}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {food.category}
+                          </p>
+                        </div>
+                        <span className="stat-number text-sm">{Math.round(food.kcalPer100g)} <span className="text-[10px] uppercase tracking-widest text-muted-foreground">kcal</span></span>
+                      </button>
+                    </li>
                   ))}
-                  <button
-                    type="button"
-                    onClick={() => setGrams(String(Math.max(1, Number(grams || 0) + 50)))}
-                    className="rounded-full border border-border/70 px-2.5 py-1 text-xs transition-colors hover:border-primary hover:text-primary"
-                  >
-                    +50 {unit}
-                  </button>
+                  {results.length === 0 && term.length > 2 && (
+                    <li className="px-4 py-10 text-center text-sm text-muted-foreground">
+                      Nada encontrado. Você pode cadastrar em Perfil.
+                    </li>
+                  )}
+                </ul>
+              </div>
+            ) : (
+              <div className="space-y-6 px-2 animate-in fade-in zoom-in-95 duration-200">
+                <div className="rounded-2xl bg-white/[0.02] border border-white/5 p-6 text-center">
+                  <p className="text-2xl font-bold tracking-tight">{selected.name}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {Math.round(selected.kcalPer100g)} kcal por 100 {unit}
+                  </p>
+                </div>
+                
+                <div className="grid gap-6">
+                  <div className="space-y-3">
+                    <Label className="text-xs uppercase tracking-widest text-muted-foreground ml-1">Quantidade ({unit})</Label>
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        min={1}
+                        value={grams}
+                        onChange={(e) => setGrams(e.target.value)}
+                        className="h-14 rounded-2xl text-lg font-medium bg-white/[0.04] border-white/10"
+                      />
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {[1, 2, 3].map((n) => (
+                        <button
+                          key={n}
+                          type="button"
+                          onClick={() => setGrams(String(Math.round(selected.measureGrams * n)))}
+                          className="rounded-full bg-white/[0.04] hover:bg-white/[0.08] px-4 py-2 text-xs font-medium transition-colors"
+                        >
+                          {n}× {selected.measure}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Label className="text-xs uppercase tracking-widest text-muted-foreground ml-1">Refeição</Label>
+                    <Select value={meal} onValueChange={setMeal}>
+                      <SelectTrigger className="h-14 rounded-2xl bg-white/[0.04] border-white/10 text-base">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-2xl border-white/10">
+                        {MEALS.map((m) => (
+                          <SelectItem key={m.id} value={m.id} className="rounded-xl my-1">
+                            {mealLabel(m.id)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="pt-6 border-t border-white/5">
+                  <div className="flex items-center justify-between mb-6 px-2">
+                    <span className="text-sm font-medium text-muted-foreground">Total</span>
+                    <p className="stat-number text-3xl text-primary">{kcal} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <Button variant="secondary" className="flex-1 h-14 rounded-2xl text-base" onClick={() => setSelected(null)}>
+                      Voltar
+                    </Button>
+                    <Button
+                      className="flex-1 h-14 rounded-2xl text-base bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                      onClick={() => mutation.mutate()}
+                      disabled={mutation.isPending || Number(grams) <= 0}
+                    >
+                      Salvar
+                    </Button>
+                  </div>
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Refeição</Label>
-                <Select value={meal} onValueChange={setMeal}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MEALS.map((m) => (
-                      <SelectItem key={m.id} value={m.id}>
-                        {mealLabel(m.id)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <p className="stat-number text-2xl text-primary">{kcal} kcal</p>
-            <div className="flex gap-2">
-              <Button variant="secondary" className="flex-1" onClick={() => setSelected(null)}>
-                Voltar
-              </Button>
-              <Button
-                className="flex-1"
-                onClick={() => mutation.mutate()}
-                disabled={mutation.isPending || Number(grams) <= 0}
-              >
-                Registrar
-              </Button>
-            </div>
+            )}
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }
+

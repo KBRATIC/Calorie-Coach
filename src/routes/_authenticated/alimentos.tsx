@@ -2,6 +2,7 @@ import { unitFor } from "@/lib/nutrition";
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import {
   ArrowDown,
   ArrowUp,
@@ -11,20 +12,13 @@ import {
   Salad,
   Search,
   Utensils,
+  Plus
 } from "lucide-react";
 import { BASE_FOODS, type BaseFood } from "@/data/baseFoods";
 import { fetchCustomFoods } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -42,11 +36,6 @@ export const Route = createFileRoute("/_authenticated/alimentos")({
         name: "description",
         content:
           "Consulte a tabela completa de alimentos com calorias por 100 g, medida caseira e categoria.",
-      },
-      { property: "og:title", content: "Tabela de alimentos — KcalTrack" },
-      {
-        property: "og:description",
-        content: "Mais de 1.100 alimentos com calorias por 100 g e por porção.",
       },
     ],
   }),
@@ -148,14 +137,14 @@ export function FoodsPage() {
     );
   }
 
-  function SortHeader({ label, sortKey }: { label: string; sortKey: SortKey }) {
+  function SortButton({ label, sortKey }: { label: string; sortKey: SortKey }) {
     const active = sort.key === sortKey;
     return (
       <button
         type="button"
         onClick={() => toggleSort(sortKey)}
-        className={`inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-colors ${
-          active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+        className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-all ${
+          active ? "bg-primary/10 text-primary border border-primary/20" : "bg-white/[0.03] text-muted-foreground border border-transparent hover:bg-white/[0.06] hover:text-foreground"
         }`}
       >
         {label}
@@ -171,17 +160,16 @@ export function FoodsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
       <div>
-        <p className="eyebrow">Base de referência</p>
-        <h1 className="mt-2 text-4xl md:text-5xl">Tabela de alimentos</h1>
-        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Todos os alimentos disponíveis no app, com calorias por 100 g, medida caseira e o valor
-          estimado por porção. Filtre por categoria, ordene por densidade calórica e planeje o dia.
+        <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Base de dados</p>
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Alimentos</h1>
+        <p className="mt-3 max-w-2xl text-[15px] text-muted-foreground leading-relaxed">
+          Navegue por nossa base completa. Filtre por categoria, ordene por densidade calórica e encontre a refeição perfeita.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3">
         {[
           { icon: Utensils, label: "Alimentos listados", value: rows.length, suffix: "" },
           { icon: Salad, label: "Categorias", value: categories.length, suffix: "" },
@@ -192,31 +180,32 @@ export function FoodsPage() {
             suffix: " kcal",
           },
         ].map((stat) => (
-          <div key={stat.label} className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-xl flex flex-col transition-all hover:bg-white/[0.03]">
+          <div key={stat.label} className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-6 shadow-xl flex flex-col transition-transform hover:scale-[1.02]">
             <stat.icon className="size-6 text-primary" />
-            <p className="stat-number mt-4 text-3xl font-bold tracking-tight text-foreground">
+            <p className="stat-number mt-4 text-3xl font-medium tracking-tight text-foreground drop-shadow-sm">
               {stat.value}
-              <span className="text-xl text-muted-foreground font-medium ml-1">{stat.suffix}</span>
+              <span className="text-xl text-muted-foreground font-normal ml-1">{stat.suffix}</span>
             </p>
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mt-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
               {stat.label}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-2xl overflow-hidden">
-        <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-4 border-b border-white/5 p-5 sm:flex sm:flex-wrap sm:justify-between bg-white/[0.01]">
-          <div className="relative min-w-0 sm:w-80">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
+      <div className="bg-surface/40 border border-white/5 backdrop-blur-3xl rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden">
+        {/* Filter & Search Header */}
+        <div className="flex flex-col md:flex-row items-center gap-4 p-6 bg-white/[0.01] border-b border-white/5">
+          <div className="relative w-full flex-1">
+            <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
+            <input
               value={term}
               onChange={(e) => {
                 setTerm(e.target.value);
                 setPage(0);
               }}
               placeholder="Buscar alimento…"
-              className="pl-9"
+              className="w-full bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] focus:border-primary/50 transition-colors rounded-2xl h-14 pl-12 pr-4 text-base outline-none shadow-inner"
               aria-label="Buscar alimento"
             />
           </div>
@@ -228,13 +217,13 @@ export function FoodsPage() {
               setPage(0);
             }}
           >
-            <SelectTrigger className="w-full sm:w-64" aria-label="Filtrar por categoria">
+            <SelectTrigger className="w-full md:w-64 h-14 rounded-2xl bg-white/[0.03] border-white/10 text-base shadow-inner">
               <SelectValue placeholder="Categoria" />
             </SelectTrigger>
-            <SelectContent className="max-h-72">
-              <SelectItem value="all">Todas as categorias</SelectItem>
+            <SelectContent className="rounded-2xl border-white/10 max-h-72">
+              <SelectItem value="all" className="rounded-xl my-1">Todas as categorias</SelectItem>
               {categories.map((c) => (
-                <SelectItem key={c} value={c}>
+                <SelectItem key={c} value={c} className="rounded-xl my-1">
                   {c}
                 </SelectItem>
               ))}
@@ -242,101 +231,100 @@ export function FoodsPage() {
           </Select>
         </div>
 
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="min-w-[240px]">
-                  <SortHeader label="Alimento" sortKey="name" />
-                </TableHead>
-                <TableHead className="hidden md:table-cell">
-                  <SortHeader label="Categoria" sortKey="category" />
-                </TableHead>
-                <TableHead className="hidden sm:table-cell">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Medida
-                  </span>
-                </TableHead>
-                <TableHead className="text-right">
-                  <SortHeader label="Kcal / 100 g" sortKey="kcalPer100g" />
-                </TableHead>
-                <TableHead className="hidden text-right lg:table-cell">
-                  <SortHeader label="Kcal / porção" sortKey="portion" />
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {visible.map((food) => {
-                const tone = densityTone(food.kcalPer100g);
-                return (
-                  <TableRow key={food.id} className="border-white/5 hover:bg-white/[0.02] transition-colors">
-                    <TableCell className="max-w-[320px] py-4">
-                      <div className="flex min-w-0 items-center gap-2">
-                        <span className="truncate font-medium text-[15px] text-foreground/90">{food.name}</span>
-                        {food.custom && (
-                          <Badge variant="outline" className="shrink-0 border-primary/40 text-primary bg-primary/5">
-                            meu
-                          </Badge>
+        {/* Sorting Pills */}
+        <div className="px-6 py-4 border-b border-white/5 flex flex-wrap items-center gap-2 overflow-x-auto no-scrollbar">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mr-2 shrink-0">Ordenar:</span>
+          <SortButton label="Nome" sortKey="name" />
+          <SortButton label="Categoria" sortKey="category" />
+          <SortButton label="Calorias (100g)" sortKey="kcalPer100g" />
+          <SortButton label="Calorias (Porção)" sortKey="portion" />
+        </div>
+
+        {/* Rich List View */}
+        <div className="p-4 sm:p-6 bg-black/10">
+          <motion.div 
+            key={page}
+            className="grid gap-3"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.04 } }
+            }}
+          >
+            {visible.map((food) => {
+              const tone = densityTone(food.kcalPer100g);
+              const hasMacros = food.proteinPer100g !== undefined || food.carbsPer100g !== undefined || food.fatPer100g !== undefined;
+              
+              return (
+                <motion.div 
+                  key={food.id} 
+                  variants={{
+                    hidden: { opacity: 0, y: 10, scale: 0.98 },
+                    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 400, damping: 30 } }
+                  }}
+                  className="bg-surface/60 border border-white/5 hover:border-white/10 hover:bg-surface/80 rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg font-semibold tracking-tight text-foreground/90 truncate">{food.name}</h3>
+                      {food.custom && (
+                        <Badge variant="outline" className="shrink-0 border-primary/30 text-primary bg-primary/5 text-[10px] px-2 py-0">
+                          Meu alimento
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground">
+                      <span className="px-2 py-1 rounded-lg bg-white/5 border border-white/5">{food.category}</span>
+                      <span>•</span>
+                      <span>{food.measure} <span className="opacity-60">({Math.round(food.measureGrams)} {unitFor(food)})</span></span>
+                    </div>
+
+                    {hasMacros && (
+                      <div className="flex items-center gap-2 mt-3 text-[11px] font-bold tracking-widest uppercase">
+                        {food.proteinPer100g !== undefined && (
+                          <span className="flex items-center gap-1.5 bg-[oklch(0.6_0.15_250)]/10 text-[oklch(0.7_0.15_250)] px-2.5 py-1 rounded-full border border-[oklch(0.6_0.15_250)]/20">
+                            P <span className="text-foreground ml-0.5">{food.proteinPer100g}g</span>
+                          </span>
+                        )}
+                        {food.carbsPer100g !== undefined && (
+                          <span className="flex items-center gap-1.5 bg-[oklch(0.7_0.18_70)]/10 text-[oklch(0.8_0.18_70)] px-2.5 py-1 rounded-full border border-[oklch(0.7_0.18_70)]/20">
+                            C <span className="text-foreground ml-0.5">{food.carbsPer100g}g</span>
+                          </span>
+                        )}
+                        {food.fatPer100g !== undefined && (
+                          <span className="flex items-center gap-1.5 bg-[oklch(0.6_0.2_15)]/10 text-[oklch(0.7_0.2_15)] px-2.5 py-1 rounded-full border border-[oklch(0.6_0.2_15)]/20">
+                            G <span className="text-foreground ml-0.5">{food.fatPer100g}g</span>
+                          </span>
                         )}
                       </div>
-                      <span className="text-sm text-muted-foreground/80 md:hidden mt-0.5 block">
-                        {food.category}
-                      </span>
-                      {(food.proteinPer100g !== undefined || food.carbsPer100g !== undefined || food.fatPer100g !== undefined) && (
-                        <div className="flex items-center gap-3 mt-2 text-[11px] font-medium text-muted-foreground">
-                          {food.proteinPer100g !== undefined && (
-                            <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full">
-                              <div className="size-1.5 rounded-full bg-[oklch(0.6_0.15_250)]" />
-                              P: {food.proteinPer100g}g
-                            </span>
-                          )}
-                          {food.carbsPer100g !== undefined && (
-                            <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full">
-                              <div className="size-1.5 rounded-full bg-[oklch(0.7_0.18_70)]" />
-                              C: {food.carbsPer100g}g
-                            </span>
-                          )}
-                          {food.fatPer100g !== undefined && (
-                            <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full">
-                              <div className="size-1.5 rounded-full bg-[oklch(0.6_0.2_15)]" />
-                              G: {food.fatPer100g}g
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="hidden text-[15px] text-muted-foreground md:table-cell py-4">
-                      {food.category}
-                    </TableCell>
-                    <TableCell className="hidden text-[15px] text-muted-foreground sm:table-cell py-4">
-                      {food.measure} · {Math.round(food.measureGrams)} {unitFor(food)}
-                    </TableCell>
-                    <TableCell className="text-right py-4">
-                      <div className="flex items-center justify-end gap-3">
-                        <span className="stat-number text-[15px]">{Math.round(food.kcalPer100g)}</span>
-                        <Badge variant="outline" className={`shrink-0 border-transparent bg-white/5 ${tone.className}`}>
-                          {tone.label}
-                        </Badge>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden text-right lg:table-cell py-4">
-                      <span className="stat-number text-[15px] text-muted-foreground/60">
-                        {Math.round(portionKcal(food))}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                    )}
+                  </div>
 
-              {!visible.length && (
-                <TableRow>
-                  <TableCell colSpan={5} className="py-12 text-center text-sm text-muted-foreground">
-                    Nenhum alimento encontrado para esse filtro.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-3 sm:pt-0 border-t border-white/5 sm:border-0 mt-2 sm:mt-0">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="stat-number text-3xl font-medium text-foreground tracking-tight">{Math.round(food.kcalPer100g)}</span>
+                      <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">kcal/100g</span>
+                    </div>
+                    <Badge variant="outline" className={`shrink-0 border-transparent bg-white/5 uppercase tracking-widest text-[9px] font-bold px-2 py-0.5 ${tone.className}`}>
+                      {tone.label}
+                    </Badge>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {!visible.length && (
+            <div className="py-20 flex flex-col items-center justify-center text-center">
+              <div className="size-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                <Search className="size-6 text-muted-foreground/50" />
+              </div>
+              <p className="text-lg font-medium">Nenhum alimento encontrado</p>
+              <p className="text-sm text-muted-foreground mt-1 max-w-sm">Tente ajustar seus filtros ou realizar uma nova busca.</p>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/5 p-5 bg-white/[0.01]">
