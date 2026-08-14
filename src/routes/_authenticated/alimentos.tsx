@@ -160,7 +160,7 @@ export function FoodsPage() {
   }
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="space-y-6 pb-10 w-full overflow-x-hidden">
       <div>
         <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Base de dados</p>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Alimentos</h1>
@@ -268,8 +268,8 @@ export function FoodsPage() {
                     className="bento-card hover:bg-surface-strong rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group"
                   >
                   <div className="flex-1 min-w-0 w-full">
-                    <div className="flex items-center gap-2 mb-1 w-full">
-                      <h3 className="text-lg font-semibold tracking-tight text-foreground/90 truncate">{food.name}</h3>
+                    <div className="flex items-center gap-2 mb-1 w-full min-w-0">
+                      <h3 className="text-lg font-semibold tracking-tight text-foreground/90 truncate flex-1 min-w-0">{food.name}</h3>
                       {food.custom && (
                         <Badge variant="outline" className="shrink-0 border-primary/30 text-primary bg-primary/5 text-[10px] px-2 py-0">
                           Meu alimento

@@ -1,4 +1,5 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   ArrowRight,
@@ -31,12 +32,6 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  beforeLoad: async () => {
-    const { data } = await supabase.auth.getSession();
-    if (data.session) {
-      throw redirect({ to: "/hoje", replace: true });
-    }
-  },
   component: Landing,
 });
 
@@ -52,6 +47,14 @@ const WEEK_DATA = [
 ];
 
 function Landing() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) navigate({ to: "/hoje", replace: true });
+    });
+  }, [navigate]);
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       <div className="aurora-layer" aria-hidden />
