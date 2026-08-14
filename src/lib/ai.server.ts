@@ -139,7 +139,8 @@ REGRAS CRÍTICAS DE COMPORTAMENTO:
 7. Se o usuário pedir para REMOVER ou APAGAR um alimento do diário, adicione no final:
 [REMOVE_FOOD: {"id": "ID_AQUI"}]
 - Não use crases nem formatação markdown nas tags. As tags devem ser literais. CALORIAS: Não superestime calorias; use bom senso nutricional.
-8. O usuário frequentemente usa o microfone para interagir. Se o texto contiver gaguejos, pausas, palavras repetidas ou correções ("eu comi um, não pera, dois pães"), ignore a confusão e extraia a intenção final de forma inteligente, sem mencionar a transcrição.`;
+8. O usuário frequentemente usa o microfone para interagir. Se o texto contiver gaguejos, pausas, palavras repetidas ou correções ("eu comi um, não pera, dois pães"), ignore a confusão e extraia a intenção final de forma inteligente, sem mencionar a transcrição.
+9. NUNCA introduza as tags (ex: "Aqui está o registro: [LOG_FOOD...]"). As tags são instruções de background, elas sumirão do chat. O usuário apenas lerá o texto. Portanto, fale normalmente confirmando a ação (ex: "Feito! Adicionei o pão...") e coloque a tag solta no fim.`;
 
 export async function chatAssistant(
   messages: { role: "user" | "model"; text: string; images?: string[] }[],
