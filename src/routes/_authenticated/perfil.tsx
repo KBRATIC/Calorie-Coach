@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
+import { Trash2, AlertTriangle, Loader2, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteAccount } from "@/lib/user.functions";
 import {
@@ -27,6 +27,7 @@ import {
 } from "@/lib/nutrition";
 
 import { useSession } from "@/hooks/useSession";
+import { usePwaInstall } from "@/hooks/usePwaInstall";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -70,6 +71,7 @@ export const Route = createFileRoute("/_authenticated/perfil")({
 
 export function ProfilePage() {
   const { user } = useSession();
+  const { installPrompt, triggerInstall } = usePwaInstall();
   const queryClient = useQueryClient();
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
 
@@ -162,13 +164,23 @@ export function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl">Perfil &amp; Meta</h1>
-        <p className="text-sm text-muted-foreground">
-          TMB calculada por Mifflin-St Jeor ou Katch-McArdle (se informar % de gordura), com
-          limites seguros de déficit e superávit.
-        </p>
-
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl">Perfil &amp; Meta</h1>
+          <p className="text-sm text-muted-foreground">
+            TMB calculada por Mifflin-St Jeor ou Katch-McArdle (se informar % de gordura), com
+            limites seguros de déficit e superávit.
+          </p>
+        </div>
+        {installPrompt && (
+          <Button 
+            onClick={triggerInstall} 
+            className="rounded-2xl h-10 px-4 bg-gradient-to-r from-blue-600 to-fuchsia-600 hover:from-blue-500 hover:to-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/20 gap-2 shrink-0 active:scale-95 transition-all"
+          >
+            <Download className="size-4" />
+            Instalar App
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">

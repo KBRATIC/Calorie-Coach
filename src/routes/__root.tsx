@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 import { CookieBanner } from "@/components/CookieBanner";
+import { usePwaInstall } from "@/hooks/usePwaInstall";
 
 
 
@@ -109,6 +110,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap",
       },
       { rel: "icon", href: "/icon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/icon.png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
 
@@ -136,6 +139,18 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  
+  // Call this here so it listens globally from the start
+  usePwaInstall();
+
+  // Register service worker on the client side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      import('virtual:pwa-register').then(({ registerSW }) => {
+        registerSW({ immediate: true });
+      }).catch(console.error);
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
