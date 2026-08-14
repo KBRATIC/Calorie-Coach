@@ -250,8 +250,11 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             <div className="p-4 sm:p-5 border-b border-border shrink-0 bg-surface rounded-t-[32px] flex flex-col items-center">
               <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-border mb-4" />
               <Drawer.Title className="flex items-center gap-3 text-xl font-medium tracking-tight w-full px-2">
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary shadow-[var(--shadow-glow)]">
-                  <Sparkles className="size-5" />
+                <div className="relative flex size-10 items-center justify-center rounded-full shrink-0 shadow-md">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-fuchsia-500 to-purple-500 animate-spin [animation-duration:3s]" />
+                  <div className="absolute inset-[2px] bg-white rounded-full z-10 flex items-center justify-center">
+                    <Sparkles className="size-[18px] text-fuchsia-600" />
+                  </div>
                 </div>
                 KcalTrack Assistant
               </Drawer.Title>
@@ -364,7 +367,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                 )}
               </AnimatePresence>
               
-              <form onSubmit={handleSend} className="relative flex items-center gap-2 bg-surface-strong border border-border rounded-[32px] p-1 shadow-inner focus-within:border-primary/50 transition-colors">
+              <form onSubmit={handleSend} className="relative flex items-center gap-2 bg-surface-strong border border-border rounded-[32px] p-1 shadow-inner focus-within:border-fuchsia-500/50 focus-within:shadow-[0_0_15px_rgba(217,70,239,0.1)] transition-all">
                 <input
                   type="file"
                   accept="image/*"
@@ -454,7 +457,11 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     <Button
                       type="submit"
                       size="icon"
-                      className="h-10 w-10 rounded-full transition-transform active:scale-[0.95] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+                      className={`h-10 w-10 rounded-full transition-transform active:scale-[0.95] flex-shrink-0 border-0 ${
+                        (!input.trim() && imagePreviews.length === 0) || isLoading 
+                          ? 'bg-surface border-border text-muted-foreground' 
+                          : 'bg-gradient-to-tr from-blue-600 via-fuchsia-500 to-purple-600 text-white shadow-lg shadow-fuchsia-500/25 hover:opacity-90'
+                      }`}
                       disabled={(!input.trim() && imagePreviews.length === 0) || isLoading}
                       aria-label="Enviar mensagem"
                     >
