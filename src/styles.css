@@ -247,7 +247,7 @@
   border: 1px solid var(--color-border);
 }
 
-/* Aurora Background */
+/* Professional Mesh Gradient & Grain */
 .aurora-layer {
   position: absolute;
   inset: 0;
@@ -257,28 +257,42 @@
   background-color: var(--color-background);
 }
 
-.aurora-layer::before,
+.aurora-layer::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background-image: 
+    radial-gradient(circle at 15% 50%, oklch(0.7 0.2 140 / 0.4), transparent 45%),
+    radial-gradient(circle at 85% 30%, oklch(0.6 0.15 250 / 0.35), transparent 50%),
+    radial-gradient(circle at 50% 80%, oklch(0.7 0.18 70 / 0.3), transparent 50%),
+    radial-gradient(circle at 50% 10%, oklch(0.7 0.2 140 / 0.25), transparent 45%);
+  filter: blur(60px);
+  animation: aurora-mesh 18s ease-in-out infinite alternate;
+  background-size: 150% 150%;
+  opacity: 0.85; /* Vibrant and highly visible */
+}
+
+/* Subtle grain texture overlay for premium organic feel */
 .aurora-layer::after {
   content: "";
   position: absolute;
-  width: 150vw;
-  height: 150vh;
-  top: -25%;
-  left: -25%;
-  background: radial-gradient(circle at center, var(--color-primary), transparent 40%),
-              radial-gradient(circle at right, oklch(0.6 0.2 280), transparent 50%),
-              radial-gradient(circle at left, oklch(0.7 0.15 78), transparent 50%);
-  opacity: 0.12;
-  filter: blur(80px);
-  animation: aurora-spin 25s linear infinite;
+  inset: 0;
+  opacity: 0.25;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-.aurora-layer::after {
-  animation: aurora-spin 35s linear infinite reverse;
-  opacity: 0.08;
-}
-
-@keyframes aurora-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes aurora-mesh {
+  0% {
+    background-position: 0% 0%;
+  }
+  33% {
+    background-position: 100% 50%;
+  }
+  66% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }
