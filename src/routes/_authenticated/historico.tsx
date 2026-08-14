@@ -176,8 +176,13 @@ export function HistoryPage() {
             <Loader2 className="size-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="h-72 w-full mt-4">
-            <ResponsiveContainer width="100%" height="100%">
+          <div 
+            className="h-72 w-full mt-4 overflow-x-auto no-scrollbar touch-pan-x"
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
+            <div style={{ minWidth: period === "mes" ? "1000px" : "100%", height: "100%", paddingRight: "10px" }}>
+              <ResponsiveContainer width="100%" height="100%">
               <BarChart data={totals} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={2} barCategoryGap="20%">
                 <XAxis 
                   dataKey="shortDate" 
@@ -251,6 +256,7 @@ export function HistoryPage() {
                 <Bar yAxisId="right" dataKey="fat" fill="oklch(0.6 0.2 15)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </div>
         )}
       </div>
