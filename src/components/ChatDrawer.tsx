@@ -227,7 +227,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       
       // Desktop: Enter sends the message.
       e.preventDefault();
-      if ((input.trim() || imageBase64Preview) && !isLoading) {
+      if ((input.trim() || imagePreviews.length > 0) && !isLoading) {
         const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
         handleSend(fakeEvent);
       }
@@ -455,7 +455,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       type="submit"
                       size="icon"
                       className="h-10 w-10 rounded-full transition-transform active:scale-[0.95] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
-                      disabled={(!input.trim() && !imageBase64Preview) || isLoading}
+                      disabled={(!input.trim() && imagePreviews.length === 0) || isLoading}
                       aria-label="Enviar mensagem"
                     >
                       <Send className="size-4" />
