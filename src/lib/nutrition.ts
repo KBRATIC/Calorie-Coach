@@ -172,6 +172,8 @@ export function todayISO(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
 }
 
+export const activeDayState = { date: todayISO() };
+
 export function formatDayLabel(iso: string): string {
   const [y, m, d] = iso.split("-").map(Number);
   const date = new Date(y!, (m ?? 1) - 1, d ?? 1);

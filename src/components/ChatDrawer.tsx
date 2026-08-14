@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2, Sparkles, Camera, X, Mic, Paperclip, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
 import { askAssistant } from "@/lib/ai.functions";
@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown";
 import { useQueryClient } from "@tanstack/react-query";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CameraCaptureDialog } from "@/components/CameraCaptureDialog";
+import { activeDayState } from "@/lib/nutrition";
 
 interface Message {
   role: "user" | "model";
@@ -187,7 +188,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       // Gemini API requires the first message to be from the 'user'.
       // If the first message in our state is the default 'model' greeting, we must exclude it.
       const apiMessages = newMessages.filter((m, idx) => !(idx === 0 && m.role === "model"));
-      const response = await ask({ data: { messages: apiMessages } });
+      const response = await ask({ data: { messages: apiMessages, date: activeDayState.date } });
       setMessages((prev) => [...prev, { role: "model", text: response.text }]);
       queryClient.invalidateQueries({ queryKey: ["entries"] });
     } catch (err) {
@@ -200,6 +201,29 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       setIsLoading(false);
     }
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      const isMobile = typeof window !== "undefined" && /Mobi|Android|iPhone/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Mobile: Enter just inserts a newline.
+        return;
+      }
+      
+      if (e.shiftKey) {
+        // Desktop: Shift+Enter inserts a newline.
+        return;
+      }
+      
+      // Desktop: Enter sends the message.
+      e.preventDefault();
+      if ((input.trim() || imageBase64Preview) && !isLoading) {
+        const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
+        handleSend(fakeEvent);
+      }
+    }
+  };
 
   return (
     <>
@@ -384,15 +408,22 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             </Popover>
             
             <div className="relative flex-1">
-              <Input
+              <Textarea
                 id="chat-input"
                 name="chat-input"
                 aria-label="Mensagem para o assistente"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  e.target.style.height = '48px';
+                  e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                }}
+                onKeyDown={handleKeyDown}
                 placeholder="Pergunte ou envie uma foto..."
-                className="pr-20 rounded-full h-12 bg-secondary/20 hover:bg-secondary/30 focus:bg-secondary/30 transition-colors border-transparent focus-visible:ring-1 focus-visible:ring-primary/30 shadow-none placeholder:text-muted-foreground/60"
+                className="pr-20 min-h-[48px] rounded-[24px] py-3 resize-none bg-secondary/20 hover:bg-secondary/30 focus:bg-secondary/30 transition-colors border-transparent focus-visible:ring-1 focus-visible:ring-primary/30 shadow-none placeholder:text-muted-foreground/60 scrollbar-hide"
                 disabled={isLoading}
+                rows={1}
+                style={{ overflowY: 'auto' }}
               />
               <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
                 <Button

@@ -20,7 +20,8 @@ const ChatInput = z.object({
     role: z.enum(["user", "model"]),
     text: z.string().min(1),
     imageBase64: z.string().optional()
-  })).max(20)
+  })).max(20),
+  date: z.string().optional()
 });
 
 export const askAssistant = createServerFn({ method: "POST" })
@@ -30,6 +31,7 @@ export const askAssistant = createServerFn({ method: "POST" })
     // 1. Injeção de Contexto Invisível
     const today = new Date();
     const todayStr = today.toISOString().split("T")[0];
+    const targetDateStr = data.date || todayStr;
     
     // Data de 7 dias atrás
     const lastWeek = new Date(today);
@@ -125,7 +127,7 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
             carbs: foodData.carbs || 0,
             fat: foodData.fat || 0,
             meal: foodData.meal || "lunch",
-            consumed_on: todayStr
+            consumed_on: targetDateStr
           });
           
           responseText = responseText.replace(match[0], "");

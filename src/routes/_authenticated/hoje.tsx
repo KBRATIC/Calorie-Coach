@@ -31,7 +31,7 @@ import {
   type RecentFood,
   type SearchableFood,
 } from "@/lib/api";
-import { MEALS, mealLabel, todayISO, formatDayLabel, addDays, unitFor } from "@/lib/nutrition";
+import { MEALS, mealLabel, todayISO, formatDayLabel, addDays, unitFor, activeDayState } from "@/lib/nutrition";
 import { useSession } from "@/hooks/useSession";
 import { CalorieRing } from "@/components/CalorieRing";
 import { Button } from "@/components/ui/button";
@@ -93,7 +93,12 @@ export const Route = createFileRoute("/_authenticated/hoje")({
 export function TodayPage() {
   const { user } = useSession();
   const queryClient = useQueryClient();
-  const [day, setDay] = useState(todayISO());
+  const [day, setDayState] = useState(activeDayState.date);
+  
+  const setDay = (d: string) => {
+    setDayState(d);
+    activeDayState.date = d;
+  };
 
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
   const entriesQuery = useQuery({
