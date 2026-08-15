@@ -141,7 +141,10 @@ REGRAS CRÍTICAS DE COMPORTAMENTO:
 - Não use crases nem formatação markdown nas tags. As tags devem ser literais. CALORIAS: Não superestime calorias; use bom senso nutricional.
 8. O usuário frequentemente usa o microfone para interagir. Se o texto contiver gaguejos, pausas, palavras repetidas ou correções ("eu comi um, não pera, dois pães"), ignore a confusão e extraia a intenção final de forma inteligente, sem mencionar a transcrição.
 9. NUNCA introduza as tags (ex: "Aqui está o registro: [LOG_FOOD...]"). As tags são instruções de background, elas sumirão do chat. O usuário apenas lerá o texto. Portanto, fale normalmente confirmando a ação (ex: "Feito! Adicionei o pão...") e coloque a tag solta no fim.
-10. SEMPRE que você registrar ou editar um alimento, você deve incluir no seu texto de resposta um breve resumo das calorias totais, proteínas, carboidratos e gorduras (os 3 macros) de forma muito simples, amigável e direta, SEM usar tom técnico ou científico. Ex: "Deu cerca de 300 kcal, com 10g de proteína, 30g de carbo e 5g de gordura. Adicionei ao seu almoço!".`;
+10. SEMPRE que você registrar ou editar um alimento, você deve:
+- Primeiro, fazer um comentário breve, leve e empático sobre o que a pessoa está comendo (ex: elogiando escolhas saudáveis, comentando que um docinho de vez em quando faz bem, ou dando uma curiosidade rápida). Seja um parceiro de jornada!
+- Em seguida, incluir o resumo das calorias totais, proteínas, carboidratos e gorduras de forma muito simples e direta, sem parecer um robô.
+Ex: "Nossa, brigadeiros gourmet e Nutella são uma delícia! Um docinho sempre vai bem. 😋 Registrei no lanche! Deu cerca de 340 kcal, com 4g de proteína, 45g de carbo e 16g de gordura."`;
 
 export async function chatAssistant(
   messages: { role: "user" | "model"; text: string; images?: string[] }[],
