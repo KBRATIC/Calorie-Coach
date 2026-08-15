@@ -311,3 +311,38 @@
     transform: translate(0, 0) scale(1) rotate(0deg);
   }
 }
+
+/* View Transitions for Theme Toggle */
+::view-transition-group(root) {
+  animation-duration: 0.7s;
+  animation-timing-function: var(--ease-out-expo);
+}
+
+::view-transition-new(root) {
+  animation: reveal 0.7s var(--ease-out-expo);
+  z-index: 100;
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
+.dark::view-transition-old(root) {
+  animation: reveal 0.7s var(--ease-out-expo) reverse;
+  z-index: 100;
+}
+
+.dark::view-transition-new(root) {
+  animation: none;
+  z-index: 1;
+}
+
+@keyframes reveal {
+  from {
+    clip-path: circle(0px at var(--x) var(--y));
+  }
+  to {
+    clip-path: circle(var(--r) at var(--x) var(--y));
+  }
+}
