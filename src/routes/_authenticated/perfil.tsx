@@ -362,7 +362,8 @@ export function ProfilePage() {
 
       {user && <CustomFoods userId={user.id} />}
 
-      <div className="bento-card border-destructive/20 bg-destructive/5 space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
+      <div className="bento-card border-destructive/20 space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-destructive/5 -z-10" />
         <div className="absolute top-0 right-0 w-64 h-64 bg-destructive/10 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
         
         <div className="relative z-10">

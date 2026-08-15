@@ -114,6 +114,12 @@
   --shadow-bento: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.05);
   --shadow-glow: 0 0 20px 0 oklch(0.7 0.2 140 / 0.15);
   --scheme: dark;
+
+  /* Interactive Aurora Colors - Dark Mode (Neon/Vibrant) */
+  --aurora-1: oklch(0.7 0.2 140 / 0.4);
+  --aurora-2: oklch(0.6 0.15 250 / 0.35);
+  --aurora-3: oklch(0.7 0.18 70 / 0.3);
+  --aurora-4: oklch(0.7 0.2 140 / 0.25);
 }
 
 /* Light Theme - Clean, high contrast */
@@ -164,6 +170,12 @@
 
   --shadow-bento: 0 4px 24px -6px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.04);
   --shadow-glow: 0 0 20px 0 oklch(0.55 0.18 140 / 0.15);
+
+  /* Interactive Aurora Colors - Light Mode (Soft, Apple-like frosted glass) */
+  --aurora-1: oklch(0.92 0.06 140 / 0.5); /* Soft pale green */
+  --aurora-2: oklch(0.93 0.04 190 / 0.4); /* Soft pale cyan/blue */
+  --aurora-3: oklch(0.91 0.05 110 / 0.4); /* Soft pale yellowish green */
+  --aurora-4: oklch(0.95 0.04 140 / 0.4); /* Lighter green */
 }
 
 @layer base {
@@ -263,10 +275,10 @@
   /* Extra inset to allow moving without showing edges */
   inset: -50%;
   background-image: 
-    radial-gradient(circle at 15% 50%, oklch(0.7 0.2 140 / 0.4), transparent 45%),
-    radial-gradient(circle at 85% 30%, oklch(0.6 0.15 250 / 0.35), transparent 50%),
-    radial-gradient(circle at 50% 80%, oklch(0.7 0.18 70 / 0.3), transparent 50%),
-    radial-gradient(circle at 50% 10%, oklch(0.7 0.2 140 / 0.25), transparent 45%);
+    radial-gradient(circle at 15% 50%, var(--aurora-1), transparent 45%),
+    radial-gradient(circle at 85% 30%, var(--aurora-2), transparent 50%),
+    radial-gradient(circle at 50% 80%, var(--aurora-3), transparent 50%),
+    radial-gradient(circle at 50% 10%, var(--aurora-4), transparent 45%);
   filter: blur(60px);
   animation: aurora-mesh 20s ease-in-out infinite alternate;
   opacity: 0.85; /* Vibrant and highly visible */
