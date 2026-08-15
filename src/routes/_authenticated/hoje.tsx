@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { createFileRoute, Link, useLocation } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Plus,
@@ -66,16 +66,20 @@ export const Route = createFileRoute("/_authenticated/hoje")({
 export function TodayPage() {
   const { user } = useSession();
   const queryClient = useQueryClient();
-  const location = useLocation();
   const [day, setDayState] = useState(activeDayState.date);
   const [direction, setDirection] = useState(1);
 
   useEffect(() => {
-    if (location.pathname === "/hoje" && day !== activeDayState.date) {
-      setDirection(activeDayState.date > day ? 1 : -1);
-      setDayState(activeDayState.date);
-    }
-  }, [location.pathname, day]);
+    return activeDayState.subscribe(() => {
+      setDayState((prev) => {
+        if (prev !== activeDayState.date) {
+          setDirection(activeDayState.date > prev ? 1 : -1);
+          return activeDayState.date;
+        }
+        return prev;
+      });
+    });
+  }, []);
   
   const setDay = (d: string) => {
     setDirection(d > day ? 1 : -1);
