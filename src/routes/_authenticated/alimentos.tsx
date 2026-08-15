@@ -232,8 +232,8 @@ export function FoodsPage() {
         </div>
 
         {/* Sorting Pills */}
-        <div className="w-full px-4 sm:px-6 py-4 border-b border-border overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-2 w-max">
+        <div className="w-full px-4 sm:px-6 py-4 border-b border-border">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mr-2 shrink-0">Ordenar:</span>
             <SortButton label="Nome" sortKey="name" />
             <SortButton label="Categoria" sortKey="category" />
