@@ -461,7 +461,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className={`h-12 w-12 rounded-full bg-transparent hover:bg-surface-strong shrink-0 transition-colors active:scale-[0.95] ${imageFiles.length > 0 ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                      className={`h-12 w-12 rounded-full bg-transparent hover:bg-surface-strong shrink-0 transition-colors active:scale-[0.95] ${imageFiles.length > 0 ? 'text-fuchsia-500' : 'text-muted-foreground hover:text-foreground'}`}
                       disabled={isLoading}
                       aria-label="Anexar arquivo"
                     >
