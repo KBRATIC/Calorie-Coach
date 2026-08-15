@@ -81,21 +81,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="fixed inset-0 overflow-hidden">
       <div className="aurora-layer" aria-hidden />
       
-      <header className="fixed top-0 z-40 w-full transition-all bg-background/80 backdrop-blur-xl border-b border-border/40">
-        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-6 py-3 md:px-10">
+      <header className="fixed top-0 z-40 w-full pt-4 md:pt-6 px-4 pointer-events-none flex justify-center">
+        <div className="flex w-full max-w-5xl items-center justify-between px-4 py-2.5 rounded-full bg-surface/70 backdrop-blur-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] pointer-events-auto transition-all">
           <div className="flex items-center gap-3">
             <img 
               src="/icon.png" 
               alt="KcalTrack Logo" 
-              className="size-9 rounded-full shadow-2xl object-cover"
+              className="size-9 rounded-full shadow-lg object-cover"
             />
-            <span className="text-display font-medium tracking-tighter text-xl drop-shadow-sm">KcalTrack</span>
+            <span className="text-display font-medium tracking-tighter text-xl drop-shadow-sm text-foreground">KcalTrack</span>
           </div>
 
-          <div className="flex items-center gap-2 bento-card rounded-full p-1 border-none shadow-none bg-black/10 dark:bg-white/5">
+          <div className="flex items-center gap-1.5 rounded-full p-1 bg-black/10 dark:bg-white/5 border border-white/5">
             <ThemeToggle />
-            <Button variant="ghost" size="icon" className="size-9 rounded-full active:scale-[0.95] transition-transform hover:bg-white/10" onClick={signOut}>
-              <LogOut className="size-4 text-muted-foreground" />
+            <Button variant="ghost" size="icon" className="size-9 rounded-full active:scale-[0.95] transition-transform hover:bg-white/10 text-muted-foreground hover:text-foreground" onClick={signOut}>
+              <LogOut className="size-4" />
               <span className="sr-only">Sair</span>
             </Button>
           </div>
@@ -108,22 +108,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full w-full">
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
-                  {activeIndex === 0 || deferred ? <TodayPage /> : null}
+                  {activeIndex === 0 || (deferred && Math.abs(activeIndex - 0) <= 1) ? <TodayPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
-                  {activeIndex === 1 || deferred ? <FoodsPage /> : null}
+                  {activeIndex === 1 || (deferred && Math.abs(activeIndex - 1) <= 1) ? <FoodsPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
-                  {activeIndex === 2 || deferred ? <HistoryPage /> : null}
+                  {activeIndex === 2 || (deferred && Math.abs(activeIndex - 2) <= 1) ? <HistoryPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
-                  {activeIndex === 3 || deferred ? <ProfilePage /> : null}
+                  {activeIndex === 3 || (deferred && Math.abs(activeIndex - 3) <= 1) ? <ProfilePage /> : null}
                 </div>
               </div>
             </div>
@@ -172,17 +172,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     className="group relative flex size-[52px] md:size-[60px] items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-2 shrink-0 shadow-xl"
                     aria-label="Assistente Inteligente"
                   >
-                    {/* Ambient Glow */}
-                    <div className="absolute inset-[-6px] rounded-full bg-gradient-to-tr from-blue-600 via-purple-500 to-fuchsia-500 blur-lg animate-spin [animation-duration:6s] opacity-80" />
+                    {/* Performance optimized glow (no heavy blurs + spin) */}
+                    <div className="absolute inset-[-4px] rounded-full bg-gradient-to-tr from-blue-600 via-purple-500 to-fuchsia-500 opacity-60 animate-pulse [animation-duration:3s]" />
                     
-                    {/* Layer 1: Chaotic Reverse Spin */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 blur-md animate-spin [animation-duration:4s] [animation-direction:reverse]" />
-                    
-                    {/* Layer 2: Pulse and Distort */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-bl from-cyan-400 via-purple-500 to-rose-500 blur-sm animate-pulse [animation-duration:3s]" />
-                    
-                    {/* Sharp Solid Ring Edge */}
-                    <div className="absolute inset-[1px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500" />
+                    {/* Solid background layer */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 opacity-90" />
 
                     {/* The Dark Core with Low Opacity */}
                     <div className="absolute inset-[2px] md:inset-[3px] bg-black/40 backdrop-blur-[2px] rounded-full z-10 flex items-center justify-center transition-transform group-hover:scale-[0.98]">
