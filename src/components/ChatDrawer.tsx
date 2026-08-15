@@ -19,6 +19,65 @@ interface Message {
   images?: string[];
 }
 
+import React from "react";
+
+const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], isLoading: boolean }) => {
+  return (
+    <div className="flex flex-col gap-6 pb-6">
+      <AnimatePresence initial={false}>
+        {messages.map((msg, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
+            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[85%] rounded-[24px] px-5 py-4 text-[15px] leading-relaxed flex flex-col gap-3 ${
+                msg.role === "user"
+                  ? "bg-primary text-primary-foreground rounded-br-sm shadow-[0_4px_20px_rgb(0,0,0,0.1)] shadow-primary/20"
+                  : "bg-surface-strong text-foreground rounded-bl-sm border border-border"
+              }`}
+            >
+              {msg.images && msg.images.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {msg.images.map((img, i) => (
+                    <img key={i} src={img} alt="Enviada pelo usuário" className="w-full max-w-[200px] rounded-lg border border-white/10" />
+                  ))}
+                </div>
+              )}
+              
+              {msg.role === "model" ? (
+                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-a:text-primary">
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                </div>
+              ) : (
+                msg.text && <span>{msg.text}</span>
+              )}
+            </div>
+          </motion.div>
+        ))}
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="flex justify-start"
+          >
+            <div className="max-w-[85%] rounded-[24px] rounded-bl-sm bg-surface-strong px-6 py-5 text-foreground border border-border">
+              <div className="flex gap-1.5 items-center">
+                <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }} className="size-2 rounded-full bg-primary" />
+                <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.2 }} className="size-2 rounded-full bg-primary" />
+                <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.4 }} className="size-2 rounded-full bg-primary" />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+});
+
 const AudioVisualizer = ({ isListening }: { isListening: boolean }) => {
   const [volumes, setVolumes] = useState<number[]>(Array(30).fill(4));
   
@@ -325,58 +384,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             </div>
 
             <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col px-4 pt-4 no-scrollbar" ref={scrollRef}>
-              <div className="flex flex-col gap-6 pb-6">
-                <AnimatePresence initial={false}>
-                  {messages.map((msg, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 15, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
-                      className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                    >
-                      <div
-                        className={`max-w-[85%] rounded-[24px] px-5 py-4 text-[15px] leading-relaxed flex flex-col gap-3 ${
-                          msg.role === "user"
-                            ? "bg-primary text-primary-foreground rounded-br-sm shadow-[0_4px_20px_rgb(0,0,0,0.1)] shadow-primary/20"
-                            : "bg-surface-strong text-foreground rounded-bl-sm border border-border"
-                        }`}
-                      >
-                        {msg.images && msg.images.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {msg.images.map((img, i) => (
-                              <img key={i} src={img} alt="Enviada pelo usuário" className="w-full max-w-[200px] rounded-lg border border-white/10" />
-                            ))}
-                          </div>
-                        )}
-                        
-                        {msg.role === "model" ? (
-                          <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-a:text-primary">
-                            <ReactMarkdown>{msg.text}</ReactMarkdown>
-                          </div>
-                        ) : (
-                          msg.text && <span>{msg.text}</span>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                  {isLoading && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 15, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      className="flex justify-start"
-                    >
-                      <div className="max-w-[85%] rounded-[24px] rounded-bl-sm bg-surface-strong px-6 py-5 text-foreground border border-border">
-                        <div className="flex gap-1.5 items-center">
-                          <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }} className="size-2 rounded-full bg-primary" />
-                          <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.2 }} className="size-2 rounded-full bg-primary" />
-                          <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.4 }} className="size-2 rounded-full bg-primary" />
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <MessageList messages={messages} isLoading={isLoading} />
             </div>
 
             <div className="p-3 sm:p-5 flex flex-col gap-3 bg-surface border-t border-border shrink-0">
@@ -491,8 +499,11 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     value={input}
                     onChange={(e) => {
                       setInput(e.target.value);
-                      e.target.style.height = '50px';
-                      e.target.style.height = Math.min(e.target.scrollHeight, 160) + 'px';
+                    }}
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = '50px';
+                      target.style.height = Math.min(target.scrollHeight, 160) + 'px';
                     }}
                     onKeyDown={handleKeyDown}
                     placeholder="Como posso te ajudar?"
@@ -536,7 +547,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     <CameraCaptureDialog 
       open={isCameraOpen} 
       onClose={() => setIsCameraOpen(false)} 
-      onCapture={(base64) => setImageBase64Preview(base64)} 
+      onCapture={(base64) => setImagePreviews(prev => [...prev, base64])} 
     />
     </>
   );

@@ -160,7 +160,7 @@ export function FoodsPage() {
   }
 
   return (
-    <div className="space-y-6 pb-10 w-full overflow-x-hidden">
+    <div className="space-y-6 pb-10">
       <div>
         <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Base de dados</p>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Alimentos</h1>
@@ -193,7 +193,7 @@ export function FoodsPage() {
         ))}
       </div>
 
-      <div className="bento-card overflow-hidden w-full max-w-full">
+      <div className="bento-card overflow-hidden">
         {/* Filter & Search Header */}
         <div className="flex flex-col md:flex-row items-center gap-4 p-6 bg-surface border-b border-border">
           <div className="relative w-full flex-1">
@@ -265,9 +265,9 @@ export function FoodsPage() {
                       hidden: { opacity: 0, y: 10, scale: 0.98 },
                       visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 400, damping: 30 } }
                     }}
-                    className="bento-card hover:bg-surface-strong rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group"
+                    className="bento-card hover:bg-surface-strong rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group w-full max-w-full overflow-hidden"
                   >
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 w-full max-w-full">
                     <div className="flex items-center gap-2 mb-1 min-w-0">
                       <h3 className="text-lg font-semibold tracking-tight text-foreground/90 truncate flex-1 min-w-0">{food.name}</h3>
                       {food.custom && (
@@ -304,8 +304,8 @@ export function FoodsPage() {
                     )}
                   </div>
 
-                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-3 sm:pt-0 border-t border-white/5 sm:border-0 mt-2 sm:mt-0 shrink-0">
-                    <div className="flex items-baseline gap-1.5 shrink-0">
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-3 sm:pt-0 border-t border-white/5 sm:border-0 mt-2 sm:mt-0 shrink-0 w-full min-w-0 max-w-full overflow-hidden">
+                    <div className="flex items-baseline gap-1.5 shrink-0 min-w-0">
                       <span className="stat-number text-3xl font-medium text-foreground tracking-tight">{Math.round(food.kcalPer100g)}</span>
                       <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">kcal/100g</span>
                     </div>
