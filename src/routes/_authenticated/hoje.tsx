@@ -562,8 +562,11 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
             {!selected ? (
               <div className="space-y-4 px-2">
                 <div className="relative">
+                  <label htmlFor="search-food" className="sr-only">Buscar alimento</label>
                   <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
                   <input
+                    id="search-food"
+                    name="search-food"
                     autoFocus
                     placeholder="Buscar alimento (ex.: arroz, pizza)"
                     className="w-full bg-surface border border-border rounded-2xl h-14 pl-12 pr-4 text-lg outline-none focus:border-primary transition-colors"
@@ -610,9 +613,11 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                 
                 <div className="grid gap-6">
                   <div className="space-y-3">
-                    <Label className="text-xs uppercase tracking-widest text-muted-foreground ml-1">Quantidade ({unit})</Label>
+                    <Label htmlFor="food-grams" className="text-xs uppercase tracking-widest text-muted-foreground ml-1">Quantidade ({unit})</Label>
                     <div className="relative">
                       <Input
+                        id="food-grams"
+                        name="food-grams"
                         type="number"
                         min={1}
                         value={grams}

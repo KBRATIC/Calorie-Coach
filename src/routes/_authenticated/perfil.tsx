@@ -315,7 +315,6 @@ export function ProfilePage() {
           
           <div className="space-y-6">
             <div className="rounded-3xl bg-gradient-to-br from-primary to-primary/80 p-6 sm:p-8 text-primary-foreground shadow-2xl shadow-primary/20 relative overflow-hidden">
-              <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay" />
               <div className="relative z-10">
                 <p className="text-[11px] font-bold uppercase tracking-widest text-white/80 mb-2">Meta diária</p>
                 <p className="stat-number text-5xl sm:text-6xl text-white font-medium tracking-tighter drop-shadow-md">{target} kcal</p>
@@ -448,7 +447,10 @@ function CustomFoods({ userId }: { userId: string }) {
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-[1fr_180px_170px_auto] bg-surface p-2 rounded-[28px] border border-border">
-        <Input placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} className="bg-transparent border-border rounded-2xl h-12" />
+        <div className="relative">
+          <label htmlFor="custom-name" className="sr-only">Nome</label>
+          <Input id="custom-name" name="custom-name" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} className="bg-transparent border-border rounded-2xl h-12 w-full" />
+        </div>
         <div className="flex rounded-2xl border border-border p-1 bg-surface-strong">
           {(["g", "ml"] as const).map((u) => (
             <button
@@ -463,13 +465,18 @@ function CustomFoods({ userId }: { userId: string }) {
             </button>
           ))}
         </div>
-        <Input
-          placeholder={`kcal / 100 ${unit}`}
-          type="number"
-          value={kcal}
-          onChange={(e) => setKcal(e.target.value)}
-          className="bg-transparent border-border rounded-2xl h-12"
-        />
+        <div className="relative">
+          <label htmlFor="custom-kcal" className="sr-only">Calorias</label>
+          <Input
+            id="custom-kcal"
+            name="custom-kcal"
+            placeholder={`kcal / 100 ${unit}`}
+            type="number"
+            value={kcal}
+            onChange={(e) => setKcal(e.target.value)}
+            className="bg-transparent border-border rounded-2xl h-12 w-full"
+          />
+        </div>
         <Button
           onClick={() => create.mutate()}
           disabled={!name.trim() || !Number(kcal) || create.isPending}

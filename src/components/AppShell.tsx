@@ -170,7 +170,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Fragment key={item.to}>
                   {navLink}
                   <button
-                    onClick={() => setIsChatOpen(true)}
+                    onClick={(e) => {
+                      e.currentTarget.blur();
+                      setIsChatOpen(true);
+                    }}
                     className="group relative flex size-[52px] md:size-[60px] items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-2 shrink-0 shadow-xl"
                     aria-label="Assistente Inteligente"
                   >
