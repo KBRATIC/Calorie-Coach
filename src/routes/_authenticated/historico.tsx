@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, PiggyBank, TrendingUp, TrendingDown, Sparkles } from "lucide-react";
 import { fetchEntries, fetchGoals } from "@/lib/api";
-import { addDays, formatDayLabel, todayISO } from "@/lib/nutrition";
+import { addDays, formatDayLabel, todayISO, activeDayState } from "@/lib/nutrition";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/historico")({
 });
 
 export function HistoryPage() {
+  const navigate = useNavigate();
   const [period, setPeriod] = useState<"semana" | "mes">("semana");
   const today = todayISO();
   
@@ -138,7 +139,7 @@ export function HistoryPage() {
                   {isPositive ? '+' : ''}{Math.round(netBalance)} <span className="text-2xl font-normal opacity-80">kcal</span>
                 </h3>
                 <div className={`flex items-center justify-center size-14 rounded-full shadow-inner ${isPositive ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}>
-                  {isPositive ? <TrendingDown className="size-6" /> : <TrendingUp className="size-6" />}
+                  {isPositive ? <TrendingUp className="size-6" /> : <TrendingDown className="size-6" />}
                 </div>
               </div>
               <p className="mt-4 text-[15px] text-muted-foreground/90 leading-relaxed max-w-xl mx-auto sm:mx-0">
@@ -178,7 +179,13 @@ export function HistoryPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="bento-card p-5 sm:p-6 flex flex-col gap-4"
               >
-                <div className="flex justify-between items-center border-b border-white/5 pb-3">
+                <button 
+                  onClick={() => {
+                    activeDayState.date = data.day;
+                    navigate({ to: "/hoje" });
+                  }}
+                  className="flex justify-between items-center border-b border-white/5 pb-3 w-full text-left hover:opacity-70 transition-opacity active:scale-[0.98]"
+                >
                   <h3 className="text-sm font-bold uppercase tracking-widest text-foreground">
                     {formatDayLabel(data.day)}
                   </h3>
@@ -186,7 +193,7 @@ export function HistoryPage() {
                     <span className="text-lg">{Math.round(data.total)}</span>
                     <span className="text-[10px] text-muted-foreground ml-1">/ {goal} kcal</span>
                   </span>
-                </div>
+                </button>
 
                 <div className="space-y-3">
                   <MiniProgressBar value={data.total} max={goal} color="bg-primary" label="Kcal" suffix="" />
@@ -199,7 +206,7 @@ export function HistoryPage() {
                   <div className={`p-3 rounded-2xl flex items-center justify-between border ${goal - data.total >= 0 ? 'bg-primary/[0.03] border-primary/10' : 'bg-destructive/[0.03] border-destructive/10'}`}>
                     <div className="flex items-center gap-3">
                       <div className={`flex items-center justify-center size-10 rounded-full shadow-inner ${goal - data.total >= 0 ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}>
-                        {goal - data.total >= 0 ? <TrendingDown className="size-5" /> : <TrendingUp className="size-5" />}
+                        {goal - data.total >= 0 ? <TrendingUp className="size-5" /> : <TrendingDown className="size-5" />}
                       </div>
                       <div>
                         <p className={`text-[10px] uppercase font-bold tracking-widest ${goal - data.total >= 0 ? 'text-primary' : 'text-destructive'}`}>Saldo do dia</p>

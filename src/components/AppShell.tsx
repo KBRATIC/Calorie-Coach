@@ -81,21 +81,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="fixed inset-0 overflow-hidden">
       <div className="aurora-layer" aria-hidden />
       
-      <header className="fixed top-0 z-40 w-full transition-all pointer-events-none">
-        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-6 py-6 md:px-10">
-          <div className="flex items-center gap-3 pointer-events-auto">
+      <header className="fixed top-0 z-40 w-full transition-all bg-background/80 backdrop-blur-xl border-b border-border/40">
+        <div className="mx-auto flex w-full max-w-[1800px] items-center justify-between px-6 py-3 md:px-10">
+          <div className="flex items-center gap-3">
             <img 
               src="/icon.png" 
               alt="KcalTrack Logo" 
-              className="size-10 rounded-full shadow-2xl object-cover"
+              className="size-9 rounded-full shadow-2xl object-cover"
             />
-            <span className="text-display font-medium tracking-tighter text-2xl drop-shadow-sm">KcalTrack</span>
+            <span className="text-display font-medium tracking-tighter text-xl drop-shadow-sm">KcalTrack</span>
           </div>
 
-          <div className="flex items-center gap-3 pointer-events-auto bento-card rounded-full p-1.5">
+          <div className="flex items-center gap-2 bento-card rounded-full p-1 border-none shadow-none bg-black/10 dark:bg-white/5">
             <ThemeToggle />
-            <Button variant="ghost" size="icon" className="size-10 rounded-full active:scale-[0.95] transition-transform hover:bg-white/10" onClick={signOut}>
-              <LogOut className="size-5 text-muted-foreground" />
+            <Button variant="ghost" size="icon" className="size-9 rounded-full active:scale-[0.95] transition-transform hover:bg-white/10" onClick={signOut}>
+              <LogOut className="size-4 text-muted-foreground" />
               <span className="sr-only">Sair</span>
             </Button>
           </div>
