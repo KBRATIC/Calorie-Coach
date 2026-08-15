@@ -11,7 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
-import { THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 import { CookieBanner } from "@/components/CookieBanner";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
 
@@ -125,7 +124,6 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className="dark" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
       <body>

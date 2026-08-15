@@ -4,7 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Flame, CalendarRange, UserCog, LogOut, Table2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "motion/react";
 
@@ -96,7 +95,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-1.5 rounded-full p-1 bg-black/10 dark:bg-white/5 border border-white/5">
-            <ThemeToggle />
             <Button variant="ghost" size="icon" className="size-9 rounded-full active:scale-[0.95] transition-transform hover:bg-white/10 text-muted-foreground hover:text-foreground" onClick={signOut}>
               <LogOut className="size-4" />
               <span className="sr-only">Sair</span>

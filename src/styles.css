@@ -122,61 +122,6 @@
   --aurora-4: oklch(0.7 0.2 140 / 0.25);
 }
 
-/* Light Theme - Clean, high contrast */
-.light {
-  --scheme: light;
-
-  --background: oklch(0.98 0 0); /* #fafafa */
-  --foreground: oklch(0.12 0 0); /* #0a0a0a */
-
-  /* Very opaque white to avoid dark text blending with dark aurora */
-  --surface: oklch(1 0 0 / 0.85); 
-  --surface-strong: oklch(0.96 0 0 / 0.9);
-
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.12 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.12 0 0);
-
-  --primary: oklch(0.55 0.18 140); /* Deeper Green for light mode text readability */
-  --primary-foreground: oklch(1 0 0);
-
-  --secondary: oklch(0.94 0 0);
-  --secondary-foreground: oklch(0.12 0 0);
-
-  --muted: oklch(0.94 0 0);
-  --muted-foreground: oklch(0.4 0 0);
-
-  --accent: oklch(0.94 0 0);
-  --accent-foreground: oklch(0.12 0 0);
-
-  --destructive: oklch(0.5 0.18 20);
-  --destructive-foreground: oklch(1 0 0);
-
-  --success: oklch(0.55 0.18 140);
-  --success-foreground: oklch(1 0 0);
-  --warning: oklch(0.7 0.15 78);
-  --warning-foreground: oklch(0.12 0 0);
-
-  --border: oklch(0.9 0 0); /* #e5e5e5 */
-  --input: oklch(0.9 0 0);
-  --ring: oklch(0.55 0.18 140);
-
-  --chart-1: oklch(0.55 0.18 140);
-  --chart-2: oklch(0.5 0.18 20);
-  --chart-3: oklch(0.7 0.15 78);
-  --chart-4: oklch(0.6 0.12 220);
-  --chart-5: oklch(0.58 0.2 25);
-
-  --shadow-bento: 0 4px 24px -6px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.04);
-  --shadow-glow: 0 0 20px 0 oklch(0.55 0.18 140 / 0.15);
-
-  /* Interactive Aurora Colors - Light Mode (Soft, Apple-like frosted glass) */
-  --aurora-1: oklch(0.92 0.06 140 / 0.5); /* Soft pale green */
-  --aurora-2: oklch(0.93 0.04 190 / 0.4); /* Soft pale cyan/blue */
-  --aurora-3: oklch(0.91 0.05 110 / 0.4); /* Soft pale yellowish green */
-  --aurora-4: oklch(0.95 0.04 140 / 0.4); /* Lighter green */
-}
 
 @layer base {
   * {
@@ -280,7 +225,7 @@
     radial-gradient(circle at 50% 80%, var(--aurora-3), transparent 50%),
     radial-gradient(circle at 50% 10%, var(--aurora-4), transparent 45%);
   filter: blur(60px);
-  animation: aurora-mesh 20s ease-in-out infinite alternate;
+  animation: aurora-mesh 12s ease-in-out infinite alternate;
   opacity: 0.85; /* Vibrant and highly visible */
   transform-origin: center;
   will-change: transform;
@@ -294,47 +239,12 @@
     transform: translate(0, 0) scale(1) rotate(0deg);
   }
   33% {
-    transform: translate(3%, -3%) scale(1.05) rotate(2deg);
+    transform: translate(10%, -10%) scale(1.1) rotate(5deg);
   }
   66% {
-    transform: translate(-3%, 3%) scale(0.95) rotate(-2deg);
+    transform: translate(-10%, 10%) scale(0.9) rotate(-5deg);
   }
   100% {
     transform: translate(0, 0) scale(1) rotate(0deg);
-  }
-}
-
-/* View Transitions for Theme Toggle */
-::view-transition-group(root) {
-  animation-duration: 0.7s;
-  animation-timing-function: var(--ease-out-expo);
-}
-
-::view-transition-new(root) {
-  animation: reveal 0.7s var(--ease-out-expo);
-  z-index: 100;
-}
-
-::view-transition-old(root) {
-  animation: none;
-  z-index: 1;
-}
-
-.dark::view-transition-old(root) {
-  animation: reveal 0.7s var(--ease-out-expo) reverse;
-  z-index: 100;
-}
-
-.dark::view-transition-new(root) {
-  animation: none;
-  z-index: 1;
-}
-
-@keyframes reveal {
-  from {
-    clip-path: circle(0px at var(--x) var(--y));
-  }
-  to {
-    clip-path: circle(var(--r) at var(--x) var(--y));
   }
 }
