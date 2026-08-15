@@ -21,6 +21,49 @@ interface Message {
 
 import React from "react";
 
+const LoadingIndicator = () => {
+  const steps = [
+    "Analisando...",
+    "Buscando referências nutricionais...",
+    "Calculando macros e porções...",
+    "Escrevendo a resposta..."
+  ];
+  const [stepIndex, setStepIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStepIndex((prev) => (prev + 1 < steps.length ? prev + 1 : prev));
+    }, 1800);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      className="flex justify-start"
+    >
+      <div className="max-w-[85%] rounded-[24px] rounded-bl-sm bg-surface-strong px-5 py-4 text-foreground border border-border shadow-sm">
+        <div className="flex gap-3 items-center">
+          <div className="flex gap-1.5 items-center shrink-0">
+            <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }} className="size-2 rounded-full bg-fuchsia-500" />
+            <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.2 }} className="size-2 rounded-full bg-purple-500" />
+            <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.4 }} className="size-2 rounded-full bg-blue-500" />
+          </div>
+          <motion.span 
+            key={stepIndex}
+            initial={{ opacity: 0, y: 2 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-muted-foreground font-medium"
+          >
+            {steps[stepIndex]}
+          </motion.span>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], isLoading: boolean }) => {
   return (
     <div className="flex flex-col gap-6 pb-6">
@@ -36,7 +79,7 @@ const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], 
             <div
               className={`max-w-[85%] rounded-[24px] px-5 py-4 text-[15px] leading-relaxed flex flex-col gap-3 ${
                 msg.role === "user"
-                  ? "bg-primary text-primary-foreground rounded-br-sm shadow-[0_4px_20px_rgb(0,0,0,0.1)] shadow-primary/20"
+                  ? "bg-gradient-to-tr from-blue-600 via-purple-600 to-fuchsia-600 text-white rounded-br-sm shadow-[0_4px_20px_rgb(0,0,0,0.1)] shadow-fuchsia-500/20 border border-white/10"
                   : "bg-surface-strong text-foreground rounded-bl-sm border border-border"
               }`}
             >
@@ -58,21 +101,7 @@ const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], 
             </div>
           </motion.div>
         ))}
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            className="flex justify-start"
-          >
-            <div className="max-w-[85%] rounded-[24px] rounded-bl-sm bg-surface-strong px-6 py-5 text-foreground border border-border">
-              <div className="flex gap-1.5 items-center">
-                <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }} className="size-2 rounded-full bg-primary" />
-                <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.2 }} className="size-2 rounded-full bg-primary" />
-                <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.4 }} className="size-2 rounded-full bg-primary" />
-              </div>
-            </div>
-          </motion.div>
-        )}
+        {isLoading && <LoadingIndicator />}
       </AnimatePresence>
     </div>
   );
