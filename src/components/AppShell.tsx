@@ -156,7 +156,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <motion.div
                     layoutId="activeDockTab"
                     className="absolute inset-0 rounded-full bg-white/10 shadow-inner"
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    transition={{ type: "spring", bounce: 0, duration: 0.3 }}
                     style={{ borderRadius: 9999 }}
                   />
                 )}
