@@ -95,8 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "KcalTrack — Controle de calorias e calculadora de TMB" },
       { property: "og:description", content: "Calcule sua taxa metabólica basal, defina metas de calorias para emagrecer ou ganhar peso e registre tudo que você come com controle semanal e mensal." },
       { name: "twitter:description", content: "Calcule sua taxa metabólica basal, defina metas de calorias para emagrecer ou ganhar peso e registre tudo que você come com controle semanal e mensal." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f156e26237bf1459941169fe58d5d211/id-preview-1b28f71f--5d23c081-1014-444c-a3e8-c074ba88a2ee.lovable.app-1786129933825.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f156e26237bf1459941169fe58d5d211/id-preview-1b28f71f--5d23c081-1014-444c-a3e8-c074ba88a2ee.lovable.app-1786129933825.png" },
+      { property: "og:image", content: "/icon.png" },
+      { name: "twitter:image", content: "/icon.png" },
     ],
     links: [
       {
