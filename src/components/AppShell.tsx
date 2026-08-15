@@ -172,15 +172,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     className="group relative flex size-[52px] md:size-[60px] items-center justify-center rounded-full transition-transform active:scale-[0.95] mx-1 md:mx-2 shrink-0 shadow-xl"
                     aria-label="Assistente Inteligente"
                   >
-                    {/* Performance optimized glow (no heavy blurs + spin) */}
-                    <div className="absolute inset-[-4px] rounded-full bg-gradient-to-tr from-blue-600 via-purple-500 to-fuchsia-500 opacity-60 animate-pulse [animation-duration:3s]" />
+                    {/* Hardware Accelerated Ambient Glow */}
+                    <div className="absolute inset-[-6px] rounded-full bg-gradient-to-tr from-blue-600 via-purple-500 to-fuchsia-500 blur-lg animate-spin [animation-duration:6s] opacity-80 transform-gpu will-change-transform" />
                     
-                    {/* Solid background layer */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 opacity-90" />
+                    {/* Layer 1: Chaotic Reverse Spin */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 blur-md animate-spin [animation-duration:4s] [animation-direction:reverse] transform-gpu will-change-transform" />
+                    
+                    {/* Layer 2: Pulse and Distort */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-bl from-cyan-400 via-purple-500 to-rose-500 blur-sm animate-pulse [animation-duration:3s] transform-gpu will-change-[opacity]" />
+                    
+                    {/* Sharp Solid Ring Edge */}
+                    <div className="absolute inset-[1px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500" />
 
-                    {/* The Dark Core with Low Opacity */}
-                    <div className="absolute inset-[2px] md:inset-[3px] bg-black/40 backdrop-blur-[2px] rounded-full z-10 flex items-center justify-center transition-transform group-hover:scale-[0.98]">
-                      <Sparkles className="size-5 md:size-6 text-white/90 animate-pulse [animation-duration:3s]" />
+                    {/* The Dark Core (No backdrop-blur to save GPU rendering loops) */}
+                    <div className="absolute inset-[2px] md:inset-[3px] bg-black/70 rounded-full z-10 flex items-center justify-center transition-transform group-hover:scale-[0.98] transform-gpu">
+                      <Sparkles className="size-5 md:size-6 text-white/90 animate-pulse [animation-duration:3s] transform-gpu will-change-[opacity]" />
                     </div>
                   </button>
                 </Fragment>

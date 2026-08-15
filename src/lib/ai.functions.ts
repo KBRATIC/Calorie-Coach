@@ -33,10 +33,12 @@ export const askAssistant = createServerFn({ method: "POST" })
     const todayStr = today.toISOString().split("T")[0];
     const targetDateStr = data.date || todayStr;
     
-    // Data de 7 dias atrás
-    const lastWeek = new Date(today);
-    lastWeek.setDate(lastWeek.getDate() - 7);
-    const lastWeekStr = lastWeek.toISOString().split("T")[0];
+    // Início da semana (Segunda-feira) para bater com o histórico do app
+    const day = today.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - diff);
+    const startOfWeekStr = startOfWeek.toISOString().split("T")[0];
     
     let contextStr = "";
     
@@ -75,12 +77,12 @@ export const askAssistant = createServerFn({ method: "POST" })
         .eq("user_id", context.userId)
         .maybeSingle();
 
-      // Buscar entradas recentes (últimos 7 dias) para entender hábitos
+      // Buscar entradas recentes (início da semana) para entender hábitos e saldo
       const { data: recentEntries } = await context.supabase
         .from("food_entries")
         .select("id, name, grams, unit, kcal, meal, consumed_on")
         .eq("user_id", context.userId)
-        .gte("consumed_on", lastWeekStr);
+        .gte("consumed_on", startOfWeekStr);
 
       if (goalData && recentEntries) {
         const goal = goalData.daily_calorie_goal || 2000;
@@ -89,6 +91,19 @@ export const askAssistant = createServerFn({ method: "POST" })
         const todaysEntries = recentEntries.filter(e => e.consumed_on === todayStr);
         const consumed = todaysEntries.reduce((sum, e) => sum + Number(e.kcal), 0);
         const remaining = goal - consumed;
+
+        // Calcular Saldo Acumulado da Semana (excluindo hoje)
+        const pastEntries = recentEntries.filter(e => e.consumed_on !== todayStr);
+        const daysMap: Record<string, number> = {};
+        for (const e of pastEntries) {
+          daysMap[e.consumed_on] = (daysMap[e.consumed_on] || 0) + Number(e.kcal);
+        }
+        let accumulatedBalance = 0;
+        for (const date in daysMap) {
+          if (daysMap[date] > 0) {
+            accumulatedBalance += (goal - daysMap[date]);
+          }
+        }
         
         // Hábitos recentes (nomes únicos)
         const uniqueFoods = Array.from(new Set(recentEntries.map(e => e.name))).slice(0, 20).join(", ");
@@ -96,7 +111,8 @@ export const askAssistant = createServerFn({ method: "POST" })
         const todaysList = todaysEntries.map(e => `- ID: ${e.id} | ${e.name} | ${e.grams || "?"}${e.unit} | ${e.kcal} kcal | Refeição: ${e.meal}`).join("\n");
         
         contextStr = `\n\n[CONTEXTO INTERNO INVISÍVEL AO USUÁRIO:
-- Calorias consumidas hoje: ${consumed} kcal de uma meta de ${goal} kcal (Restam ${remaining} kcal).
+- Calorias consumidas hoje: ${consumed} kcal de uma meta de ${goal} kcal (Restam ${remaining} kcal livres SÓ HOJE).
+- SALDO ACUMULADO DA SEMANA: ${accumulatedBalance >= 0 ? '+' : ''}${accumulatedBalance} kcal (Este é o "banco de calorias" extra que o usuário economizou ou gastou nos dias anteriores. Se o usuário perguntar o que pode comer no fim de semana, some o restante de hoje + o saldo acumulado).
 - ALIMENTOS REGISTRADOS HOJE:
 ${todaysList || "Nenhum alimento registrado ainda hoje."}
 - Alimentos que o usuário costuma comer (histórico recente): ${uniqueFoods || "Nenhum histórico ainda"}.
