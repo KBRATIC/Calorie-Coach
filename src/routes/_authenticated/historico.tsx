@@ -194,6 +194,22 @@ export function HistoryPage() {
                   <MiniProgressBar value={data.carbs} max={goalCarbs} color="bg-[oklch(0.7_0.18_70)]" label="Carbo" suffix="g" />
                   <MiniProgressBar value={data.fat} max={goalFat} color="bg-[oklch(0.6_0.2_15)]" label="Gordura" suffix="g" />
                 </div>
+
+                {data.total > 0 && (
+                  <div className={`p-3 rounded-2xl flex items-center justify-between border ${goal - data.total >= 0 ? 'bg-primary/[0.03] border-primary/10' : 'bg-destructive/[0.03] border-destructive/10'}`}>
+                    <div className="flex items-center gap-3">
+                      <div className={`flex items-center justify-center size-10 rounded-full shadow-inner ${goal - data.total >= 0 ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}>
+                        {goal - data.total >= 0 ? <TrendingDown className="size-5" /> : <TrendingUp className="size-5" />}
+                      </div>
+                      <div>
+                        <p className={`text-[10px] uppercase font-bold tracking-widest ${goal - data.total >= 0 ? 'text-primary' : 'text-destructive'}`}>Saldo do dia</p>
+                        <p className={`text-lg font-medium leading-none mt-1 ${goal - data.total >= 0 ? 'text-primary' : 'text-destructive'}`}>
+                          {goal - data.total >= 0 ? '+' : ''}{Math.round(goal - data.total)} <span className="text-xs font-normal opacity-80">kcal</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             );
           })
