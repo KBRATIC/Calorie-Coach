@@ -149,7 +149,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       text: "Sou o assistente de nutrição do KcalTrack. Como posso te ajudar hoje? Tire dúvidas sobre alimentos, peça sugestões de refeições saudáveis ou envie uma foto do seu prato para estimar as calorias.",
     },
   ]);
-  const [input, setInput] = useState("");
+  const [hasText, setHasText] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -199,10 +200,12 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       }
 
       if (finalTranscript) {
-        setInput((prev) => {
+        if (inputRef.current) {
+          const prev = inputRef.current.value;
           const sep = prev && !prev.endsWith(" ") && !finalTranscript.startsWith(" ") ? " " : "";
-          return prev + sep + finalTranscript;
-        });
+          inputRef.current.value = prev + sep + finalTranscript;
+          setHasText(inputRef.current.value.trim().length > 0);
+        }
       }
       setInterimText(currentInterim);
     };
@@ -300,12 +303,17 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if ((!input.trim() && imagePreviews.length === 0) || isLoading) return;
+    const inputValue = inputRef.current?.value || "";
+    if ((!inputValue.trim() && imagePreviews.length === 0) || isLoading) return;
 
-    const userMessage = input.trim();
+    const userMessage = inputValue.trim();
     const imagesToSend = [...imagePreviews];
     
-    setInput("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.style.height = "50px";
+    }
+    setHasText(false);
     setImageFiles([]);
     setImagePreviews([]);
 
@@ -350,7 +358,8 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       
       // Desktop: Enter sends the message.
       e.preventDefault();
-      if ((input.trim() || imagePreviews.length > 0) && !isLoading) {
+      const inputValue = inputRef.current?.value || "";
+      if ((inputValue.trim() || imagePreviews.length > 0) && !isLoading) {
         const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
         handleSend(fakeEvent);
       }
@@ -361,7 +370,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     <>
       <Drawer.Root open={open} onOpenChange={onOpenChange}>
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
+          <Drawer.Overlay className="fixed inset-0 bg-black/80 z-50 transition-opacity" />
           <Drawer.Content 
             onInteractOutside={(e) => {
               if (isCameraOpen) e.preventDefault();
@@ -496,14 +505,16 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                     id="chat-input"
                     name="chat-input"
                     aria-label="Mensagem para o assistente"
-                    value={input}
-                    onChange={(e) => {
-                      setInput(e.target.value);
-                    }}
+                    ref={inputRef}
                     onInput={(e) => {
                       const target = e.target as HTMLTextAreaElement;
                       target.style.height = '50px';
                       target.style.height = Math.min(target.scrollHeight, 160) + 'px';
+                      
+                      const currentHasText = target.value.trim().length > 0;
+                      if (currentHasText !== hasText) {
+                        setHasText(currentHasText);
+                      }
                     }}
                     onKeyDown={handleKeyDown}
                     placeholder="Como posso te ajudar?"
@@ -528,11 +539,11 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       type="submit"
                       size="icon"
                       className={`h-10 w-10 rounded-full transition-transform active:scale-[0.95] flex-shrink-0 border-0 ${
-                        (!input.trim() && imagePreviews.length === 0) || isLoading 
+                        (!hasText && imagePreviews.length === 0) || isLoading 
                           ? 'bg-surface border-border text-muted-foreground' 
                           : 'bg-gradient-to-tr from-blue-600 via-fuchsia-500 to-purple-600 text-white shadow-lg shadow-fuchsia-500/25 hover:opacity-90'
                       }`}
-                      disabled={(!input.trim() && imagePreviews.length === 0) || isLoading}
+                      disabled={(!hasText && imagePreviews.length === 0) || isLoading}
                       aria-label="Enviar mensagem"
                     >
                       <Send className="size-4" />
