@@ -51,7 +51,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       const index = emblaApi.selectedScrollSnap();
       const currentPathIndex = NAV.findIndex((n) => location.pathname === n.to || location.pathname.startsWith(n.to));
       if (index !== currentPathIndex) {
-        navigate({ to: NAV[index].to, replace: true });
+        const targetRoute = NAV[index]?.to;
+        if (targetRoute) {
+          navigate({ to: targetRoute, replace: true });
+        }
       }
     };
     emblaApi.on("select", onSelect);
@@ -145,7 +148,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`relative z-10 flex flex-col md:flex-row h-14 md:h-16 w-[72px] md:w-auto md:px-6 items-center justify-center gap-1.5 md:gap-3 rounded-full transition-colors active:scale-[0.95] hover:bg-white/[0.05] ${
+                className={`relative z-10 flex flex-col md:flex-row h-14 md:h-16 w-[72px] md:w-auto md:px-6 items-center justify-center gap-1.5 md:gap-3 rounded-full transition-colors hover:bg-white/[0.05] ${
                   isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground/80"
                 }`}
               >
@@ -154,9 +157,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     layoutId="activeDockTab"
                     className="absolute inset-0 rounded-full bg-white/10 shadow-inner"
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    style={{ borderRadius: 9999 }}
                   />
                 )}
-                <item.icon className={`relative z-10 size-5 md:size-6 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
+                <item.icon className={`relative z-10 size-5 md:size-6 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100 active:scale-90'}`} />
                 <span className={`relative z-10 text-[10px] md:text-sm font-medium tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 md:opacity-100 md:w-auto h-0 md:h-auto overflow-hidden'}`}>
                   {item.label}
                 </span>

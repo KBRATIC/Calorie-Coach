@@ -175,8 +175,8 @@ export async function chatAssistant(
         if (base64Data.startsWith("data:")) {
           const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
           if (matches && matches.length === 3) {
-            mimeType = matches[1];
-            base64Data = matches[2];
+            mimeType = matches[1] || "image/jpeg";
+            base64Data = matches[2] || base64Data;
           }
         }
 
