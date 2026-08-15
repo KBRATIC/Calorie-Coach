@@ -17,8 +17,8 @@ import { ChatDrawer } from "@/components/ChatDrawer";
 
 const NAV = [
   { to: "/hoje", label: "Diário", icon: Flame },
-  { to: "/alimentos", label: "Alimentos", icon: Table2 },
   { to: "/historico", label: "Histórico", icon: CalendarRange },
+  { to: "/alimentos", label: "Alimentos", icon: Table2 },
   { to: "/perfil", label: "Perfil", icon: UserCog },
 ] as const;
 
@@ -113,12 +113,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
-                  {activeIndex === 1 || (deferred && Math.abs(activeIndex - 1) <= 1) ? <FoodsPage /> : null}
+                  {activeIndex === 1 || (deferred && Math.abs(activeIndex - 1) <= 1) ? <HistoryPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
-                  {activeIndex === 2 || (deferred && Math.abs(activeIndex - 2) <= 1) ? <HistoryPage /> : null}
+                  {activeIndex === 2 || (deferred && Math.abs(activeIndex - 2) <= 1) ? <FoodsPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
