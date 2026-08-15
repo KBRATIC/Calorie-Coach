@@ -137,15 +137,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </main>
 
-      <div className="absolute inset-x-0 bottom-6 md:bottom-10 z-40 mx-4 flex justify-center pointer-events-none">
-        <nav className="relative flex items-center p-2 md:p-3 gap-2 rounded-full bg-surface/90 backdrop-blur-md shadow-2xl pointer-events-auto border border-border">
+      <div className="absolute inset-x-0 bottom-6 md:bottom-10 z-40 px-2 sm:mx-4 flex justify-center pointer-events-none">
+        <nav className="relative w-full max-w-md flex items-center justify-between p-1.5 md:p-3 gap-1 sm:gap-2 rounded-[32px] bg-surface/90 backdrop-blur-md shadow-2xl pointer-events-auto border border-border">
           {NAV.map((item, idx) => {
             const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
             const navLink = (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`relative z-10 flex flex-col md:flex-row h-14 md:h-16 w-[72px] md:w-auto md:px-6 items-center justify-center gap-1.5 md:gap-3 rounded-full transition-colors active:scale-[0.95] hover:bg-white/[0.05] ${
+                className={`relative z-10 flex flex-1 flex-col md:flex-row h-14 md:h-16 min-w-0 md:w-auto md:px-6 items-center justify-center gap-1 md:gap-3 rounded-full transition-colors active:scale-[0.95] hover:bg-white/[0.05] ${
                   isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground/80"
                 }`}
               >
@@ -157,7 +157,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   />
                 )}
                 <item.icon className={`relative z-10 size-5 md:size-6 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`} />
-                <span className={`relative z-10 text-[10px] md:text-sm font-medium tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 md:opacity-100 md:w-auto h-0 md:h-auto overflow-hidden'}`}>
+                <span className={`relative z-10 text-[9px] md:text-sm font-medium tracking-wide transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 md:opacity-100 md:w-auto h-0 md:h-auto overflow-hidden'} truncate w-full text-center`}>
                   {item.label}
                 </span>
               </Link>
