@@ -356,8 +356,9 @@ Regra 3: Se o usuário enviar uma foto de comida, faça uma análise mais aprofu
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
+        'X-Accel-Buffering': 'no',
       },
     });
   });

@@ -96,7 +96,7 @@ const MessageList = React.memo(({ messages, isLoading, currentStatus }: { messag
             </div>
           </motion.div>
         ))}
-        {isLoading && <LoadingIndicator status={currentStatus} />}
+        {isLoading && <LoadingIndicator key="loading-indicator" status={currentStatus} />}
       </AnimatePresence>
     </div>
   );
