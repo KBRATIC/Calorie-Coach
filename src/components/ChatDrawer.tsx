@@ -349,79 +349,72 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     setIsLoading(true);
 
     try {
-      const apiMessages = newMessages.filter((m, idx) => !(idx === 0 && m.role === "model"));
-      
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-      
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ messages: apiMessages, date: activeDayState.date })
+      const formattedMessages = newMessages.filter((m, idx) => !(idx === 0 && m.role === "model"));
+      const { chatAssistantStreamFn } = await import('@/lib/ai.functions');
+      const res = await chatAssistantStreamFn({
+        data: {
+          messages: formattedMessages,
+          date: activeDayState.date
+        }
       });
 
-      if (!res.ok) throw new Error("Erro na rede");
-      
-      const reader = res.body?.getReader();
+      if (!res.body) {
+        throw new Error("Não foi possível conectar ao servidor.");
+      }
+
+      const reader = res.body.getReader();
       const decoder = new TextDecoder("utf-8");
       
-      let currentText = "";
-      let currentThinking = "";
+      let finalBotText = "";
       let buffer = "";
 
       setMessages(prev => [...prev, { role: "model", text: "", thinking: "" }]);
       
-      while (reader) {
+      while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         
         buffer += decoder.decode(value, { stream: true });
-        let boundary = buffer.indexOf("\n\n");
-        while (boundary !== -1) {
-          const eventChunk = buffer.slice(0, boundary);
-          buffer = buffer.slice(boundary + 2);
-          
+        const lines = buffer.split("\n\n");
+        buffer = lines.pop() || "";
+
+        for (const eventChunk of lines) {
           let eventType = "message";
           let dataStr = "";
-          
-          const lines = eventChunk.split("\n");
-          for (const line of lines) {
+
+          const chunkLines = eventChunk.split("\n");
+          for (const line of chunkLines) {
             if (line.startsWith("event: ")) eventType = line.slice(7);
             if (line.startsWith("data: ")) dataStr = line.slice(6);
           }
-          
+
           if (eventType === "step") {
             const data = JSON.parse(dataStr);
             setCurrentStatus(data.message);
           } else if (eventType === "chunk") {
             const data = JSON.parse(dataStr);
             const chunkText = data.text;
-            
-            // Handle <think> parsing
+
             currentText += chunkText;
-            
+
             let displayThinking = currentThinking;
             let displayText = currentText;
-            
+
             if (currentText.includes("<think>")) {
               const parts = currentText.split("</think>");
               if (parts.length > 1) {
                 displayThinking = parts[0].replace("<think>", "").trim();
-                displayText = parts[1]; // The final answer part
+                displayText = parts[1];
               } else {
                 displayThinking = currentText.replace("<think>", "").trim();
                 displayText = "";
               }
             }
-            
-            // Remove any internal LOG_FOOD tags from display
+
             displayText = displayText.replace(/\[LOG_FOOD:[^\]]*\]/g, "");
             displayText = displayText.replace(/\[EDIT_FOOD:[^\]]*\]/g, "");
             displayText = displayText.replace(/\[REMOVE_FOOD:[^\]]*\]/g, "");
-            
+
             setMessages(prev => {
               const newMsgs = [...prev];
               newMsgs[newMsgs.length - 1] = {
@@ -436,8 +429,6 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
           } else if (eventType === "error") {
              throw new Error(JSON.parse(dataStr).message);
           }
-          
-          boundary = buffer.indexOf("\n\n");
         }
       }
 
