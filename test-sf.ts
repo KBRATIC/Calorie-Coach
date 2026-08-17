@@ -1,0 +1,1 @@
+import { createServerFn } from '@tanstack/react-start'; console.log(createServerFn({ method: 'POST' }).handler(() => {}).url);

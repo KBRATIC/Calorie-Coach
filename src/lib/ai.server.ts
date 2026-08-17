@@ -123,29 +123,24 @@ export async function parseMealText(text: string, defaultMeal: string): Promise<
 const CHAT_SYSTEM = `Você é o KcalTrack, um assistente inteligente focado em facilitar o registro rápido de refeições e o acompanhamento de calorias.
 Sua personalidade é educada, prestativa e amigável. Você deve ter um tom natural e agradável, não robótico, mas mantendo o profissionalismo. Não seja excessivamente íntimo, efusivo ou aja como um "amigo no WhatsApp". Use alguns emojis sutis para deixar o texto mais visual, mas sem exageros.
 
-Sua função principal vai além de apenas registrar: você deve ser capaz de interpretar todo o contexto da conversa. O histórico das mensagens enviadas nesta sessão será fornecido, e você deve usá-lo para raciocinar e responder com inteligência.
-
-INSTRUÇÃO DE RACIOCÍNIO (MUITO IMPORTANTE):
-Antes de dar a sua resposta final, você DEVE organizar seu raciocínio passo a passo usando tags <think> e </think>. Dentro dessa tag, você pode "pensar em voz alta", analisar a imagem, calcular os macros e revisar o histórico. Somente após fechar a tag </think> você deve escrever a mensagem final que será mostrada ao usuário.
-
 REGRAS CRÍTICAS DE COMPORTAMENTO:
-1. LEIA O CONTEXTO! Se o usuário fizer perguntas sobre uma imagem já enviada ou um prato recém-registrado, você DEVE usar o histórico do chat para entender do que ele está falando.
-2. Seja direto, claro e cordial. Substitua saudações secas por interações naturais.
-3. Se o usuário enviar uma imagem ou relatar o que comeu com a intenção de registrar, identifique os alimentos na sua tag <think>, estime as porções e depois confirme o registro.
-4. VOCÊ É PROATIVO! Se o usuário disser que comeu algo, NÃO pergunte se ele quer registrar. REGISTRE IMEDIATAMENTE.
-5. Para REGISTRAR novos alimentos, adicione no FINAL da sua mensagem (fora da tag think) uma tag invisível PARA CADA ALIMENTO:
+1. Seja direto, claro e cordial. Substitua saudações secas por interações naturais, mantendo a resposta elegante e concisa.
+2. Se o usuário enviar uma imagem ou relatar o que comeu, identifique os alimentos, estime as porções com precisão e confirme o registro de forma prestativa, com um leve toque de incentivo se apropriado.
+3. VOCÊ É PROATIVO! Se o usuário disser que comeu algo, NÃO pergunte se ele quer registrar. REGISTRE IMEDIATAMENTE estimando as porções padrão e avise que já fez isso.
+4. Para REGISTRAR novos alimentos, adicione no FINAL da sua mensagem uma tag invisível PARA CADA ALIMENTO:
 [LOG_FOOD: {"name": "Nome", "quantity": 100, "unit": "g", "kcal": 250, "protein": 10, "carbs": 30, "fat": 5, "meal": "lunch"}]
-- "meal" DEVE SER: "breakfast", "lunch", "snack", "dinner" ou "other". Se não souber, adivinhe.
+- "meal" DEVE SER: "breakfast", "lunch", "snack", "dinner" ou "other". Se não souber, adivinhe pelo horário ou contexto.
 - SEMPRE separe itens compostos. "Arroz com feijão e carne" = 3 tags [LOG_FOOD] separadas.
-6. Para EDITAR ou CORRIGIR um alimento que JÁ ESTÁ NO DIÁRIO (leia o contexto injetado), use:
+5. Para EDITAR ou CORRIGIR um alimento que JÁ ESTÁ NO DIÁRIO (leia o contexto injetado para saber o ID), use:
 [EDIT_FOOD: {"id": "ID_AQUI", "name": "Novo Nome", "quantity": 100, "unit": "g", "kcal": 200, "protein": 10, "carbs": 30, "fat": 5}]
-7. Para REMOVER ou APAGAR um alimento (ex: "apaga o arroz"), encontre o ID e use:
+6. Para REMOVER ou APAGAR um alimento (ex: "não comi a sobremesa", "apaga o arroz"), encontre o ID no contexto injetado e use:
 [REMOVE_FOOD: {"id": "ID_AQUI"}]
-8. O usuário usa microfone. Ignore erros de fala e foque na intenção final.
-9. NUNCA mencione as tags, nem diga "Estou enviando um comando".
-10. SEMPRE que registrar/editar:
-- Mostre o resumo nutricional na mensagem visível ao usuário: "Total estimado: X kcal (P: Xg, C: Xg, G: Xg)."
-11. Responda a perguntas contextuais justificando seu raciocínio com base nos alimentos vistos.`;
+7. O usuário usa microfone. Ignore erros de fala, gaguejos ou correções no meio da frase. Aja apenas sobre a intenção final.
+8. NUNCA mencione as tags, nem diga "Estou enviando um comando". As tags ficam ocultas e soltas no fim do texto.
+9. SEMPRE que registrar/editar:
+- Confirme a ação de forma fluida.
+- Mostre o resumo nutricional de forma limpa: "Total estimado: X kcal (P: Xg, C: Xg, G: Xg)."
+10. Se o usuário perguntar quem é você, explique brevemente que você é o assistente KcalTrack, pronto para ajudar com o registro de calorias e macros de forma simples e rápida.`;
 
 export async function chatAssistant(
   messages: { role: "user" | "model"; text: string; images?: string[] }[],
@@ -229,113 +224,4 @@ export async function chatAssistant(
 
   const text = json.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
   return text;
-}
-
-export async function* chatAssistantStream(
-  messages: { role: "user" | "model"; text: string; images?: string[] }[],
-  contextStr: string = ""
-): AsyncGenerator<string, void, unknown> {
-  const googleKey = process.env["GEMINI_API_KEY"] || process.env["GOOGLE_AI_STUDIO_API_KEY"];
-  if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
-
-  const url = new URL(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:streamGenerateContent?alt=sse"
-  );
-  url.searchParams.set("key", googleKey);
-
-  const contents = messages.map((m, index) => {
-    const parts: any[] = [];
-    
-    let textToSend = m.text;
-    if (m.role === "user" && index === messages.length - 1 && contextStr) {
-      textToSend += contextStr;
-    }
-
-    if (textToSend) {
-      parts.push({ text: textToSend });
-    }
-    
-    if (m.images && m.images.length > 0) {
-      for (const imgBase64 of m.images) {
-        let mimeType = "image/jpeg";
-        let base64Data = imgBase64;
-        
-        if (base64Data.startsWith("data:")) {
-          const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-          if (matches && matches.length === 3) {
-            mimeType = matches[1] || "image/jpeg";
-            base64Data = matches[2] || base64Data;
-          }
-        }
-
-        parts.push({
-          inlineData: {
-            mimeType: mimeType,
-            data: base64Data,
-          },
-        });
-      }
-    }
-
-    return {
-      role: m.role,
-      parts,
-    };
-  });
-
-  const res = await fetch(url.toString(), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: CHAT_SYSTEM }] },
-      contents,
-      generationConfig: {
-        temperature: 0.7,
-      },
-    }),
-  });
-
-  if (!res.ok) {
-    const body = await res.text();
-    console.error("Google AI Chat Streaming error:", res.status, body);
-    throw new Error(`Falha no chat da IA do Google (${res.status})`);
-  }
-
-  if (!res.body) {
-    throw new Error("Resposta da IA sem corpo de stream");
-  }
-
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder("utf-8");
-  let buffer = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    
-    let boundary = buffer.indexOf("\n\n");
-    while (boundary !== -1) {
-      const eventChunk = buffer.slice(0, boundary);
-      buffer = buffer.slice(boundary + 2);
-      
-      const lines = eventChunk.split("\n");
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const dataStr = line.slice(6);
-          try {
-            const dataObj = JSON.parse(dataStr);
-            const textPart = dataObj?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (textPart) {
-              yield textPart;
-            }
-          } catch (e) {
-            // ignore parsing errors on partial json or done message
-          }
-        }
-      }
-      boundary = buffer.indexOf("\n\n");
-    }
-  }
 }
