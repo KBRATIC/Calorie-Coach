@@ -1,10 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2, Sparkles, Camera, X, Mic, Paperclip, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
-import { askAssistant } from "@/lib/ai.functions";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
 import { useQueryClient } from "@tanstack/react-query";
@@ -12,31 +10,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CameraCaptureDialog } from "@/components/CameraCaptureDialog";
 import { activeDayState } from "@/lib/nutrition";
 import { Drawer } from "vaul";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   role: "user" | "model";
   text: string;
+  thinking?: string;
   images?: string[];
 }
 
 import React from "react";
 
-const LoadingIndicator = () => {
-  const steps = [
-    "Analisando...",
-    "Buscando referências nutricionais...",
-    "Calculando macros e porções...",
-    "Escrevendo a resposta..."
-  ];
-  const [stepIndex, setStepIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStepIndex((prev) => (prev + 1 < steps.length ? prev + 1 : prev));
-    }, 1800);
-    return () => clearInterval(interval);
-  }, []);
-
+const LoadingIndicator = ({ status }: { status?: string }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 15, scale: 0.98 }}
@@ -50,21 +35,16 @@ const LoadingIndicator = () => {
             <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.2 }} className="size-2 rounded-full bg-purple-500" />
             <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: 0.4 }} className="size-2 rounded-full bg-blue-500" />
           </div>
-          <motion.span 
-            key={stepIndex}
-            initial={{ opacity: 0, y: 2 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-sm text-muted-foreground font-medium"
-          >
-            {steps[stepIndex]}
-          </motion.span>
+          <span className="text-sm text-muted-foreground font-medium">
+            {status || "Escrevendo..."}
+          </span>
         </div>
       </div>
     </motion.div>
   );
 };
 
-const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], isLoading: boolean }) => {
+const MessageList = React.memo(({ messages, isLoading, currentStatus }: { messages: Message[], isLoading: boolean, currentStatus?: string }) => {
   return (
     <div className="flex flex-col gap-6 pb-6">
       <AnimatePresence initial={false}>
@@ -77,7 +57,7 @@ const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], 
             className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[85%] rounded-[24px] px-5 py-4 text-[15px] leading-relaxed flex flex-col gap-3 ${
+              className={`w-fit min-w-[80px] max-w-[85%] rounded-[24px] px-5 py-4 text-[15px] leading-relaxed flex flex-col gap-3 ${
                 msg.role === "user"
                   ? "bg-gradient-to-tr from-blue-600 via-purple-600 to-fuchsia-600 text-white rounded-br-sm shadow-[0_4px_20px_rgb(0,0,0,0.1)] shadow-fuchsia-500/20 border border-white/10"
                   : "bg-surface-strong text-foreground rounded-bl-sm border border-border"
@@ -86,22 +66,37 @@ const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], 
               {msg.images && msg.images.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
                   {msg.images.map((img, i) => (
-                    <img key={i} src={img} alt="Enviada pelo usuário" className="w-full max-w-[200px] rounded-lg border border-white/10" />
+                    <img key={i} src={img} alt="Enviada pelo usuário" className="max-w-full sm:max-w-[250px] max-h-[300px] object-contain rounded-lg border border-white/10 bg-black/20" />
                   ))}
                 </div>
               )}
               
+              {msg.thinking && msg.role === "model" && (
+                <div className="mb-1 rounded-xl bg-black/20 border border-white/5 overflow-hidden text-left w-full">
+                  <details className="group">
+                    <summary className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-muted-foreground cursor-pointer hover:bg-white/5 transition-colors list-none [&::-webkit-details-marker]:hidden">
+                      <Sparkles className="size-3 text-fuchsia-500/70 group-open:text-purple-400" />
+                      <span className="group-open:hidden">Pensamento...</span>
+                      <span className="hidden group-open:inline text-purple-400/80">Raciocínio da IA</span>
+                    </summary>
+                    <div className="px-3 pb-3 text-[13px] text-muted-foreground/80 font-mono whitespace-pre-wrap leading-relaxed border-t border-white/5 pt-2">
+                      {msg.thinking}
+                    </div>
+                  </details>
+                </div>
+              )}
+
               {msg.role === "model" ? (
-                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-a:text-primary">
+                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-a:text-primary break-words">
                   <ReactMarkdown>{msg.text}</ReactMarkdown>
                 </div>
               ) : (
-                msg.text && <span>{msg.text}</span>
+                msg.text && <span className="break-words">{msg.text}</span>
               )}
             </div>
           </motion.div>
         ))}
-        {isLoading && <LoadingIndicator />}
+        {isLoading && <LoadingIndicator status={currentStatus} />}
       </AnimatePresence>
     </div>
   );
@@ -184,9 +179,9 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const ask = useServerFn(askAssistant);
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState<string | undefined>(undefined);
   const [isListening, setIsListening] = useState(false);
   const [interimText, setInterimText] = useState("");
   const recognitionRef = useRef<any>(null);
@@ -354,20 +349,107 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     setIsLoading(true);
 
     try {
-      // Gemini API requires the first message to be from the 'user'.
-      // If the first message in our state is the default 'model' greeting, we must exclude it.
       const apiMessages = newMessages.filter((m, idx) => !(idx === 0 && m.role === "model"));
-      const response = await ask({ data: { messages: apiMessages, date: activeDayState.date } });
-      setMessages((prev) => [...prev, { role: "model", text: response.text }]);
-      queryClient.invalidateQueries({ queryKey: ["entries"] });
-    } catch (err) {
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ messages: apiMessages, date: activeDayState.date })
+      });
+
+      if (!res.ok) throw new Error("Erro na rede");
+      
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder("utf-8");
+      
+      let currentText = "";
+      let currentThinking = "";
+      let buffer = "";
+
+      setMessages(prev => [...prev, { role: "model", text: "", thinking: "" }]);
+      
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        buffer += decoder.decode(value, { stream: true });
+        let boundary = buffer.indexOf("\n\n");
+        while (boundary !== -1) {
+          const eventChunk = buffer.slice(0, boundary);
+          buffer = buffer.slice(boundary + 2);
+          
+          let eventType = "message";
+          let dataStr = "";
+          
+          const lines = eventChunk.split("\n");
+          for (const line of lines) {
+            if (line.startsWith("event: ")) eventType = line.slice(7);
+            if (line.startsWith("data: ")) dataStr = line.slice(6);
+          }
+          
+          if (eventType === "step") {
+            const data = JSON.parse(dataStr);
+            setCurrentStatus(data.message);
+          } else if (eventType === "chunk") {
+            const data = JSON.parse(dataStr);
+            const chunkText = data.text;
+            
+            // Handle <think> parsing
+            currentText += chunkText;
+            
+            let displayThinking = currentThinking;
+            let displayText = currentText;
+            
+            if (currentText.includes("<think>")) {
+              const parts = currentText.split("</think>");
+              if (parts.length > 1) {
+                displayThinking = parts[0].replace("<think>", "").trim();
+                displayText = parts[1]; // The final answer part
+              } else {
+                displayThinking = currentText.replace("<think>", "").trim();
+                displayText = "";
+              }
+            }
+            
+            // Remove any internal LOG_FOOD tags from display
+            displayText = displayText.replace(/\[LOG_FOOD:[^\]]*\]/g, "");
+            displayText = displayText.replace(/\[EDIT_FOOD:[^\]]*\]/g, "");
+            displayText = displayText.replace(/\[REMOVE_FOOD:[^\]]*\]/g, "");
+            
+            setMessages(prev => {
+              const newMsgs = [...prev];
+              newMsgs[newMsgs.length - 1] = {
+                ...newMsgs[newMsgs.length - 1],
+                text: displayText,
+                thinking: displayThinking
+              };
+              return newMsgs;
+            });
+          } else if (eventType === "done") {
+             queryClient.invalidateQueries({ queryKey: ["entries"] });
+          } else if (eventType === "error") {
+             throw new Error(JSON.parse(dataStr).message);
+          }
+          
+          boundary = buffer.indexOf("\n\n");
+        }
+      }
+
+    } catch (err: any) {
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        { role: "model", text: "Desculpe, ocorreu um erro ao conectar à IA. Tente novamente." },
+        { role: "model", text: err.message || "Desculpe, ocorreu um erro ao conectar à IA. Tente novamente." },
       ]);
     } finally {
       setIsLoading(false);
+      setCurrentStatus(undefined);
     }
   }
 
@@ -422,7 +504,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
             </div>
 
             <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col px-4 pt-4 no-scrollbar" ref={scrollRef}>
-              <MessageList messages={messages} isLoading={isLoading} />
+              <MessageList messages={messages} isLoading={isLoading} currentStatus={currentStatus} />
             </div>
 
             <div className="p-3 sm:p-5 flex flex-col gap-3 bg-surface border-t border-border shrink-0">
