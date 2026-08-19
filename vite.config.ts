@@ -3,13 +3,19 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import viteReact from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
+import { nitro } from "nitro/vite";
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   plugins: [
-    tanstackStart({
-      server: {
-        preset: "vercel",
+    tanstackStart(),
+    nitro({ 
+      preset: "vercel",
+      rolldown: false,
+      rollupConfig: {
+        output: {
+          inlineDynamicImports: true
+        }
       }
     }),
     viteReact(),
