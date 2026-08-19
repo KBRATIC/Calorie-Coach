@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Lightning } from "@phosphor-icons/react";
+import { ArrowRight, Check, Lightning, BowlFood } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -131,13 +131,13 @@ export function HeroSection() {
             <div className="space-y-3 mt-2">
                <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/40">
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded bg-primary/20 flex items-center justify-center text-primary"><Lightning size={16} weight="fill"/></div>
+                    <div className="size-8 rounded bg-primary/20 flex items-center justify-center text-primary"><BowlFood size={16} weight="fill"/></div>
                     <div>
-                      <p className="text-sm font-medium">Treino de Força</p>
-                      <p className="text-xs text-muted-foreground">18:30 - Peito e Tríceps</p>
+                      <p className="text-sm font-medium">Almoço</p>
+                      <p className="text-xs text-muted-foreground">Arroz, feijão e frango grelhado</p>
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-destructive">-450 kcal</span>
+                  <span className="text-sm font-medium text-primary">620 kcal</span>
                </div>
             </div>
           </div>
