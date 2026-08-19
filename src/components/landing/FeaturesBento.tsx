@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MagnifyingGlass, CalendarBlank, Fire, Calculator, TrendingDown, TrendingUp, Minus } from "@phosphor-icons/react";
+import { MagnifyingGlass, CalendarBlank, Fire, Calculator, TrendDown, TrendUp, Minus } from "@phosphor-icons/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
@@ -57,9 +57,9 @@ function SearchMockup() {
 // Badges mockup for the background
 function GoalsMockup() {
   const badges = [
-    { label: "Cutting", icon: TrendingDown, color: "text-destructive" },
+    { label: "Cutting", icon: TrendDown, color: "text-destructive" },
     { label: "Manutenção", icon: Minus, color: "text-muted-foreground" },
-    { label: "Lean Bulk", icon: TrendingUp, color: "text-success" },
+    { label: "Lean Bulk", icon: TrendUp, color: "text-success" },
   ];
 
   return (
