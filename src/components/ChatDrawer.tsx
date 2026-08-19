@@ -175,7 +175,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      text: "Sou o assistente de nutrição do KcalTrack. Como posso te ajudar hoje? Tire dúvidas sobre alimentos, peça sugestões de refeições saudáveis ou envie uma foto do seu prato para estimar as calorias.",
+      text: "Oi! 👋 Sou seu assistente nutricional aqui no KcalTrack. Me conta o que comeu, tira uma foto do prato ou me pergunta qualquer coisa sobre alimentação — tô aqui pra te ajudar! 😊",
     },
   ]);
   const [hasText, setHasText] = useState(false);
@@ -356,15 +356,27 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     try {
       // Gemini API requires the first message to be from the 'user'.
       // If the first message in our state is the default 'model' greeting, we must exclude it.
-      const apiMessages = newMessages.filter((m, idx) => !(idx === 0 && m.role === "model"));
+      const apiMessages = newMessages
+        .filter((m, idx) => !(idx === 0 && m.role === "model"))
+        .map((m, idx, arr) => {
+          // Only send images on the LAST user message to avoid huge payload on follow-ups
+          if (m.images && idx !== arr.length - 1) {
+            return { ...m, text: m.text || "[imagem enviada anteriormente]", images: undefined };
+          }
+          return m;
+        });
       const response = await ask({ data: { messages: apiMessages, date: activeDayState.date } });
       setMessages((prev) => [...prev, { role: "model", text: response.text }]);
       queryClient.invalidateQueries({ queryKey: ["entries"] });
     } catch (err) {
       console.error(err);
+      const errorMessage = err instanceof Error ? err.message : "";
+      const userFacingMessage = errorMessage.includes("limite diário")
+        ? errorMessage
+        : "Desculpe, ocorreu um erro ao conectar à IA. Tente novamente.";
       setMessages((prev) => [
         ...prev,
-        { role: "model", text: "Desculpe, ocorreu um erro ao conectar à IA. Tente novamente." },
+        { role: "model", text: userFacingMessage },
       ]);
     } finally {
       setIsLoading(false);
