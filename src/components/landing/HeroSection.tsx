@@ -40,7 +40,7 @@ export function HeroSection() {
         >
           <motion.h1
             variants={itemVariants}
-            className="max-w-xl text-4xl leading-[1.08] tracking-tight font-display font-bold md:text-5xl lg:text-6xl"
+            className="max-w-2xl mx-auto lg:mx-0 text-4xl leading-[1.08] tracking-tight font-display font-bold md:text-5xl lg:text-6xl"
           >
             Seu corpo merece{" "}
             <span className="text-primary relative inline-block">
@@ -120,18 +120,17 @@ export function HeroSection() {
           }}
           className="mt-12 lg:mt-0 flex justify-center lg:justify-end"
         >
-          <div className="relative">
+          <div className="relative rounded-[2.5rem] border border-border/40 bg-surface/20 backdrop-blur-md p-3 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
             <img
               src="/hero-mockup.jpg"
               alt="Interface do KcalTrack mostrando dashboard com anel de calorias, registro de refeições e gráfico semanal"
-              className="w-64 md:w-72 lg:w-80 rounded-3xl"
+              className="w-64 md:w-72 lg:w-80 rounded-[1.8rem] object-cover"
               width={320}
               height={427}
               loading="eager"
             />
             {/* Glow behind phone */}
-            <div className="absolute -inset-8 -z-10 bg-primary/8 blur-[60px] rounded-full pointer-events-none" />
-            <div className="absolute -inset-12 -z-20 bg-primary/4 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute -inset-8 -z-10 bg-primary/10 blur-[60px] rounded-full pointer-events-none" />
           </div>
         </motion.div>
       </div>
