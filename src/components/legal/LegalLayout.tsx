@@ -15,7 +15,7 @@ export function LegalLayout({ children, title, lastUpdated }: { children: ReactN
   return (
     <div className="min-h-screen relative overflow-hidden text-foreground selection:bg-primary/30">
       <div className="aurora-layer" aria-hidden />
-      <div className="mx-auto max-w-6xl px-4 pt-12 pb-32 md:px-10 lg:pt-20 relative z-10">
+      <div className="mx-auto max-w-[90rem] px-4 pt-12 pb-32 md:px-10 lg:pt-20 relative z-10">
         
         <Link to="/" className="inline-block mb-12 relative z-10 group">
           <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground">
