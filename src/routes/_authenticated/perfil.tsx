@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Trash2, AlertTriangle, Loader2, Download } from "lucide-react";
@@ -360,6 +360,15 @@ export function ProfilePage() {
       </div>
 
       {user && <CustomFoods userId={user.id} />}
+
+      <div className="bento-card p-6 sm:p-8 mt-8 space-y-4">
+        <h2 className="text-xl font-medium tracking-tight">Legal e Privacidade</h2>
+        <div className="flex flex-col gap-3">
+          <Link to="/termos" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Termos de Uso</Link>
+          <Link to="/privacidade" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Política de Privacidade</Link>
+          <Link to="/cookies" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Política de Cookies</Link>
+        </div>
+      </div>
 
       <div className="bento-card border-destructive/20 space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
         <div className="absolute inset-0 bg-destructive/5 -z-10" />
