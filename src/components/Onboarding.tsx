@@ -22,10 +22,13 @@ export function Onboarding() {
   });
 
   useEffect(() => {
+    if (localStorage.getItem(`onboarding_seen_${user?.id}`) === "true") {
+      return;
+    }
     if (!isLoading && hasSeen === false) {
       setOpen(true);
     }
-  }, [hasSeen, isLoading]);
+  }, [hasSeen, isLoading, user?.id]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -39,7 +42,12 @@ export function Onboarding() {
   }, [emblaApi]);
 
   const markSeenMutation = useMutation({
-    mutationFn: () => markOnboardingSeen(user!.id),
+    mutationFn: async () => {
+      if (user?.id) {
+        localStorage.setItem(`onboarding_seen_${user.id}`, "true");
+      }
+      return markOnboardingSeen(user!.id);
+    },
     onSuccess: () => {
       setOpen(false);
       queryClient.setQueryData(["onboarding", user?.id], true);
@@ -72,7 +80,7 @@ export function Onboarding() {
     }
   ];
 
-  if (!user || hasSeen) return null;
+  if (!user || hasSeen || localStorage.getItem(`onboarding_seen_${user?.id}`) === "true") return null;
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
