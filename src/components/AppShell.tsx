@@ -1,11 +1,11 @@
 import { useState, useEffect, Fragment } from "react";
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Flame, CalendarRange, UserCog, LogOut, Table2, Sparkles } from "lucide-react";
+import { Flame, CalendarRange, UserCog, LogOut, Table2, Sparkles, ArrowUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 import { TodayPage } from "@/routes/_authenticated/hoje";
 import { FoodsPage } from "@/routes/_authenticated/alimentos";
@@ -27,6 +27,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const queryClient = useQueryClient();
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setIsScrolled(e.currentTarget.scrollTop > 300);
+  };
+
+  const scrollToTop = () => {
+    const containers = document.querySelectorAll('.overflow-y-auto');
+    containers.forEach(container => {
+      container.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  };
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "x",
@@ -103,26 +115,46 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
+      <AnimatePresence>
+        {isScrolled && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="fixed top-24 md:top-28 z-40 w-full px-4 pointer-events-none flex justify-center"
+          >
+            <Button
+              onClick={scrollToTop}
+              className="pointer-events-auto rounded-full h-11 px-5 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_0_oklch(0.7_0.2_140/0.2)] border border-primary/50 transition-all active:scale-95 text-[13px] font-bold tracking-wide"
+            >
+              <ArrowUp className="size-4 mr-2" />
+              VOLTAR AO TOPO
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <main className="absolute inset-0 mx-auto w-full max-w-[1800px] overflow-hidden">
         {isTab ? (
           <div className="embla h-full overflow-hidden w-full" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full w-full">
-              <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
+              <div onScroll={handleScroll} className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-[90rem] mx-auto">
                   {activeIndex === 0 || (deferred && Math.abs(activeIndex - 0) <= 1) ? <TodayPage /> : null}
                 </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
+              <div onScroll={handleScroll} className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-[90rem] mx-auto">
                   {activeIndex === 1 || (deferred && Math.abs(activeIndex - 1) <= 1) ? <HistoryPage /> : null}
                 </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
+              <div onScroll={handleScroll} className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-[90rem] mx-auto">
                   {activeIndex === 2 || (deferred && Math.abs(activeIndex - 2) <= 1) ? <FoodsPage /> : null}
                 </div>
               </div>
-              <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
+              <div onScroll={handleScroll} className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
                 <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-[90rem] mx-auto">
                   {activeIndex === 3 || (deferred && Math.abs(activeIndex - 3) <= 1) ? <ProfilePage /> : null}
                 </div>
@@ -130,7 +162,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         ) : (
-          <div className="h-full overflow-y-auto overscroll-contain no-scrollbar">
+          <div onScroll={handleScroll} className="h-full overflow-y-auto overscroll-contain no-scrollbar">
             <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-[90rem] mx-auto">
               {children}
             </div>
