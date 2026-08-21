@@ -217,8 +217,19 @@ export async function chatAssistant(
   });
 
   if (!res.ok) {
-    const body = await res.text();
-    console.error("Google AI Chat error:", res.status, body);
+    let body = await res.text();
+    if (res.status === 404) {
+      try {
+        const modelsRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${googleKey}`);
+        if (modelsRes.ok) {
+          const modelsData = await modelsRes.json();
+          const availableModels = modelsData.models?.map((m: any) => m.name).join(", ");
+          body += ` | Modelos disponíveis para sua chave: ${availableModels}`;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
     throw new Error(`Falha no chat da IA do Google (${res.status}): ${body}`);
   }
 
