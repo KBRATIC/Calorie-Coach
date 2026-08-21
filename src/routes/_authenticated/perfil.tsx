@@ -427,7 +427,7 @@ export function ProfilePage() {
           </AlertDialogContent>
         </AlertDialog>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
