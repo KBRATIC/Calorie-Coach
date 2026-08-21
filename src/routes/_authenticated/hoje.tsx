@@ -256,7 +256,7 @@ export function TodayPage() {
             <ChevronRight className="size-5" />
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {!goalsQuery.isLoading && !goalsQuery.data && (
         <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col sm:flex-row items-center justify-between gap-4">

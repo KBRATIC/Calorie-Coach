@@ -306,7 +306,7 @@ export function ProfilePage() {
           >
             Salvar meta
           </Button>
-        </div>
+        </motion.div>
 
         <motion.div variants={itemVariants} className="bento-card p-6 sm:p-8 space-y-6 flex flex-col justify-between">
           <div className="space-y-6">

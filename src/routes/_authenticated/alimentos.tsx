@@ -366,6 +366,6 @@ export function FoodsPage() {
         Valores de referência baseados na Tabela de Calorias EndocrinoSaude. Podem variar conforme
         preparo e marca.
       </p>
-    </div>
+    </motion.div>
   );
 }
