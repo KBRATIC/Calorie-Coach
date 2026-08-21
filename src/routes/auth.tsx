@@ -36,8 +36,13 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/hoje", replace: true });
     });
@@ -56,6 +61,13 @@ function AuthPage() {
       toast.error("Não foi possível entrar", { description: error.message });
       return;
     }
+    
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", email);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+    }
+
     navigate({ to: "/hoje", replace: true });
   }
 
@@ -164,6 +176,16 @@ function AuthPage() {
                       {showPassword ? <Eye className="size-5" /> : <EyeClosed className="size-5" />}
                     </Button>
                   </div>
+                </div>
+                <div className="flex items-center space-x-2 pt-1">
+                  <Checkbox 
+                    id="remember-me" 
+                    checked={rememberMe} 
+                    onCheckedChange={(c) => setRememberMe(c as boolean)} 
+                  />
+                  <Label htmlFor="remember-me" className="text-sm font-medium text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+                    Lembrar de mim
+                  </Label>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   Entrar
