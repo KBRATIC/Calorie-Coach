@@ -70,19 +70,21 @@ export const askAssistant = createServerFn({ method: "POST" })
     }
 
     try {
-      // Buscar metas
-      const { data: goalData } = await context.supabase
-        .from("user_goals")
-        .select("daily_calorie_goal")
-        .eq("user_id", context.userId)
-        .maybeSingle();
+      const [goalResponse, recentEntriesResponse] = await Promise.all([
+        context.supabase
+          .from("user_goals")
+          .select("daily_calorie_goal")
+          .eq("user_id", context.userId)
+          .maybeSingle(),
+        context.supabase
+          .from("food_entries")
+          .select("id, name, grams, unit, kcal, meal, consumed_on")
+          .eq("user_id", context.userId)
+          .gte("consumed_on", startOfWeekStr)
+      ]);
 
-      // Buscar entradas recentes (início da semana) para entender hábitos e saldo
-      const { data: recentEntries } = await context.supabase
-        .from("food_entries")
-        .select("id, name, grams, unit, kcal, meal, consumed_on")
-        .eq("user_id", context.userId)
-        .gte("consumed_on", startOfWeekStr);
+      const goalData = goalResponse.data;
+      const recentEntries = recentEntriesResponse.data;
 
       if (goalData && recentEntries) {
         const goal = goalData.daily_calorie_goal || 2000;

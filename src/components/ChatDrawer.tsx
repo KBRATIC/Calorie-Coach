@@ -373,7 +373,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
       const errorMessage = err instanceof Error ? err.message : "";
       const userFacingMessage = errorMessage.includes("limite diário")
         ? errorMessage
-        : "Desculpe, ocorreu um erro ao conectar à IA. Tente novamente.";
+        : `Erro: ${errorMessage}`;
       setMessages((prev) => [
         ...prev,
         { role: "model", text: userFacingMessage },

@@ -74,7 +74,7 @@ function parseJsonContent(content: string, defaultMeal: string): ParsedItem[] {
 
 async function parseWithGoogle(text: string, defaultMeal: string, key: string): Promise<ParsedItem[]> {
   const url = new URL(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
   );
   url.searchParams.set("key", key);
 
@@ -161,21 +161,15 @@ export async function chatAssistant(
   if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
 
   const url = new URL(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent"
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
   );
   url.searchParams.set("key", googleKey);
 
   const contents = messages.map((m, index) => {
     const parts: any[] = [];
     
-    // Injeta o contexto no último texto enviado pelo usuário
-    let textToSend = m.text;
-    if (m.role === "user" && index === messages.length - 1 && contextStr) {
-      textToSend += contextStr;
-    }
-
-    if (textToSend) {
-      parts.push({ text: textToSend });
+    if (m.text) {
+      parts.push({ text: m.text });
     }
     
     if (m.images && m.images.length > 0) {
@@ -206,11 +200,15 @@ export async function chatAssistant(
     };
   });
 
+  const finalSystemInstruction = contextStr 
+    ? CHAT_SYSTEM + contextStr 
+    : CHAT_SYSTEM;
+
   const res = await fetch(url.toString(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: CHAT_SYSTEM }] },
+      systemInstruction: { parts: [{ text: finalSystemInstruction }] },
       contents,
       generationConfig: {
         temperature: 0.7,
@@ -221,7 +219,7 @@ export async function chatAssistant(
   if (!res.ok) {
     const body = await res.text();
     console.error("Google AI Chat error:", res.status, body);
-    throw new Error(`Falha no chat da IA do Google (${res.status})`);
+    throw new Error(`Falha no chat da IA do Google (${res.status}): ${body}`);
   }
 
   const json = (await res.json()) as {
