@@ -25,12 +25,12 @@ export const Route = createFileRoute("/_authenticated/historico")({
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.15 } }
+  show: { opacity: 1, transition: { staggerChildren: 0.03 } }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.9, rotateX: 5 },
-  show: { opacity: 1, y: 0, scale: 1, rotateX: 0, transition: { type: "spring", stiffness: 250, damping: 15 } }
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } }
 };
 
 export function HistoryPage() {
@@ -126,7 +126,7 @@ export function HistoryPage() {
         </div>
       </motion.div>
 
-      <motion.div key={period} variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
+      <motion.div key={period} variants={containerVariants} className="space-y-6">
       <div className="grid gap-3 sm:grid-cols-3">
         <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Média diária</p>
