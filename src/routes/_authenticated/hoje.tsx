@@ -329,9 +329,6 @@ export function TodayPage() {
       <motion.div variants={itemVariants} className="flex items-center justify-between pt-6">
         <h2 className="text-xl font-medium tracking-tight">Refeições</h2>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" onClick={() => redoMutation.mutate()} disabled={!lastUndone || redoMutation.isPending}>
-            <Redo2 className="size-3.5 mr-1.5" /> Refazer
-          </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" disabled={undoMutation.isPending || entries.length === 0}>
@@ -359,6 +356,9 @@ export function TodayPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+          <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" onClick={() => redoMutation.mutate()} disabled={!lastUndone || redoMutation.isPending}>
+            <Redo2 className="size-3.5 mr-1.5" /> Refazer
+          </Button>
         </div>
       </motion.div>
 
