@@ -142,7 +142,7 @@ export function HistoryPage() {
 
         {/* Calorie Bank */}
         {logged.length > 0 && (
-          <motion.div variants={itemVariants} initial="hidden" animate="show" className={`sm:col-span-3 backdrop-blur-3xl rounded-[32px] p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 border transition-all ${isPositive ? 'bg-primary/[0.03] border-primary/20 hover:bg-primary/[0.05]' : 'bg-destructive/[0.03] border-destructive/20 hover:bg-destructive/[0.05]'}`}>
+          <motion.div variants={itemVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className={`sm:col-span-3 backdrop-blur-3xl rounded-[32px] p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 border transition-all ${isPositive ? 'bg-primary/[0.03] border-primary/20 hover:bg-primary/[0.05]' : 'bg-destructive/[0.03] border-destructive/20 hover:bg-destructive/[0.05]'}`}>
             <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3 ${isPositive ? 'bg-primary/20' : 'bg-destructive/20'}`} />
             <div className="relative z-10 flex-1 w-full text-center sm:text-left">
               <p className={`flex items-center justify-center sm:justify-start gap-2 text-[10px] uppercase tracking-widest font-bold ${isPositive ? 'text-primary' : 'text-destructive'}`}>
@@ -191,8 +191,7 @@ export function HistoryPage() {
                 key={data.day} 
                 variants={itemVariants}
                 initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-50px" }}
+                animate={isActive ? "show" : "hidden"}
                 className="bento-card p-5 sm:p-6 flex flex-col gap-4"
               >
                 <button 
