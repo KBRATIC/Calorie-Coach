@@ -1,6 +1,7 @@
 import { unitFor } from "@/lib/nutrition";
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { Route as AuthRoute } from "@/routes/_authenticated/route";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import {
@@ -84,7 +85,7 @@ export function FoodsPage() {
     dir: "asc",
   });
   const [page, setPage] = useState(0);
-  const { user } = Route.useRouteContext();
+  const { user } = AuthRoute.useRouteContext();
 
   const customQuery = useQuery({ queryKey: ["custom-foods"], queryFn: fetchCustomFoods });
 

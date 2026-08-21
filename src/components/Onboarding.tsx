@@ -5,10 +5,10 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ChevronRight, ArrowRight, Target, Sparkles, Utensils } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchHasSeenOnboarding, markOnboardingSeen } from "@/lib/api";
-import { useSession } from "@/hooks/useSession";
+import { Route as AuthRoute } from "@/routes/_authenticated/route";
 
 export function Onboarding() {
-  const { user } = useSession();
+  const { user } = AuthRoute.useRouteContext();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   

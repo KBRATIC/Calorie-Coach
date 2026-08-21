@@ -26,7 +26,7 @@ import {
   type Sex,
 } from "@/lib/nutrition";
 
-import { useSession } from "@/hooks/useSession";
+import { Route as AuthRoute } from "@/routes/_authenticated/route";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -81,7 +81,7 @@ const itemVariants = {
 };
 
 export function ProfilePage() {
-  const { user } = useSession();
+  const { user } = AuthRoute.useRouteContext();
   const { installPrompt, triggerInstall } = usePwaInstall();
   const queryClient = useQueryClient();
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });

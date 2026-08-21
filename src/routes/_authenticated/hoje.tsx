@@ -49,7 +49,7 @@ import {
   type SearchableFood,
 } from "@/lib/api";
 import { MEALS, mealLabel, todayISO, formatDayLabel, addDays, unitFor, activeDayState, calcMacroGoals } from "@/lib/nutrition";
-import { useSession } from "@/hooks/useSession";
+import { Route as AuthRoute } from "@/routes/_authenticated/route";
 import { CalorieRing } from "@/components/CalorieRing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -87,7 +87,7 @@ const itemVariants = {
 };
 
 export function TodayPage() {
-  const { user } = useSession();
+  const { user } = AuthRoute.useRouteContext();
   const queryClient = useQueryClient();
   const [day, setDayState] = useState(activeDayState.date);
   const [direction, setDirection] = useState(1);
