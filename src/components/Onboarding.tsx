@@ -67,7 +67,7 @@ export function Onboarding() {
     },
     {
       title: "2. Lance com Inteligência Artificial",
-      description: "Na aba 'Hoje', use o Assistente IA para registrar refeições apenas digitando. Exemplo: 'Comi 2 pães com ovo'.",
+      description: "Na aba 'Diário', use o Assistente IA para registrar refeições apenas digitando. Exemplo: 'Comi 2 pães com ovo'.",
       icon: <Sparkles className="size-12 text-primary mb-4" />,
     }
   ];
@@ -76,11 +76,16 @@ export function Onboarding() {
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
-      // Don't allow closing by clicking outside if they haven't finished
-      if (!val && !hasSeen) return;
       setOpen(val);
+      if (!val) {
+        finish();
+      }
     }}>
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden border-border/60 bg-background/95 backdrop-blur-xl">
+      <DialogContent 
+        className="sm:max-w-md p-0 overflow-hidden border-border/60 bg-background/95 backdrop-blur-xl"
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <DialogTitle className="sr-only">Introdução ao aplicativo</DialogTitle>
         <DialogDescription className="sr-only">Slides de apresentação das funcionalidades</DialogDescription>
         
