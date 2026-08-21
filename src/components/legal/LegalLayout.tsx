@@ -13,12 +13,13 @@ export function LegalLayout({ children, title, lastUpdated }: { children: ReactN
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30">
-      <div className="mx-auto max-w-6xl px-4 pt-12 pb-32 md:px-10 lg:pt-20">
+    <div className="min-h-screen relative overflow-hidden text-foreground selection:bg-primary/30">
+      <div className="aurora-layer" aria-hidden />
+      <div className="mx-auto max-w-6xl px-4 pt-12 pb-32 md:px-10 lg:pt-20 relative z-10">
         
-        <Link to="/" className="inline-block mb-12">
+        <Link to="/" className="inline-block mb-12 relative z-10 group">
           <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="size-4" weight="bold" />
+            <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" weight="bold" />
             Voltar para a Home
           </Button>
         </Link>
@@ -53,13 +54,15 @@ export function LegalLayout({ children, title, lastUpdated }: { children: ReactN
 
           {/* Main Content */}
           <main className="flex-1 min-w-0">
-            <div className="mb-10">
-              <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-4">{title}</h1>
-              <p className="text-muted-foreground">Última atualização: {lastUpdated}</p>
-            </div>
-            
-            <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-tight prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground">
-              {children}
+            <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-surface/40 backdrop-blur-xl [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-6 sm:p-10 md:p-12">
+              <div className="mb-10 border-b border-border/20 pb-8">
+                <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-4">{title}</h1>
+                <p className="text-muted-foreground">Última atualização: {lastUpdated}</p>
+              </div>
+              
+              <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-tight prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-li:text-muted-foreground">
+                {children}
+              </div>
             </div>
           </main>
         </div>

@@ -97,7 +97,8 @@ function AuthPage() {
   }
 
   return (
-    <div className="grid min-h-screen place-items-center px-4 py-10 relative">
+    <div className="grid min-h-screen place-items-center px-4 py-10 relative overflow-hidden">
+      <div className="aurora-layer" aria-hidden />
       <Link
         to="/"
         className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
@@ -116,7 +117,7 @@ function AuthPage() {
           <span className="font-display tracking-tight font-bold text-lg text-foreground">KcalTrack</span>
         </Link>
 
-        <div className="panel p-6">
+        <div className="w-full rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/50 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-6 md:p-8 relative z-10">
           <Tabs defaultValue="signin">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Entrar</TabsTrigger>
