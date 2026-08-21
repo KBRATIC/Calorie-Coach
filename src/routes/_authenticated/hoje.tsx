@@ -65,12 +65,12 @@ export const Route = createFileRoute("/_authenticated/hoje")({
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  show: { opacity: 1, transition: { staggerChildren: 0.15 } }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  hidden: { opacity: 0, y: 40, scale: 0.9, rotateX: 5 },
+  show: { opacity: 1, y: 0, scale: 1, rotateX: 0, transition: { type: "spring", stiffness: 250, damping: 15 } }
 };
 
 export function TodayPage() {
@@ -273,15 +273,15 @@ export function TodayPage() {
       <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 relative z-10">
         
         {/* Calorie Hero - Takes up full width on mobile, 2 cols on desktop */}
-        <div className="col-span-2 sm:col-span-2 row-span-2 bento-card p-6 flex flex-col items-center justify-center transition-transform relative overflow-hidden">
+        <motion.div variants={itemVariants} className="col-span-2 sm:col-span-2 row-span-2 bento-card p-6 flex flex-col items-center justify-center transition-transform relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-[50px] -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2" />
           <CalorieRing consumed={consumed} goal={goal} />
-        </div>
+        </motion.div>
 
         {/* Macro Widgets - Bento small cards */}
-        <MacroBento title="Proteína" consumed={consumedProtein} goal={goalProtein} color="from-[oklch(0.6_0.15_250)] to-[oklch(0.7_0.15_250)]" />
-        <MacroBento title="Carbo" consumed={consumedCarbs} goal={goalCarbs} color="from-[oklch(0.7_0.18_70)] to-[oklch(0.8_0.18_70)]" />
-        <MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" className="col-span-2" />
+        <motion.div variants={itemVariants}><MacroBento title="Proteína" consumed={consumedProtein} goal={goalProtein} color="from-[oklch(0.6_0.15_250)] to-[oklch(0.7_0.15_250)]" /></motion.div>
+        <motion.div variants={itemVariants}><MacroBento title="Carbo" consumed={consumedCarbs} goal={goalCarbs} color="from-[oklch(0.7_0.18_70)] to-[oklch(0.8_0.18_70)]" /></motion.div>
+        <motion.div variants={itemVariants} className="col-span-2"><MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" className="h-full" /></motion.div>
       </motion.div>
 
       <motion.div variants={itemVariants} className="flex items-center justify-between pt-6">
@@ -694,4 +694,5 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
     </Drawer.Root>
   );
 }
+
 

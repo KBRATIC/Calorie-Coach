@@ -66,12 +66,12 @@ function densityTone(kcal: number) {
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  show: { opacity: 1, transition: { staggerChildren: 0.15 } }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  hidden: { opacity: 0, y: 40, scale: 0.9, rotateX: 5 },
+  show: { opacity: 1, y: 0, scale: 1, rotateX: 0, transition: { type: "spring", stiffness: 250, damping: 15 } }
 };
 
 export function FoodsPage() {
@@ -179,7 +179,7 @@ export function FoodsPage() {
         </p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3">
         {[
           { icon: Utensils, label: "Alimentos listados", value: rows.length, suffix: "" },
           { icon: Salad, label: "Categorias", value: categories.length, suffix: "" },
@@ -190,7 +190,7 @@ export function FoodsPage() {
             suffix: " kcal",
           },
         ].map((stat) => (
-          <div key={stat.label} className="bento-card p-6 flex flex-col transition-transform hover:scale-[1.02]">
+          <motion.div variants={itemVariants} key={stat.label} className="bento-card p-6 flex flex-col transition-transform hover:scale-[1.02]">
             <stat.icon className="size-6 text-primary" />
             <p className="stat-number mt-4 text-3xl font-medium tracking-tight text-foreground drop-shadow-sm">
               {stat.value}
@@ -199,9 +199,9 @@ export function FoodsPage() {
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
               {stat.label}
             </p>
-          </div>
+          </motion.div>
         ))}
-      </motion.div>
+      </div>
 
       <motion.div variants={itemVariants} className="bento-card overflow-hidden">
         {/* Filter & Search Header */}
@@ -369,3 +369,4 @@ export function FoodsPage() {
     </motion.div>
   );
 }
+

@@ -23,12 +23,12 @@ export const Route = createFileRoute("/_authenticated/historico")({
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  show: { opacity: 1, transition: { staggerChildren: 0.15 } }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  hidden: { opacity: 0, y: 40, scale: 0.9, rotateX: 5 },
+  show: { opacity: 1, y: 0, scale: 1, rotateX: 0, transition: { type: "spring", stiffness: 250, damping: 15 } }
 };
 
 export function HistoryPage() {
@@ -120,25 +120,25 @@ export function HistoryPage() {
         </div>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid gap-3 sm:grid-cols-3">
-        <div className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Média diária</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{average} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
-        </div>
-        <div className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
+        </motion.div>
+        <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Dias na meta</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">
             {onTarget}<span className="text-sm text-muted-foreground font-normal">/{logged.length}</span>
           </p>
-        </div>
-        <div className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
+        </motion.div>
+        <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Total consumido</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{total} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
-        </div>
+        </motion.div>
 
         {/* Calorie Bank */}
         {logged.length > 0 && (
-          <div className={`sm:col-span-3 backdrop-blur-3xl rounded-[32px] p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 border transition-all ${isPositive ? 'bg-primary/[0.03] border-primary/20 hover:bg-primary/[0.05]' : 'bg-destructive/[0.03] border-destructive/20 hover:bg-destructive/[0.05]'}`}>
+          <motion.div variants={itemVariants} className={`sm:col-span-3 backdrop-blur-3xl rounded-[32px] p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 border transition-all ${isPositive ? 'bg-primary/[0.03] border-primary/20 hover:bg-primary/[0.05]' : 'bg-destructive/[0.03] border-destructive/20 hover:bg-destructive/[0.05]'}`}>
             <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3 ${isPositive ? 'bg-primary/20' : 'bg-destructive/20'}`} />
             <div className="relative z-10 flex-1 w-full text-center sm:text-left">
               <p className={`flex items-center justify-center sm:justify-start gap-2 text-[10px] uppercase tracking-widest font-bold ${isPositive ? 'text-primary' : 'text-destructive'}`}>
@@ -170,9 +170,9 @@ export function HistoryPage() {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
-      </motion.div>
+      </div>
 
       <div className="space-y-4">
         {entriesQuery.isLoading ? (
@@ -255,3 +255,4 @@ function MiniProgressBar({ value, max, color, label, suffix }: { value: number, 
     </div>
   );
 }
+

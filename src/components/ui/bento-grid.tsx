@@ -18,7 +18,7 @@ const BentoGrid = ({
       variants={{
         visible: {
           transition: {
-            staggerChildren: 0.1,
+            staggerChildren: 0.15,
           },
         },
       }}
@@ -56,8 +56,14 @@ const BentoCard = ({
     whileInView="visible"
     viewport={{ once: true, margin: "-20px" }}
     variants={{
-      hidden: { opacity: 0, y: 30, scale: 0.98 },
-      visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 150, damping: 20 } },
+      hidden: { opacity: 0, y: 40, scale: 0.9, rotateX: 5 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotateX: 0,
+        transition: { type: "spring", stiffness: 250, damping: 15 },
+      },
     }}
     whileHover={{ scale: 1.01, transition: { type: "spring", stiffness: 300, damping: 20 } }}
     className={cn(

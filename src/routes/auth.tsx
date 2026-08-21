@@ -123,9 +123,9 @@ function AuthPage() {
       </Link>
 
       <motion.div 
-        initial={{ opacity: 0, y: 30, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        initial={{ opacity: 0, y: 40, scale: 0.9, rotateX: 5 }}
+        animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+        transition={{ type: "spring", stiffness: 250, damping: 15 }}
         className="w-full max-w-md"
       >
         <div className="w-full rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/50 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-6 sm:p-10 relative z-10">
