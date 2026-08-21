@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft, Eye, EyeClosed } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,8 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [lgpdConsent, setLgpdConsent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -136,19 +138,32 @@ function AuthPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    className="bg-surface/50 border-border/50 rounded-xl h-11 px-4"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Senha</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="bg-surface/50 border-border/50 rounded-xl h-11 px-4 pr-12 [&::-ms-reveal]:hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 size-9 text-muted-foreground hover:text-foreground hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Eye className="size-5" /> : <EyeClosed className="size-5" />}
+                    </Button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   Entrar
@@ -166,6 +181,7 @@ function AuthPage() {
                     autoComplete="name" 
                     value={name} 
                     onChange={(e) => setName(e.target.value)} 
+                    className="bg-surface/50 border-border/50 rounded-xl h-11 px-4"
                   />
                 </div>
                 <div className="space-y-2">
@@ -178,20 +194,33 @@ function AuthPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    className="bg-surface/50 border-border/50 rounded-xl h-11 px-4"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password-up">Senha</Label>
-                  <Input
-                    id="password-up"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    minLength={6}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password-up"
+                      name="password"
+                      type={showSignupPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="bg-surface/50 border-border/50 rounded-xl h-11 px-4 pr-12 [&::-ms-reveal]:hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 size-9 text-muted-foreground hover:text-foreground hover:bg-transparent"
+                      onClick={() => setShowSignupPassword(!showSignupPassword)}
+                    >
+                      {showSignupPassword ? <Eye className="size-5" /> : <EyeClosed className="size-5" />}
+                    </Button>
+                  </div>
                 </div>
                 
                 <div className="flex items-start space-x-3 py-2">
