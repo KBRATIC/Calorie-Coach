@@ -269,7 +269,7 @@ export function FoodsPage() {
         {/* Rich List View */}
         <div className="p-4 sm:p-6 bg-black/10">
           <motion.div 
-            key={page}
+            key={category + sort.key + sort.dir + page}
             className="grid gap-3"
             initial="hidden"
             animate="visible"

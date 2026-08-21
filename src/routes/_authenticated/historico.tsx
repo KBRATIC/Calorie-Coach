@@ -126,6 +126,7 @@ export function HistoryPage() {
         </div>
       </motion.div>
 
+      <motion.div key={period} variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
       <div className="grid gap-3 sm:grid-cols-3">
         <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Média diária</p>
@@ -239,6 +240,7 @@ export function HistoryPage() {
           })
         )}
       </div>
+      </motion.div>
       </motion.div>
     </IsActiveContext.Provider>
   );
