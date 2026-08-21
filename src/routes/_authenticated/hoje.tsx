@@ -16,6 +16,17 @@ import { motion, AnimatePresence } from "motion/react";
 import { ptBR } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 
 import { toast } from "sonner";
@@ -286,9 +297,33 @@ export function TodayPage() {
 
       <motion.div variants={itemVariants} className="flex items-center justify-between pt-6">
         <h2 className="text-xl font-medium tracking-tight">Refeições</h2>
-        <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" onClick={() => undoMutation.mutate()} disabled={undoMutation.isPending || entries.length === 0}>
-          <Undo2 className="size-3.5 mr-1.5" /> Desfazer
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" disabled={undoMutation.isPending || entries.length === 0}>
+              <Undo2 className="size-3.5 mr-1.5" /> Desfazer
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-surface border-border rounded-[32px] p-6 sm:p-8 shadow-2xl max-w-sm w-[90vw]">
+            <AlertDialogHeader className="space-y-3">
+              <AlertDialogTitle className="text-2xl font-medium tracking-tight">Desfazer registro?</AlertDialogTitle>
+              <AlertDialogDescription className="text-base text-muted-foreground/80 leading-relaxed">
+                O último alimento adicionado hoje será removido.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-3 mt-6">
+              <AlertDialogCancel className="rounded-2xl h-12 px-6 text-base font-medium border-border hover:bg-white/5 transition-colors m-0">
+                Cancelar
+              </AlertDialogCancel>
+              <AlertDialogAction 
+                className="rounded-2xl h-12 px-6 text-base font-medium bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-xl shadow-destructive/20 active:scale-[0.98] transition-all m-0"
+                onClick={() => undoMutation.mutate()}
+                disabled={undoMutation.isPending}
+              >
+                Desfazer
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </motion.div>
 
       {/* Rich Meal Cards Instead of Accordion */}
