@@ -378,10 +378,16 @@ export function ProfilePage() {
 
       <motion.div variants={itemVariants} className="bento-card p-6 sm:p-8 mt-8 space-y-4">
         <h2 className="text-xl font-medium tracking-tight">Legal e Privacidade</h2>
-        <div className="flex flex-col gap-3">
-          <Link to="/termos" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Termos de Uso</Link>
-          <Link to="/privacidade" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Política de Privacidade</Link>
-          <Link to="/cookies" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Política de Cookies</Link>
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+          <Button asChild variant="outline" className="flex-1 justify-center sm:justify-start h-12 rounded-xl bg-surface border-border text-muted-foreground hover:text-foreground hover:bg-surface-strong shadow-sm active:scale-[0.98] transition-all">
+            <Link to="/termos">Termos de Uso</Link>
+          </Button>
+          <Button asChild variant="outline" className="flex-1 justify-center sm:justify-start h-12 rounded-xl bg-surface border-border text-muted-foreground hover:text-foreground hover:bg-surface-strong shadow-sm active:scale-[0.98] transition-all">
+            <Link to="/privacidade">Política de Privacidade</Link>
+          </Button>
+          <Button asChild variant="outline" className="flex-1 justify-center sm:justify-start h-12 rounded-xl bg-surface border-border text-muted-foreground hover:text-foreground hover:bg-surface-strong shadow-sm active:scale-[0.98] transition-all">
+            <Link to="/cookies">Política de Cookies</Link>
+          </Button>
         </div>
       </motion.div>
 
