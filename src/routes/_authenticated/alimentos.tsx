@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { BASE_FOODS, type BaseFood } from "@/data/baseFoods";
 import { fetchCustomFoods, addCustomFood, deleteCustomFood } from "@/lib/api";
-import { useSession } from "@/lib/auth";
+import { useSession } from "@/hooks/useSession";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -287,7 +287,7 @@ export function FoodsPage() {
                     }}
                     className="bento-card hover:bg-surface-strong rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group w-full max-w-full overflow-hidden"
                   >
-                  <div className="flex-1 min-w-0 w-full max-w-full">
+                  <div className="flex-1 min-w-0 w-full sm:w-auto max-w-full">
                     <div className="flex items-center gap-2 mb-1 min-w-0">
                       <h3 className="text-lg font-semibold tracking-tight text-foreground/90 truncate flex-1 min-w-0">{food.name}</h3>
                       {food.custom && (
@@ -324,7 +324,7 @@ export function FoodsPage() {
                     )}
                   </div>
 
-                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-3 sm:pt-0 border-t border-white/5 sm:border-0 mt-2 sm:mt-0 shrink-0 w-full min-w-0 max-w-full overflow-hidden">
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-3 sm:pt-0 border-t border-white/5 sm:border-0 mt-2 sm:mt-0 shrink-0 w-full sm:w-auto min-w-0 max-w-full overflow-hidden">
                     <div className="flex items-baseline gap-1.5 shrink-0 min-w-0">
                       <span className="stat-number text-3xl font-medium text-foreground tracking-tight">{Math.round(food.kcalPer100g)}</span>
                       <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">kcal/100g</span>
