@@ -115,6 +115,11 @@
   --shadow-glow: 0 0 20px 0 oklch(0.7 0.2 140 / 0.15);
   --scheme: dark;
 
+  /* Interactive Aurora Colors - Dark Mode (Neon/Vibrant) */
+  --aurora-1: oklch(0.7 0.2 140 / 0.4);
+  --aurora-2: oklch(0.6 0.15 250 / 0.35);
+  --aurora-3: oklch(0.7 0.18 70 / 0.3);
+  --aurora-4: oklch(0.7 0.2 140 / 0.25);
 }
 
 
@@ -199,24 +204,45 @@
   border: 1px solid var(--color-border);
 }
 
-/* Static mesh gradient for landing page — replaces InteractiveAurora */
-.landing-mesh {
-  position: fixed;
+/* Professional Mesh Gradient & Grain */
+.aurora-layer {
+  position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: -10;
   overflow: hidden;
   pointer-events: none;
   background-color: var(--color-background);
 }
 
-.landing-mesh::before {
+.aurora-layer::before {
   content: "";
   position: absolute;
-  inset: -20%;
-  background-image:
-    radial-gradient(ellipse at 15% 20%, oklch(0.7 0.2 140 / 0.12), transparent 50%),
-    radial-gradient(ellipse at 80% 60%, oklch(0.6 0.12 220 / 0.08), transparent 50%),
-    radial-gradient(ellipse at 50% 90%, oklch(0.8 0.15 75 / 0.06), transparent 45%);
-  filter: blur(80px);
-  opacity: 1;
+  /* Extra inset to allow moving without showing edges */
+  inset: -50%;
+  background-image: 
+    radial-gradient(circle at 15% 50%, var(--aurora-1), transparent 45%),
+    radial-gradient(circle at 85% 30%, var(--aurora-2), transparent 50%),
+    radial-gradient(circle at 50% 80%, var(--aurora-3), transparent 50%),
+    radial-gradient(circle at 50% 10%, var(--aurora-4), transparent 45%);
+  filter: blur(60px);
+  animation: aurora-mesh 12s ease-in-out infinite alternate;
+  opacity: 0.85; /* Vibrant and highly visible */
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* Hardware Accelerated transform animation instead of heavy background-position repaint */
+@keyframes aurora-mesh {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(10%, -10%) scale(1.1) rotate(5deg);
+  }
+  66% {
+    transform: translate(-10%, 10%) scale(0.9) rotate(-5deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
 }

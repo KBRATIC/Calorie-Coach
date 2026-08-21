@@ -8,7 +8,6 @@ import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesBento } from "@/components/landing/FeaturesBento";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { StatsSection } from "@/components/landing/StatsSection";
-import { InteractiveAurora } from "@/components/landing/InteractiveAurora";
 
 export const Route = createFileRoute("/")(  {
   head: () => ({
@@ -41,8 +40,8 @@ function Landing() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Animated aurora background */}
-      <InteractiveAurora />
+      {/* Looping CSS animated aurora background */}
+      <div className="aurora-layer" aria-hidden />
 
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 w-full backdrop-blur-md border-b border-border/40 bg-background/70">
