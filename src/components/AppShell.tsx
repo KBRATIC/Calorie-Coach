@@ -126,7 +126,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <Button
               onClick={scrollToTop}
-              className="pointer-events-auto rounded-full h-11 px-5 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_0_oklch(0.7_0.2_140/0.2)] border border-primary/50 transition-all active:scale-95 text-[13px] font-bold tracking-wide"
+              className="pointer-events-auto rounded-full h-11 px-5 bg-surface/70 backdrop-blur-2xl border border-primary/40 text-primary shadow-[0_8px_30px_rgba(0,0,0,0.2)] hover:bg-surface/90 hover:border-primary/60 transition-all active:scale-95 text-[13px] font-bold tracking-wide"
             >
               <ArrowUp className="size-4 mr-2" />
               VOLTAR AO TOPO
