@@ -137,7 +137,8 @@ function Calendar({
           return <ChevronDownIcon className={cn("size-4", className)} {...props} />;
         },
         DayButton: CalendarDayButton,
-        CaptionLabel: ({ displayMonth }) => {
+        CaptionLabel: (props: any) => {
+          const monthToDisplay = props.displayMonth || props.month || internalMonth;
           return (
             <Button
               variant="ghost"
@@ -148,7 +149,7 @@ function Calendar({
                 setView("months");
               }}
             >
-              {displayMonth.toLocaleString("pt-BR", { month: "long", year: "numeric" })}
+              {monthToDisplay.toLocaleString("pt-BR", { month: "long", year: "numeric" })}
             </Button>
           );
         },
