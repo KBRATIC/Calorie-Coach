@@ -202,6 +202,7 @@ function AuthPage() {
                   Entrar
                 </Button>
               </form>
+            </motion.div>
             </TabsContent>
 
             <TabsContent value="signup" className="mt-6 outline-none">
@@ -280,6 +281,7 @@ function AuthPage() {
                   Criar conta
                 </Button>
               </form>
+            </motion.div>
             </TabsContent>
           </Tabs>
 
