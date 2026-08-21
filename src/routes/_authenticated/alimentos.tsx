@@ -5,6 +5,8 @@ import { Route as AuthRoute } from "@/routes/_authenticated/route";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { IsActiveContext } from "@/hooks/useIsActive";
+import { AnimatedNumber } from "@/components/AnimatedNumber";
+
 import {
   ArrowDown,
   ArrowUp,
@@ -204,7 +206,7 @@ export function FoodsPage() {
           <motion.div variants={itemVariants} key={stat.label} className="bento-card p-6 flex flex-col transition-transform hover:scale-[1.02]">
             <stat.icon className="size-6 text-primary" />
             <p className="stat-number mt-4 text-3xl font-medium tracking-tight text-foreground drop-shadow-sm">
-              {stat.value}
+              <AnimatedNumber value={stat.value as number} />
               <span className="text-xl text-muted-foreground font-normal ml-1">{stat.suffix}</span>
             </p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
