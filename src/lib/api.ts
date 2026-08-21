@@ -117,18 +117,18 @@ export async function clearMeal(day: string, meal: string): Promise<number> {
 }
 
 /** Remove o último lançamento registrado no dia (desfazer). */
-export async function undoLastEntry(day: string): Promise<string | null> {
+export async function undoLastEntry(day: string): Promise<any | null> {
   const { data, error } = await supabase
     .from("food_entries")
-    .select("id, name")
+    .select("*")
     .eq("consumed_on", day)
     .order("created_at", { ascending: false })
     .limit(1);
   if (error) throw error;
-  const row = (data ?? [])[0] as { id: string; name: string } | undefined;
+  const row = (data ?? [])[0];
   if (!row) return null;
   await deleteEntry(row.id);
-  return row.name;
+  return row;
 }
 
 

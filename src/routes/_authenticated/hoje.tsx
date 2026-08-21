@@ -8,6 +8,7 @@ import {
   Loader2,
   Zap,
   Undo2,
+  Redo2,
   Eraser,
   ChevronRight
 } from "lucide-react";
@@ -141,6 +142,7 @@ export function TodayPage() {
     }, 120);
   };
   const [calendarOpen, setCalendarOpen] = useState(false);
+  const [lastUndone, setLastUndone] = useState<any>(null);
 
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
   const entriesQuery = useQuery({
@@ -175,11 +177,32 @@ export function TodayPage() {
 
   const undoMutation = useMutation({
     mutationFn: () => undoLastEntry(day),
-    onSuccess: (name) => {
+    onSuccess: (row) => {
       invalidateEntries();
-      toast.success(name ? `"${name}" removido` : "Nada para desfazer");
+      if (row) {
+        setLastUndone(row);
+        toast.success(`"${row.name}" removido`);
+      } else {
+        toast.success("Nada para desfazer");
+      }
     },
     onError: (e: Error) => toast.error("Erro ao desfazer", { description: e.message }),
+  });
+
+  const redoMutation = useMutation({
+    mutationFn: async () => {
+      if (!lastUndone) return null;
+      const { id, created_at, ...entryToInsert } = lastUndone;
+      await addEntry(entryToInsert);
+      return lastUndone.name;
+    },
+    onSuccess: (name) => {
+      if (!name) return;
+      invalidateEntries();
+      setLastUndone(null);
+      toast.success(`"${name}" restaurado`);
+    },
+    onError: (e: Error) => toast.error("Erro ao refazer", { description: e.message }),
   });
 
   const clearMealMutation = useMutation({
@@ -298,12 +321,18 @@ export function TodayPage() {
 
       <motion.div variants={itemVariants} className="flex items-center justify-between pt-6">
         <h2 className="text-xl font-medium tracking-tight">Refeições</h2>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" disabled={undoMutation.isPending || entries.length === 0}>
-              <Undo2 className="size-3.5 mr-1.5" /> Desfazer
+        <div className="flex items-center gap-2">
+          {lastUndone && (
+            <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" onClick={() => redoMutation.mutate()} disabled={redoMutation.isPending}>
+              <Redo2 className="size-3.5 mr-1.5" /> Refazer
             </Button>
-          </AlertDialogTrigger>
+          )}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" disabled={undoMutation.isPending || entries.length === 0}>
+                <Undo2 className="size-3.5 mr-1.5" /> Desfazer
+              </Button>
+            </AlertDialogTrigger>
           <AlertDialogContent className="bg-surface border-border rounded-[32px] p-6 sm:p-8 shadow-2xl max-w-sm w-[90vw]">
             <AlertDialogHeader className="space-y-3">
               <AlertDialogTitle className="text-2xl font-medium tracking-tight">Desfazer registro?</AlertDialogTitle>
@@ -325,6 +354,7 @@ export function TodayPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        </div>
       </motion.div>
 
       {/* Rich Meal Cards Instead of Accordion */}
