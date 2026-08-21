@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useLocation } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Trash2, AlertTriangle, Loader2, Download } from "lucide-react";
@@ -84,6 +84,8 @@ export function ProfilePage() {
   const { user } = AuthRoute.useRouteContext();
   const { installPrompt, triggerInstall } = usePwaInstall();
   const queryClient = useQueryClient();
+  const location = useLocation();
+  const isActive = location.pathname.startsWith("/perfil");
   const goalsQuery = useQuery({ queryKey: ["goals"], queryFn: fetchGoals });
 
   const [sex, setSex] = useState<Sex>("male");
@@ -174,7 +176,7 @@ export function ProfilePage() {
   });
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} className="space-y-6">
+    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl">Perfil &amp; Meta</h1>

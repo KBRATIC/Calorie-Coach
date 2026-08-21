@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Plus,
@@ -91,6 +91,8 @@ export function TodayPage() {
   const queryClient = useQueryClient();
   const [day, setDayState] = useState(activeDayState.date);
   const [direction, setDirection] = useState(1);
+  const location = useLocation();
+  const isActive = location.pathname === "/hoje";
 
   useEffect(() => {
     return activeDayState.subscribe(() => {
@@ -215,7 +217,7 @@ export function TodayPage() {
   });
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} className="space-y-8 pb-10">
+    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-8 pb-10">
       <Onboarding />
       
       {/* Native-style Header */}

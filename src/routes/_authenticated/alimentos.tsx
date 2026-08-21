@@ -1,6 +1,6 @@
 import { unitFor } from "@/lib/nutrition";
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLocation } from "@tanstack/react-router";
 import { Route as AuthRoute } from "@/routes/_authenticated/route";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
@@ -80,6 +80,8 @@ const itemVariants = {
 export function FoodsPage() {
   const [term, setTerm] = useState("");
   const [category, setCategory] = useState("all");
+  const location = useLocation();
+  const isActive = location.pathname.startsWith("/alimentos");
   const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({
     key: "name",
     dir: "asc",
@@ -174,8 +176,8 @@ export function FoodsPage() {
   }
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} className="space-y-6 pb-10">
-      <motion.div variants={itemVariants}>
+    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
+      <motion.div variants={itemVariants} className="text-center sm:text-left">
         <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Base de dados</p>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Alimentos</h1>
         <p className="mt-3 max-w-2xl text-[15px] text-muted-foreground leading-relaxed">

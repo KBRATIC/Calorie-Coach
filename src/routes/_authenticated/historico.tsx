@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useLocation } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, PiggyBank, TrendingUp, TrendingDown, Sparkles } from "lucide-react";
 import { fetchEntries, fetchGoals } from "@/lib/api";
@@ -34,6 +34,8 @@ const itemVariants = {
 
 export function HistoryPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isActive = location.pathname.startsWith("/historico");
   const [period, setPeriod] = useState<"semana" | "mes">("semana");
   const today = todayISO();
   
@@ -93,7 +95,7 @@ export function HistoryPage() {
   const isPositive = netBalance >= 0;
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} className="space-y-6 pb-10">
+    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-center sm:text-left">
           <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Resultados</p>
