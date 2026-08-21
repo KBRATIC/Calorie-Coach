@@ -22,35 +22,36 @@ function FoodDatabaseMockup() {
     { name: "Frango Grelhado", kcal: 165, macro: "Proteína", color: "bg-primary", pct: 75 },
     { name: "Arroz Integral", kcal: 110, macro: "Carboidrato", color: "bg-yellow-500", pct: 60 },
     { name: "Ovo Cozido", kcal: 155, macro: "Proteína/Gordura", color: "bg-orange-500", pct: 50 },
-    { name: "Banana Prata", kcal: 89, macro: "Carboidrato", color: "bg-yellow-400", pct: 40 },
   ];
 
   return (
-    <div className="absolute inset-x-6 top-6 flex flex-col gap-3 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
-      <div className="flex items-center gap-2.5 rounded-xl border border-border/40 bg-background/50 px-3.5 py-2.5 text-xs text-muted-foreground backdrop-blur-md">
-        <MagnifyingGlass className="size-4 text-primary" />
+    <div className="absolute inset-x-4 top-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+      {/* Search Input Mockup */}
+      <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-background/50 px-3 py-2 text-[10px] text-muted-foreground backdrop-blur-md">
+        <MagnifyingGlass className="size-3.5 text-primary" />
         <span>Buscar alimentos (ex: frango)...</span>
       </div>
 
-      <div className="flex flex-col gap-2">
+      {/* Floating Food Cards */}
+      <div className="flex flex-col gap-1.5">
         {foods.map((food, i) => (
           <div
             key={i}
-            className="flex items-center justify-between rounded-xl border border-border/30 bg-surface/40 p-3 backdrop-blur-md transition-all duration-300 group-hover:bg-surface/60"
+            className="flex items-center justify-between rounded-lg border border-border/30 bg-surface/40 p-2.5 backdrop-blur-md transition-all duration-300 group-hover:bg-surface/60"
             style={{ transform: `translateY(${i * 2}px)` }}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <BowlFood className="size-4" weight="fill" />
+            <div className="flex items-center gap-2.5">
+              <div className="flex size-7 items-center justify-center rounded bg-primary/10 text-primary">
+                <BowlFood className="size-3.5" weight="fill" />
               </div>
               <div className="text-left">
-                <p className="text-xs font-semibold text-foreground">{food.name}</p>
-                <span className="text-[10px] text-muted-foreground">{food.macro}</span>
+                <p className="text-[11px] font-semibold text-foreground leading-none">{food.name}</p>
+                <span className="text-[9px] text-muted-foreground">{food.macro}</span>
               </div>
             </div>
             <div className="text-right">
-              <span className="text-xs font-bold text-primary">{food.kcal} kcal</span>
-              <div className="mt-1 h-1 w-16 overflow-hidden rounded-full bg-border/40">
+              <span className="text-[11px] font-bold text-primary leading-none">{food.kcal} kcal</span>
+              <div className="mt-1 h-1 w-12 overflow-hidden rounded-full bg-border/40">
                 <div className={`h-full ${food.color}`} style={{ width: `${food.pct}%` }} />
               </div>
             </div>
@@ -75,6 +76,7 @@ function WeeklyChartMockup() {
 
   return (
     <div className="absolute inset-x-6 top-6 flex flex-col gap-4 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
+      {/* Stats header summary */}
       <div className="flex items-center justify-between rounded-xl border border-border/30 bg-surface/30 p-3 backdrop-blur-md">
         <div className="text-left">
           <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Média Semanal</p>
@@ -86,7 +88,9 @@ function WeeklyChartMockup() {
         </div>
       </div>
 
+      {/* Bar Chart mockup */}
       <div className="flex h-36 items-end justify-between gap-2.5 rounded-xl border border-border/20 bg-surface/20 p-4 pt-8 relative">
+        {/* Target limit dotted line */}
         <div className="absolute inset-x-0 bottom-24 border-t border-dashed border-primary/30 flex justify-end pr-2">
           <span className="text-[9px] text-primary/60 font-mono -mt-2">Meta: 2000 kcal</span>
         </div>
@@ -96,13 +100,11 @@ function WeeklyChartMockup() {
           return (
             <div key={i} className="flex flex-1 flex-col items-center gap-1.5 h-full justify-end">
               <div
-                className="w-full rounded-md transition-all duration-500"
+                className={`w-full rounded transition-all duration-500 ${
+                  data.status === "excedido" ? "bg-destructive" : "bg-primary"
+                }`}
                 style={{
                   height: `${heightPct}%`,
-                  backgroundColor:
-                    data.status === "excedido"
-                      ? "oklch(var(--color-destructive))"
-                      : "oklch(var(--color-primary))",
                   opacity: 0.8,
                 }}
               />
@@ -118,25 +120,27 @@ function WeeklyChartMockup() {
 /* --- MOCKUP 3: Cenários de Meta --- */
 function GoalScenariosMockup() {
   return (
-    <div className="absolute inset-x-6 top-6 flex flex-col gap-3 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
-      <div className="flex rounded-lg bg-secondary/50 border border-border/30 p-1 text-center">
-        <div className="flex-1 rounded-md bg-primary text-[10px] font-bold text-primary-foreground py-1 shadow-sm">
+    <div className="absolute inset-x-4 top-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+      {/* Fake Tabs Selector */}
+      <div className="flex rounded-md bg-secondary/50 border border-border/30 p-0.5 text-center">
+        <div className="flex-1 rounded bg-primary text-[9px] font-bold text-primary-foreground py-0.5 shadow-sm">
           Cutting
         </div>
-        <div className="flex-1 text-[10px] font-semibold text-muted-foreground py-1">
+        <div className="flex-1 text-[9px] font-semibold text-muted-foreground py-0.5">
           Manutenção
         </div>
-        <div className="flex-1 text-[10px] font-semibold text-muted-foreground py-1">
+        <div className="flex-1 text-[9px] font-semibold text-muted-foreground py-0.5">
           Lean Bulk
         </div>
       </div>
 
-      <div className="flex items-center justify-between rounded-xl border border-border/30 bg-surface/30 p-2.5 backdrop-blur-md">
+      {/* Target Preview */}
+      <div className="flex items-center justify-between rounded-lg border border-border/30 bg-surface/30 p-2 backdrop-blur-md">
         <div className="text-left">
-          <p className="text-[9px] text-muted-foreground">Calorias Recomendadas</p>
-          <p className="text-sm font-bold text-primary">1.650 kcal / dia</p>
+          <p className="text-[8px] text-muted-foreground leading-none">Calorias Recomendadas</p>
+          <p className="text-[11px] font-bold text-primary mt-0.5">1.650 kcal / dia</p>
         </div>
-        <div className="text-right text-[9px] text-muted-foreground">
+        <div className="text-right text-[8px] text-muted-foreground">
           Déficit: <span className="text-destructive font-semibold">-500 kcal</span>
         </div>
       </div>
@@ -147,17 +151,18 @@ function GoalScenariosMockup() {
 /* --- MOCKUP 4: Fórmula Científica --- */
 function ScientificFormulaMockup() {
   return (
-    <div className="absolute inset-x-6 top-6 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
-      <div className="rounded-xl border border-border/30 bg-surface/40 p-3 backdrop-blur-md font-mono text-left relative overflow-hidden">
-        <div className="text-[9px] text-muted-foreground uppercase tracking-wider mb-2">Mifflin-St Jeor</div>
-        <div className="text-[10px] text-foreground leading-relaxed space-y-1">
+    <div className="absolute inset-x-4 top-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+      {/* High-tech calculation display */}
+      <div className="rounded-lg border border-border/30 bg-surface/40 p-2 backdrop-blur-md font-mono text-left relative overflow-hidden">
+        <div className="text-[8px] text-muted-foreground uppercase tracking-wider mb-1">Mifflin-St Jeor</div>
+        <div className="text-[9px] text-foreground leading-normal space-y-0.5">
           <p className="text-primary font-semibold">TMB = 10×Peso + 6.25×Alt − 5×Idade + 5</p>
-          <div className="text-muted-foreground border-t border-border/20 pt-1.5 mt-1 text-[9px] flex justify-between">
+          <div className="text-muted-foreground border-t border-border/20 pt-1 mt-1 text-[8px] flex justify-between">
             <span>P: 80kg</span>
             <span>A: 180cm</span>
-            <span>I: 25 anos</span>
+            <span>I: 25a</span>
           </div>
-          <p className="text-xs font-bold text-primary mt-1 text-right">Resultado: 1.785 kcal</p>
+          <p className="text-[10px] font-bold text-primary mt-0.5 text-right">TMB: 1.785 kcal</p>
         </div>
       </div>
     </div>

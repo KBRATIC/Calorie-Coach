@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { Flame } from "lucide-react";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -97,13 +97,23 @@ function AuthPage() {
   }
 
   return (
-    <div className="grid min-h-screen place-items-center px-4 py-10">
+    <div className="grid min-h-screen place-items-center px-4 py-10 relative">
+      <Link
+        to="/"
+        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+      >
+        <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" weight="bold" />
+        Voltar ao início
+      </Link>
+
       <div className="w-full max-w-md">
-        <Link to="/" className="mb-8 flex items-center justify-center gap-2">
-          <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-            <Flame className="size-5" />
-          </span>
-          <span className="text-display text-lg">KcalTrack</span>
+        <Link to="/" className="mb-8 flex items-center justify-center gap-2 group">
+          <img
+            src="/icon.png"
+            alt="KcalTrack Logo"
+            className="size-9 rounded-full object-cover transition-transform group-hover:scale-105"
+          />
+          <span className="font-display tracking-tight font-bold text-lg text-foreground">KcalTrack</span>
         </Link>
 
         <div className="panel p-6">
