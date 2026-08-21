@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, PiggyBank, TrendingUp, TrendingDown, Sparkles } from "lucide-react";
 import { fetchEntries, fetchGoals } from "@/lib/api";
-import { addDays, formatDayLabel, todayISO, activeDayState } from "@/lib/nutrition";
+import { addDays, formatDayLabel, todayISO, activeDayState, calcMacroGoals } from "@/lib/nutrition";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 
@@ -54,9 +54,10 @@ export function HistoryPage() {
   });
 
   const goal = goalsQuery.data?.daily_calorie_goal ?? 2000;
-  const goalProtein = goalsQuery.data?.daily_protein_goal ?? 150;
-  const goalCarbs = goalsQuery.data?.daily_carbs_goal ?? 200;
-  const goalFat = goalsQuery.data?.daily_fat_goal ?? 65;
+  const fallbackMacros = calcMacroGoals(goal);
+  const goalProtein = goalsQuery.data?.protein_goal ?? fallbackMacros.protein;
+  const goalCarbs = goalsQuery.data?.carbs_goal ?? fallbackMacros.carbs;
+  const goalFat = goalsQuery.data?.fat_goal ?? fallbackMacros.fat;
   const entries = entriesQuery.data ?? [];
 
   const days: string[] = [];
