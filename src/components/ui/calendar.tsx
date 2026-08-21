@@ -21,8 +21,25 @@ function Calendar({
 }) {
   const defaultClassNames = getDefaultClassNames();
 
+  const [view, setView] = React.useState<"days" | "months">("days");
+  const [internalMonth, setInternalMonth] = React.useState<Date>(
+    props.month || props.defaultMonth || (props.selected as Date) || new Date()
+  );
+
+  React.useEffect(() => {
+    if (props.month) setInternalMonth(props.month);
+  }, [props.month]);
+
+  const handleMonthChange = (date: Date) => {
+    setInternalMonth(date);
+    props.onMonthChange?.(date);
+  };
+
   return (
+    <div className="relative w-fit">
     <DayPicker
+      month={internalMonth}
+      onMonthChange={handleMonthChange}
       showOutsideDays={showOutsideDays}
       className={cn(
         "bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
@@ -120,6 +137,21 @@ function Calendar({
           return <ChevronDownIcon className={cn("size-4", className)} {...props} />;
         },
         DayButton: CalendarDayButton,
+        CaptionLabel: ({ displayMonth }) => {
+          return (
+            <Button
+              variant="ghost"
+              className="h-8 hover:bg-transparent hover:text-primary transition-colors text-sm font-medium -ml-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setView("months");
+              }}
+            >
+              {displayMonth.toLocaleString("pt-BR", { month: "long", year: "numeric" })}
+            </Button>
+          );
+        },
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
@@ -133,6 +165,54 @@ function Calendar({
       }}
       {...props}
     />
+    {view === "months" && (
+      <div className="absolute inset-0 bg-background/95 backdrop-blur-sm z-10 flex flex-col p-3 rounded-xl border border-border">
+        <div className="flex items-center justify-between mb-4 mt-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 opacity-70 hover:opacity-100"
+            onClick={() => handleMonthChange(new Date(internalMonth.getFullYear() - 1, internalMonth.getMonth(), 1))}
+          >
+            <ChevronLeftIcon className="size-4" />
+          </Button>
+          <div className="font-semibold text-sm tracking-wide">
+            {internalMonth.getFullYear()}
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 opacity-70 hover:opacity-100"
+            onClick={() => handleMonthChange(new Date(internalMonth.getFullYear() + 1, internalMonth.getMonth(), 1))}
+          >
+            <ChevronRightIcon className="size-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-3 gap-2 h-full pb-2">
+          {Array.from({ length: 12 }).map((_, i) => {
+            const isSelected = internalMonth.getMonth() === i;
+            const m = new Date(internalMonth.getFullYear(), i, 1);
+            return (
+              <Button
+                key={i}
+                variant={isSelected ? "default" : "ghost"}
+                className={cn(
+                  "h-full w-full rounded-lg text-[13px] font-medium capitalize",
+                  isSelected ? "bg-primary text-primary-foreground shadow-sm shadow-primary/25" : "hover:bg-primary/10 hover:text-primary"
+                )}
+                onClick={() => {
+                  handleMonthChange(m);
+                  setView("days");
+                }}
+              >
+                {m.toLocaleString("pt-BR", { month: "short" }).replace(".", "")}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+    )}
+    </div>
   );
 }
 
