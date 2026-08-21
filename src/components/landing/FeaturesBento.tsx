@@ -102,7 +102,7 @@ function WeeklyChartMockup() {
           return (
             <div key={i} className="flex flex-1 flex-col items-center gap-1.5 h-full justify-end">
               <div
-                className={`w-full rounded transition-all duration-500 ${
+                className={`w-3 sm:w-5 rounded-t-sm transition-all duration-500 ${
                   data.status === "excedido" ? "bg-destructive" : "bg-primary"
                 }`}
                 style={{
@@ -266,7 +266,7 @@ export function FeaturesBento() {
           {features.map((feature) => (
             <div
               key={feature.name}
-              className={`bento-card-item ${feature.className}`}
+              className={`bento-card-item h-full ${feature.className}`}
             >
               <BentoCard
                 name={feature.name}
