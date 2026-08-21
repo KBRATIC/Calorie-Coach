@@ -249,20 +249,19 @@ export function FeaturesBento() {
   );
 
   return (
-    <section className="mx-auto max-w-[90rem] px-4 py-16 md:py-24 md:px-10 overflow-hidden">
-      <div className="mb-10 text-center">
-        <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl text-foreground font-display">
-          O que o{" "}
-          <span className="text-primary">KcalTrack</span>{" "}
-          faz por você
+    <section className="relative w-full max-w-[120rem] mx-auto py-12 md:py-24 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col items-center justify-center text-center mb-12">
+        <h2 className="text-3xl md:text-5xl font-bold font-display tracking-tight text-foreground mb-4">
+          Tudo que você precisa em <span className="text-primary text-glow">um só lugar</span>
         </h2>
-        <p className="mt-3 text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Ferramentas pensadas para te dar controle real sobre sua nutrição.
+        <p className="text-lg text-muted-foreground max-w-2xl">
+          Nossa plataforma foi desenhada para eliminar o atrito de contar calorias.
+          Rápido, preciso e inteligente.
         </p>
       </div>
 
       <div ref={containerRef}>
-        <BentoGrid className="lg:grid-rows-3">
+        <BentoGrid>
           {features.map((feature) => (
             <div
               key={feature.name}
