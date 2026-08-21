@@ -1,3 +1,6 @@
+import { motion } from "motion/react";
+import { AnimatedNumber } from "./AnimatedNumber";
+
 type Props = {
   consumed: number;
   goal: number;
@@ -23,20 +26,21 @@ export function CalorieRing({ consumed, goal, size = 260 }: Props) {
           strokeWidth={18}
           className="stroke-secondary"
         />
-        <circle
+        <motion.circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
           strokeWidth={18}
           strokeLinecap="round"
-          strokeDasharray={`${dash} ${circumference}`}
+          initial={{ strokeDasharray: `0 ${circumference}` }}
+          animate={{ strokeDasharray: `${dash} ${circumference}` }}
+          transition={{ type: "spring", stiffness: 60, damping: 15 }}
           className={over ? "stroke-destructive" : "stroke-primary"}
-          style={{ transition: "stroke-dasharray 500ms ease" }}
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="stat-number text-6xl tracking-tighter drop-shadow-sm font-light text-foreground">{Math.round(consumed)}</span>
+        <span className="stat-number text-6xl tracking-tighter drop-shadow-sm font-light text-foreground"><AnimatedNumber value={Math.round(consumed)} /></span>
         <span className="text-[11px] uppercase tracking-widest text-muted-foreground mt-1">
           de {Math.round(goal)} kcal
         </span>
@@ -44,8 +48,8 @@ export function CalorieRing({ consumed, goal, size = 260 }: Props) {
           className={`mt-2 text-sm font-bold tracking-wide uppercase ${over ? "text-destructive" : "text-primary"}`}
         >
           {over
-            ? `${Math.round(Math.abs(remaining))} kcal acima`
-            : `${Math.round(remaining)} kcal restantes`}
+            ? <><AnimatedNumber value={Math.round(Math.abs(remaining))} /> kcal acima</>
+            : <><AnimatedNumber value={Math.round(remaining)} /> kcal restantes</>}
         </span>
       </div>
     </div>

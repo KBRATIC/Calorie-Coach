@@ -6,6 +6,7 @@ import { fetchEntries, fetchGoals } from "@/lib/api";
 import { addDays, formatDayLabel, todayISO, activeDayState, calcMacroGoals } from "@/lib/nutrition";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
+import { AnimatedNumber } from "@/components/AnimatedNumber";
 
 export const Route = createFileRoute("/_authenticated/historico")({
   head: () => ({
@@ -124,17 +125,17 @@ export function HistoryPage() {
       <div className="grid gap-3 sm:grid-cols-3">
         <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Média diária</p>
-          <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{average} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
+          <p className="stat-number text-4xl font-medium tracking-tight text-foreground"><AnimatedNumber value={average} /> <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
         </motion.div>
         <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Dias na meta</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">
-            {onTarget}<span className="text-sm text-muted-foreground font-normal">/{logged.length}</span>
+            <AnimatedNumber value={onTarget} /><span className="text-sm text-muted-foreground font-normal">/{logged.length}</span>
           </p>
         </motion.div>
         <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Total consumido</p>
-          <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{total} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
+          <p className="stat-number text-4xl font-medium tracking-tight text-foreground"><AnimatedNumber value={total} /> <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
         </motion.div>
 
         {/* Calorie Bank */}
@@ -147,7 +148,7 @@ export function HistoryPage() {
               </p>
               <div className="mt-4 flex items-center justify-center sm:justify-start gap-4">
                 <h3 className={`stat-number text-6xl font-medium tracking-tighter drop-shadow-sm ${isPositive ? 'text-primary' : 'text-destructive'}`}>
-                  {isPositive ? '+' : ''}{Math.round(netBalance)} <span className="text-2xl font-normal opacity-80">kcal</span>
+                  {isPositive ? '+' : ''}<AnimatedNumber value={Math.round(Math.abs(netBalance))} /> <span className="text-2xl font-normal opacity-80">kcal</span>
                 </h3>
                 <div className={`flex items-center justify-center size-14 rounded-full shadow-inner ${isPositive ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}>
                   {isPositive ? <TrendingUp className="size-6" /> : <TrendingDown className="size-6" />}
@@ -200,7 +201,7 @@ export function HistoryPage() {
                     {formatDayLabel(data.day)}
                   </h3>
                   <span className={`text-sm font-medium tracking-tight ${overGoal ? 'text-destructive' : 'text-primary'}`}>
-                    <span className="text-lg">{Math.round(data.total)}</span>
+                    <span className="text-lg"><AnimatedNumber value={data.total} /></span>
                     <span className="text-[10px] text-muted-foreground ml-1">/ {goal} kcal</span>
                   </span>
                 </button>
@@ -221,7 +222,7 @@ export function HistoryPage() {
                       <div>
                         <p className={`text-[10px] uppercase font-bold tracking-widest ${goal - data.total >= 0 ? 'text-primary' : 'text-destructive'}`}>Saldo do dia</p>
                         <p className={`text-lg font-medium leading-none mt-1 ${goal - data.total >= 0 ? 'text-primary' : 'text-destructive'}`}>
-                          {goal - data.total >= 0 ? '+' : ''}{Math.round(goal - data.total)} <span className="text-xs font-normal opacity-80">kcal</span>
+                          {goal - data.total >= 0 ? '+' : ''}<AnimatedNumber value={Math.abs(goal - data.total)} /> <span className="text-xs font-normal opacity-80">kcal</span>
                         </p>
                       </div>
                     </div>
@@ -251,7 +252,7 @@ function MiniProgressBar({ value, max, color, label, suffix }: { value: number, 
         />
       </div>
       <span className={`w-16 text-right text-[11px] font-medium ${isOver ? 'text-destructive' : 'text-foreground'}`}>
-        {Math.round(value)}<span className={`text-[9px] ml-0.5 ${isOver ? 'text-destructive/70' : 'text-muted-foreground'}`}>{suffix}</span>
+        <AnimatedNumber value={value} /><span className={`text-[9px] ml-0.5 ${isOver ? 'text-destructive/70' : 'text-muted-foreground'}`}>{suffix}</span>
       </span>
     </div>
   );

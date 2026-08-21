@@ -15,6 +15,7 @@ import { Drawer } from "vaul";
 import { motion, AnimatePresence } from "motion/react";
 import { ptBR } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { Calendar } from "@/components/ui/calendar";
 import {
   AlertDialog,
@@ -370,7 +371,7 @@ function MacroBento({ title, consumed, goal, color, className }: { title: string
       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
       <div>
         <div className="flex items-baseline gap-1">
-          <p className="stat-number text-2xl font-medium tracking-tight text-foreground">{Math.round(consumed)}<span className="text-[11px] text-muted-foreground/60 ml-0.5">g</span></p>
+          <p className="stat-number text-2xl font-medium tracking-tight text-foreground"><AnimatedNumber value={consumed} /><span className="text-[11px] text-muted-foreground/60 ml-0.5">g</span></p>
           <span className="text-[11px] font-medium text-muted-foreground/50">/ {Math.round(goal)}g</span>
         </div>
         <div className="h-1.5 w-full rounded-full bg-secondary mt-3 overflow-hidden">
@@ -406,7 +407,7 @@ function MealDrawer({ mealId, mealLabel, totalKcal, entries, hasItems, onDelete,
               </div>
             </div>
             {hasItems && (
-              <span className="stat-number text-lg font-medium text-foreground">{totalKcal} <span className="text-xs text-muted-foreground">kcal</span></span>
+              <span className="stat-number text-lg font-medium text-foreground"><AnimatedNumber value={totalKcal} /> <span className="text-xs text-muted-foreground">kcal</span></span>
             )}
           </div>
         </button>
@@ -422,7 +423,7 @@ function MealDrawer({ mealId, mealLabel, totalKcal, entries, hasItems, onDelete,
               <div>
                 <Drawer.Title className="text-3xl font-bold tracking-tight text-foreground">{mealLabel}</Drawer.Title>
                 <Drawer.Description className="text-sm text-muted-foreground mt-1">
-                  {totalKcal} kcal totais
+                  <AnimatedNumber value={totalKcal} /> kcal totais
                 </Drawer.Description>
               </div>
               
@@ -447,7 +448,7 @@ function MealDrawer({ mealId, mealLabel, totalKcal, entries, hasItems, onDelete,
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="stat-number text-base">{Math.round(Number(entry.kcal))}</span>
+                      <span className="stat-number text-base"><AnimatedNumber value={Math.round(Number(entry.kcal))} /></span>
                       <Button variant="ghost" size="icon" onClick={() => onDelete(entry.id)} className="size-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10">
                         <Trash2 className="size-4" />
                       </Button>
@@ -526,7 +527,7 @@ function QuickAddDrawer({ userId, day }: { userId: string; day: string }) {
                 >
                   <span className="text-foreground/90">{food.name}</span>
                   <span className="ml-2 text-muted-foreground font-light text-xs">
-                    {Math.round(Number(food.kcal))} kcal
+                    <AnimatedNumber value={Math.round(Number(food.kcal))} /> kcal
                   </span>
                 </button>
               ))}
@@ -636,7 +637,7 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                             {food.category}
                           </p>
                         </div>
-                        <span className="stat-number text-sm">{Math.round(food.kcalPer100g)} <span className="text-[10px] uppercase tracking-widest text-muted-foreground">kcal</span></span>
+                        <span className="stat-number text-sm"><AnimatedNumber value={Math.round(food.kcalPer100g)} /> <span className="text-[10px] uppercase tracking-widest text-muted-foreground">kcal</span></span>
                       </button>
                     </li>
                   ))}
@@ -652,7 +653,7 @@ function AddFoodDialog({ userId, day, defaultMeal, onAdded }: { userId: string; 
                 <div className="rounded-2xl bg-surface border border-border p-6 text-center">
                   <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">{selected.name}</p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {Math.round(selected.kcalPer100g)} kcal por 100 {unit}
+                    <AnimatedNumber value={Math.round(selected.kcalPer100g)} /> kcal por 100 {unit}
                   </p>
                 </div>
                 
