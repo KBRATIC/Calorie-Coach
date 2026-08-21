@@ -29,7 +29,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative mx-auto max-w-[120rem] px-4 pt-16 pb-20 md:pt-28 md:pb-32 md:px-10">
+    <section className="relative mx-auto max-w-[90rem] px-4 pt-16 pb-20 md:pt-28 md:pb-32 md:px-10">
       <div className="flex flex-col items-center justify-center max-w-5xl mx-auto">
         {/* Text Content */}
         <motion.div

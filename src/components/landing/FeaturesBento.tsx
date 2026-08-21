@@ -25,7 +25,7 @@ function FoodDatabaseMockup() {
   ];
 
   return (
-    <div className="absolute inset-x-4 top-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+    <div className="w-full px-4 pt-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
       {/* Search Input Mockup */}
       <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-background/50 px-3 py-2 text-[10px] text-muted-foreground backdrop-blur-md">
         <MagnifyingGlass className="size-3.5 text-primary" />
@@ -77,7 +77,7 @@ function WeeklyChartMockup() {
   ];
 
   return (
-    <div className="absolute inset-x-4 top-4 sm:inset-x-6 sm:top-6 flex flex-col gap-3 sm:gap-4 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
+    <div className="w-full px-4 pt-4 sm:px-6 sm:pt-6 flex flex-col gap-3 sm:gap-4 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
       {/* Stats header summary - Hidden on mobile to prevent overlapping */}
       <div className="hidden sm:flex items-center justify-between rounded-xl border border-border/30 bg-surface/30 p-3 backdrop-blur-md">
         <div className="text-left">
@@ -122,7 +122,7 @@ function WeeklyChartMockup() {
 /* --- MOCKUP 3: Cenários de Meta --- */
 function GoalScenariosMockup() {
   return (
-    <div className="absolute inset-x-4 top-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+    <div className="w-full px-4 pt-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
       {/* Fake Tabs Selector */}
       <div className="flex rounded-md bg-secondary/50 border border-border/30 p-0.5 text-center">
         <div className="flex-1 rounded bg-primary text-[9px] font-bold text-primary-foreground py-0.5 shadow-sm">
@@ -153,7 +153,7 @@ function GoalScenariosMockup() {
 /* --- MOCKUP 4: Fórmula Científica --- */
 function ScientificFormulaMockup() {
   return (
-    <div className="absolute inset-x-4 top-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+    <div className="w-full px-4 pt-4 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
       {/* High-tech calculation display */}
       <div className="rounded-lg border border-border/30 bg-surface/40 p-2 backdrop-blur-md font-mono text-left relative overflow-hidden">
         <div className="text-[8px] text-muted-foreground uppercase tracking-wider mb-1">Mifflin-St Jeor</div>
@@ -180,7 +180,7 @@ const features = [
     href: "/auth",
     cta: "Buscar alimentos",
     background: <FoodDatabaseMockup />,
-    className: "lg:row-start-1 lg:row-end-4 lg:col-start-1 lg:col-end-2",
+    className: "lg:col-span-1",
   },
   {
     Icon: CalendarBlank,
@@ -190,7 +190,7 @@ const features = [
     href: "/auth",
     cta: "Ver gráficos",
     background: <WeeklyChartMockup />,
-    className: "lg:col-start-2 lg:col-end-4 lg:row-start-1 lg:row-end-3",
+    className: "lg:col-span-2",
   },
   {
     Icon: Fire,
@@ -200,7 +200,7 @@ const features = [
     href: "/auth",
     cta: "Definir meta",
     background: <GoalScenariosMockup />,
-    className: "lg:col-start-2 lg:col-end-3 lg:row-start-3 lg:row-end-4",
+    className: "lg:col-span-1",
   },
   {
     Icon: Calculator,
@@ -210,7 +210,7 @@ const features = [
     href: "/auth",
     cta: "Calcular TMB",
     background: <ScientificFormulaMockup />,
-    className: "lg:col-start-3 lg:col-end-4 lg:row-start-3 lg:row-end-4",
+    className: "lg:col-span-2",
   },
 ];
 
@@ -249,7 +249,7 @@ export function FeaturesBento() {
   );
 
   return (
-    <section className="relative w-full max-w-[120rem] mx-auto py-12 md:py-24 px-4 sm:px-6 lg:px-8">
+    <section className="relative w-full max-w-[90rem] mx-auto py-12 md:py-24 px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col items-center justify-center text-center mb-12">
         <h2 className="text-3xl md:text-5xl font-bold font-display tracking-tight text-foreground mb-4">
           Tudo que você precisa em <span className="text-primary text-glow">um só lugar</span>
