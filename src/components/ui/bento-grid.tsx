@@ -50,7 +50,7 @@ const BentoCard = ({
     )}
   >
     <div className="flex-1 w-full overflow-hidden relative group-hover:scale-[1.02] transition-transform duration-500">{background}</div>
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2 p-6 transition-all duration-300 group-hover:-translate-y-2 mt-auto">
+    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2 p-6 mt-auto">
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary origin-left transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75 group-hover:bg-primary/20">
         <Icon className="h-6 w-6" weight="duotone" />
       </div>
@@ -58,21 +58,15 @@ const BentoCard = ({
         {name}
       </h3>
       <p className="max-w-lg text-muted-foreground">{description}</p>
-    </div>
-
-    <div
-      className={cn(
-        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
-      )}
-    >
-      <Button variant="ghost" asChild size="sm" className="pointer-events-auto text-primary hover:text-primary hover:bg-primary/10">
-        <a href={href}>
+      
+      {/* Botão sempre visível e sem sobreposição */}
+      <div className="mt-2 flex items-center pointer-events-auto">
+        <a href={href} className="text-sm font-semibold text-primary hover:text-primary/80 flex items-center gap-1 transition-colors">
           {cta}
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <ArrowRight className="h-4 w-4" />
         </a>
-      </Button>
+      </div>
     </div>
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-neutral-800/10" />
   </div>
 );
 
