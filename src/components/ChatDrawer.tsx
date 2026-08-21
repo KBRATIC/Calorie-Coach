@@ -326,6 +326,40 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
     }
   };
 
+  const handlePaste = async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    const files: File[] = [];
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const file = items[i].getAsFile();
+        if (file) files.push(file);
+      }
+    }
+
+    if (files.length > 0) {
+      // Previne que a imagem seja "colada" como texto (como às vezes ocorre em contenteditable, embora aqui seja textarea é mais seguro dar preventDefault para evitar lixo no input de algumas engines)
+      const availableSlots = 10 - imageFiles.length;
+      const filesToProcess = files.slice(0, availableSlots);
+      
+      if (files.length > availableSlots) {
+        toast.error(`Limite de 10 imagens por mensagem. Apenas ${availableSlots} foram adicionadas.`);
+      }
+
+      setImageFiles(prev => [...prev, ...filesToProcess]);
+      
+      for (const file of filesToProcess) {
+        try {
+          const compressedBase64 = await compressImage(file);
+          setImagePreviews(prev => [...prev, compressedBase64]);
+        } catch (error) {
+          console.error("Erro ao comprimir imagem colada:", error);
+        }
+      }
+    }
+  };
+
   const removeImage = (index: number) => {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
@@ -559,6 +593,7 @@ export function ChatDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                       }
                     }}
                     onKeyDown={handleKeyDown}
+                    onPaste={handlePaste}
                     placeholder="Como posso te ajudar?"
                     className="pr-24 min-h-[50px] rounded-none py-3.5 resize-none bg-transparent hover:bg-transparent focus:bg-transparent transition-colors border-transparent focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/50 text-base sm:text-lg font-light [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                     disabled={isLoading}
