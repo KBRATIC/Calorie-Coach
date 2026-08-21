@@ -170,7 +170,7 @@ export function FoodsPage() {
   }
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6 pb-10">
+    <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} className="space-y-6 pb-10">
       <motion.div variants={itemVariants}>
         <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Base de dados</p>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Alimentos</h1>

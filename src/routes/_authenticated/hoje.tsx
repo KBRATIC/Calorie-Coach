@@ -180,7 +180,7 @@ export function TodayPage() {
   });
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-8 pb-10">
+    <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} className="space-y-8 pb-10">
       <Onboarding />
       
       {/* Native-style Header */}

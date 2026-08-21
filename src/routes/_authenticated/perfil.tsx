@@ -174,7 +174,7 @@ export function ProfilePage() {
   });
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
+    <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} className="space-y-6">
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl">Perfil &amp; Meta</h1>
