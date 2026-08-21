@@ -74,7 +74,7 @@ function parseJsonContent(content: string, defaultMeal: string): ParsedItem[] {
 
 async function parseWithGoogle(text: string, defaultMeal: string, key: string): Promise<ParsedItem[]> {
   const url = new URL(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
   );
   url.searchParams.set("key", key);
 
@@ -162,7 +162,7 @@ export async function chatAssistant(
   if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
 
   const url = new URL(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent"
   );
   url.searchParams.set("key", googleKey);
 
