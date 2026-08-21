@@ -21,7 +21,7 @@ function FoodDatabaseMockup() {
   const foods = [
     { name: "Frango Grelhado", kcal: 165, macro: "Proteína", color: "bg-primary", pct: 75 },
     { name: "Arroz Integral", kcal: 110, macro: "Carboidrato", color: "bg-yellow-500", pct: 60 },
-    { name: "Ovo Cozido", kcal: 155, macro: "Proteína/Gordura", color: "bg-orange-500", pct: 50 },
+    { name: "Ovo Cozido", kcal: 155, macro: "Proteína/Gordura", color: "bg-orange-500", pct: 50, desktopOnly: true },
   ];
 
   return (
@@ -37,7 +37,9 @@ function FoodDatabaseMockup() {
         {foods.map((food, i) => (
           <div
             key={i}
-            className="flex items-center justify-between rounded-lg border border-border/30 bg-surface/40 p-2.5 backdrop-blur-md transition-all duration-300 group-hover:bg-surface/60"
+            className={`items-center justify-between rounded-lg border border-border/30 bg-surface/40 p-2.5 backdrop-blur-md transition-all duration-300 group-hover:bg-surface/60 ${
+              food.desktopOnly ? "hidden sm:flex" : "flex"
+            }`}
             style={{ transform: `translateY(${i * 2}px)` }}
           >
             <div className="flex items-center gap-2.5">
@@ -75,9 +77,9 @@ function WeeklyChartMockup() {
   ];
 
   return (
-    <div className="absolute inset-x-6 top-6 flex flex-col gap-4 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
-      {/* Stats header summary */}
-      <div className="flex items-center justify-between rounded-xl border border-border/30 bg-surface/30 p-3 backdrop-blur-md">
+    <div className="absolute inset-x-4 top-4 sm:inset-x-6 sm:top-6 flex flex-col gap-3 sm:gap-4 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
+      {/* Stats header summary - Hidden on mobile to prevent overlapping */}
+      <div className="hidden sm:flex items-center justify-between rounded-xl border border-border/30 bg-surface/30 p-3 backdrop-blur-md">
         <div className="text-left">
           <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Média Semanal</p>
           <p className="text-lg font-bold text-foreground font-display">1.957 kcal</p>
@@ -89,10 +91,10 @@ function WeeklyChartMockup() {
       </div>
 
       {/* Bar Chart mockup */}
-      <div className="flex h-36 items-end justify-between gap-2.5 rounded-xl border border-border/20 bg-surface/20 p-4 pt-8 relative">
+      <div className="flex h-24 sm:h-36 items-end justify-between gap-1.5 sm:gap-2.5 rounded-xl border border-border/20 bg-surface/20 p-3 sm:p-4 pt-6 sm:pt-8 relative">
         {/* Target limit dotted line */}
-        <div className="absolute inset-x-0 bottom-24 border-t border-dashed border-primary/30 flex justify-end pr-2">
-          <span className="text-[9px] text-primary/60 font-mono -mt-2">Meta: 2000 kcal</span>
+        <div className="absolute inset-x-0 bottom-16 sm:bottom-24 border-t border-dashed border-primary/30 flex justify-end pr-2">
+          <span className="text-[8px] sm:text-[9px] text-primary/60 font-mono -mt-2">Meta: 2000 kcal</span>
         </div>
 
         {weeklyData.map((data, i) => {
