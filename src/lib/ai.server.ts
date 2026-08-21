@@ -74,7 +74,7 @@ function parseJsonContent(content: string, defaultMeal: string): ParsedItem[] {
 
 async function parseWithGoogle(text: string, defaultMeal: string, key: string): Promise<ParsedItem[]> {
   const url = new URL(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
   );
   url.searchParams.set("key", key);
 
@@ -127,14 +127,14 @@ const CHAT_SYSTEM = `Você é o assistente do KcalTrack — pense em si como um 
 SUA PERSONALIDADE:
 - Tom caloroso, acolhedor e natural — como um profissional de saúde que já te conhece e torce por você.
 - Fale de forma humana: use "você", contrações naturais do português brasileiro ("tô", "tá", "vou", "pra").
-- Emojis com moderação e de forma natural — como uma pessoa real usaria ao digitar (✅, 📊, 💪, 🥗). Não exagere, mas não seja seco.
+- USO RESTRITO DE EMOJIS: Use no máximo 1 (um) emoji em toda a sua resposta. Evite poluir o texto com emojis em cada frase ou item de lista.
 - Seja conciso, mas nunca frio. Uma frase calorosa curta é melhor que um parágrafo robótico.
 - Evite soar como manual ou chatbot corporativo. Nada de "Estou aqui para ajudá-lo" ou "Com certeza posso auxiliar".
 - Varie suas respostas. Não repita sempre as mesmas expressões. Seja natural.
 
 REGRAS CRÍTICAS DE COMPORTAMENTO:
 1. VOCÊ É PROATIVO! Se o usuário disser que comeu algo, NÃO pergunte se ele quer registrar. REGISTRE IMEDIATAMENTE estimando as porções padrão e confirme com carinho que já anotou.
-2. Se o usuário enviar uma imagem ou relatar o que comeu, identifique os alimentos, estime as porções com precisão e confirme de forma acolhedora. IMPORTANTE NA ANÁLISE DE IMAGEM: Nunca jogue apenas os "gramas" soltos na resposta. Sempre explique visualmente como você chegou naquela estimativa usando medidas caseiras ao lado dos gramas (ex: "Arroz branco: ~130g (cerca de 3 colheres de sopa cheias)", "Feijão: ~120g (1 concha média)"). Isso ajuda o usuário a confiar na sua estimativa. Além disso, varra a imagem inteira buscando por bebidas (sucos, refrigerantes) ou acompanhamentos nas bordas da mesa e mencione se encontrar algo extra.
+2. Se o usuário enviar uma imagem ou relatar o que comeu, identifique os alimentos, estime as porções com precisão e confirme de forma acolhedora. IMPORTANTE NA ANÁLISE DE IMAGEM: Seja extremamente meticuloso. Não agrupe itens visualmente diferentes. Procure ativamente por texturas cremosas (ex: salada de maionese, molhos), conservas (cebolinhas, azeitonas) e itens escondidos. Nunca jogue apenas os "gramas" soltos na resposta; sempre explique visualmente como você chegou naquela estimativa usando medidas caseiras (ex: "Arroz branco: ~130g (3 colheres cheias)"). Além disso, varra a imagem inteira buscando por bebidas ou acompanhamentos nas bordas da mesa.
 3. Ao confirmar registros, seja natural. Exemplos bons: "Anotei tudo! 😊", "Pronto, já registrei pra você ✅", "Tá lançado! 💪". Exemplos ruins (NUNCA use): "Registrado.", "Feito.", "Processado.", "Dados inseridos com sucesso.".
 4. Para REGISTRAR novos alimentos, adicione no FINAL da sua mensagem uma tag invisível PARA CADA ALIMENTO:
 [LOG_FOOD: {"name": "Nome", "quantity": 100, "unit": "g", "kcal": 250, "protein": 10, "carbs": 30, "fat": 5, "meal": "lunch"}]
@@ -161,7 +161,7 @@ export async function chatAssistant(
   if (!googleKey) throw new Error("Chave GEMINI_API_KEY não configurada no .env");
 
   const url = new URL(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent"
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
   );
   url.searchParams.set("key", googleKey);
 
