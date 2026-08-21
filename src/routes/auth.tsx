@@ -108,16 +108,16 @@ function AuthPage() {
       </Link>
 
       <div className="w-full max-w-md">
-        <Link to="/" className="mb-8 flex items-center justify-center gap-2 group">
-          <img
-            src="/icon.png"
-            alt="KcalTrack Logo"
-            className="size-9 rounded-full object-cover transition-transform group-hover:scale-105"
-          />
-          <span className="font-display tracking-tight font-bold text-lg text-foreground">KcalTrack</span>
-        </Link>
+        <div className="w-full rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/50 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-6 sm:p-10 relative z-10">
+          <Link to="/" className="mb-8 flex items-center justify-center gap-2 group">
+            <img
+              src="/icon.png"
+              alt="KcalTrack Logo"
+              className="size-10 rounded-full object-cover transition-transform group-hover:scale-105 shadow-glow"
+            />
+            <span className="font-display tracking-tight font-bold text-2xl text-foreground">KcalTrack</span>
+          </Link>
 
-        <div className="w-full rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/50 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-6 md:p-8 relative z-10">
           <Tabs defaultValue="signin">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Entrar</TabsTrigger>
