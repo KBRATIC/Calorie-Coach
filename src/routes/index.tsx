@@ -44,22 +44,22 @@ function Landing() {
       <div className="aurora-layer" aria-hidden />
 
       {/* ── Header ─────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 w-full backdrop-blur-md border-b border-border/40 bg-background/70">
-        <div className="mx-auto flex max-w-[90rem] items-center justify-between px-4 py-3 md:px-10">
-          <Link to="/" className="flex min-w-0 items-center gap-2 group">
+      <header className="fixed top-0 z-40 w-full pt-4 md:pt-6 px-4 pointer-events-none flex justify-center">
+        <div className="flex w-full max-w-[90rem] items-center justify-between px-4 md:px-6 py-2.5 rounded-full bg-surface/70 backdrop-blur-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] pointer-events-auto transition-all">
+          <Link to="/" className="flex items-center gap-3 group">
             <img
               src="/icon.png"
               alt="KcalTrack Logo"
-              className="size-9 rounded-full object-cover transition-transform group-hover:scale-105"
+              className="size-9 rounded-full shadow-lg object-cover transition-transform group-hover:scale-105"
             />
-            <span className="font-display tracking-tight font-bold text-lg">
+            <span className="font-display tracking-tight font-bold text-lg drop-shadow-sm text-foreground">
               KcalTrack
             </span>
           </Link>
           <Button
             asChild
             size="sm"
-            className="rounded-full gap-1.5 transition-all hover:gap-2 active:scale-[0.98]"
+            className="rounded-full gap-1.5 px-5 transition-all hover:gap-2 active:scale-[0.98] shadow-glow"
           >
             <Link to="/auth">
               Começar grátis
@@ -111,25 +111,37 @@ function Landing() {
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
-      <footer className="border-t border-border/20 py-8 relative z-10">
-        <div className="mx-auto max-w-[90rem] px-4 md:px-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} KcalTrack. Valores calóricos baseados
-            na Tabela EndocrinoSaude.
-          </p>
-          <div className="flex gap-6 text-sm text-muted-foreground font-medium">
-            <Link
-              to="/termos"
-              className="hover:text-primary transition-colors"
-            >
-              Termos de Uso
-            </Link>
-            <Link
-              to="/privacidade"
-              className="hover:text-primary transition-colors"
-            >
-              Privacidade
-            </Link>
+      <footer className="relative z-10 w-full px-4 pb-4 md:pb-8 pt-10">
+        <div className="mx-auto max-w-[90rem] rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/50 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-8 md:p-12">
+          <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
+            <div className="flex flex-col items-center md:items-start gap-4">
+              <Link to="/" className="flex items-center gap-2 group">
+                <img src="/icon.png" alt="Logo" className="size-8 rounded-full opacity-80 group-hover:opacity-100 transition-opacity" />
+                <span className="font-display font-bold tracking-tight text-xl opacity-80 group-hover:opacity-100 transition-opacity">KcalTrack</span>
+              </Link>
+              <p className="text-sm text-muted-foreground max-w-sm text-center md:text-left leading-relaxed">
+                A forma mais inteligente de registrar sua alimentação e atingir seus objetivos de saúde com o poder da Inteligência Artificial.
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4">
+              <Link to="/termos" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Termos de Uso
+              </Link>
+              <Link to="/privacidade" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Política de Privacidade
+              </Link>
+              <Link to="/cookies" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Política de Cookies
+              </Link>
+            </div>
+          </div>
+          
+          <div className="w-full h-px bg-border/40 my-8" />
+          
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground/60">
+            <p>© {new Date().getFullYear()} KcalTrack. Todos os direitos reservados.</p>
+            <p>Valores calóricos baseados na Tabela EndocrinoSaude.</p>
           </div>
         </div>
       </footer>
