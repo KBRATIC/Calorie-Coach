@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { AnimatedNumber } from "./AnimatedNumber";
+import { useIsActive } from "@/hooks/useIsActive";
 
 type Props = {
   consumed: number;
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export function CalorieRing({ consumed, goal, size = 260 }: Props) {
+  const isActive = useIsActive();
   const pct = goal > 0 ? Math.min(consumed / goal, 1.25) : 0;
   const radius = size / 2 - 18;
   const circumference = 2 * Math.PI * radius;
@@ -34,7 +36,7 @@ export function CalorieRing({ consumed, goal, size = 260 }: Props) {
           strokeWidth={18}
           strokeLinecap="round"
           initial={{ strokeDasharray: `0 ${circumference}` }}
-          animate={{ strokeDasharray: `${dash} ${circumference}` }}
+          animate={isActive ? { strokeDasharray: `${dash} ${circumference}` } : { strokeDasharray: `0 ${circumference}` }}
           transition={{ type: "spring", stiffness: 60, damping: 15 }}
           className={over ? "stroke-destructive" : "stroke-primary"}
         />

@@ -50,6 +50,7 @@ import {
 } from "@/lib/api";
 import { MEALS, mealLabel, todayISO, formatDayLabel, addDays, unitFor, activeDayState, calcMacroGoals } from "@/lib/nutrition";
 import { Route as AuthRoute } from "@/routes/_authenticated/route";
+import { IsActiveContext } from "@/hooks/useIsActive";
 import { CalorieRing } from "@/components/CalorieRing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -217,7 +218,8 @@ export function TodayPage() {
   });
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-8 pb-10">
+    <IsActiveContext.Provider value={isActive}>
+      <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-8 pb-10">
       <Onboarding />
       
       {/* Native-style Header */}
@@ -388,7 +390,8 @@ export function TodayPage() {
           })}
         </motion.div>
       )}
-    </motion.div>
+      </motion.div>
+    </IsActiveContext.Provider>
   );
 }
 
@@ -397,6 +400,7 @@ export function TodayPage() {
 // ----------------------------------------
 
 function MacroBento({ title, consumed, goal, color, className }: { title: string, consumed: number, goal: number, color: string, className?: string }) {
+  const isActive = useIsActive();
   const progress = Math.min(100, (consumed / Math.max(1, goal)) * 100);
   return (
     <div className={`bento-card p-4 sm:p-5 flex flex-col justify-between h-32 sm:h-36 ${className || 'col-span-1'}`}>
@@ -409,7 +413,7 @@ function MacroBento({ title, consumed, goal, color, className }: { title: string
         <div className="h-1.5 w-full rounded-full bg-secondary mt-3 overflow-hidden">
           <motion.div 
             initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
+            animate={isActive ? { width: `${progress}%` } : { width: 0 }}
             transition={{ type: "spring", stiffness: 60, damping: 15 }}
             className={`h-full bg-gradient-to-r ${color} rounded-full`}
           />

@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate, useLocation, Link } from "@tanstack/react
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Trash2, AlertTriangle, Loader2, Download } from "lucide-react";
+import { IsActiveContext } from "@/hooks/useIsActive";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteAccount } from "@/lib/user.functions";
 import {
@@ -176,7 +177,8 @@ export function ProfilePage() {
   });
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
+    <IsActiveContext.Provider value={isActive}>
+      <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl">Perfil &amp; Meta</h1>
@@ -435,7 +437,7 @@ export function ProfilePage() {
           </AlertDialogContent>
         </AlertDialog>
       </motion.div>
-    </motion.div>
+      </motion.div>
+    </IsActiveContext.Provider>
   );
 }
-

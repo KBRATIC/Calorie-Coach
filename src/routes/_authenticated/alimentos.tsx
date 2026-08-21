@@ -4,6 +4,7 @@ import { createFileRoute, useLocation } from "@tanstack/react-router";
 import { Route as AuthRoute } from "@/routes/_authenticated/route";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
+import { IsActiveContext } from "@/hooks/useIsActive";
 import {
   ArrowDown,
   ArrowUp,
@@ -176,7 +177,8 @@ export function FoodsPage() {
   }
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
+    <IsActiveContext.Provider value={isActive}>
+      <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
       <motion.div variants={itemVariants} className="text-center sm:text-left">
         <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Base de dados</p>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Alimentos</h1>
@@ -373,12 +375,12 @@ export function FoodsPage() {
           </Button>
         </div>
       </motion.div>
-
-      <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
         Valores de referência baseados na Tabela de Calorias EndocrinoSaude. Podem variar conforme
         preparo e marca.
       </p>
-    </motion.div>
+      </motion.div>
+    </IsActiveContext.Provider>
   );
 }
 

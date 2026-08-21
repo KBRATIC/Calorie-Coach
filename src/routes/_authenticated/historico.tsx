@@ -7,6 +7,7 @@ import { addDays, formatDayLabel, todayISO, activeDayState, calcMacroGoals } fro
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
+import { IsActiveContext, useIsActive } from "@/hooks/useIsActive";
 
 export const Route = createFileRoute("/_authenticated/historico")({
   head: () => ({
@@ -95,7 +96,8 @@ export function HistoryPage() {
   const isPositive = netBalance >= 0;
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
+    <IsActiveContext.Provider value={isActive}>
+      <motion.div variants={containerVariants} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-6 pb-10">
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-center sm:text-left">
           <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Resultados</p>
@@ -237,11 +239,13 @@ export function HistoryPage() {
           })
         )}
       </div>
-    </motion.div>
+      </motion.div>
+    </IsActiveContext.Provider>
   );
 }
 
 function MiniProgressBar({ value, max, color, label, suffix }: { value: number, max: number, color: string, label: string, suffix: string }) {
+  const isActive = useIsActive();
   const pct = Math.min(100, (value / Math.max(1, max)) * 100);
   const isOver = value > max;
   return (
@@ -250,7 +254,7 @@ function MiniProgressBar({ value, max, color, label, suffix }: { value: number, 
       <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
         <motion.div 
            initial={{ width: 0 }}
-           animate={{ width: `${pct}%` }}
+           animate={isActive ? { width: `${pct}%` } : { width: 0 }}
            transition={{ type: "spring", stiffness: 60, damping: 15 }}
            className={`h-full rounded-full ${color}`}
         />
