@@ -50,7 +50,7 @@ import {
 } from "@/lib/api";
 import { MEALS, mealLabel, todayISO, formatDayLabel, addDays, unitFor, activeDayState, calcMacroGoals } from "@/lib/nutrition";
 import { Route as AuthRoute } from "@/routes/_authenticated/route";
-import { IsActiveContext } from "@/hooks/useIsActive";
+import { IsActiveContext, useIsActive } from "@/hooks/useIsActive";
 import { CalorieRing } from "@/components/CalorieRing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
