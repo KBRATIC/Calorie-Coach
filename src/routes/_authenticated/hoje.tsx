@@ -63,6 +63,16 @@ export const Route = createFileRoute("/_authenticated/hoje")({
   component: TodayPage,
 });
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
+
 export function TodayPage() {
   const { user } = useSession();
   const queryClient = useQueryClient();
@@ -170,11 +180,11 @@ export function TodayPage() {
   });
 
   return (
-    <div className="space-y-8 pb-10">
+    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-8 pb-10">
       <Onboarding />
       
       {/* Native-style Header */}
-      <div className="flex flex-col gap-1 items-center justify-center pt-2 pb-4 relative z-20">
+      <motion.div variants={itemVariants} className="flex flex-col gap-1 items-center justify-center pt-2 pb-4 relative z-20">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" className="size-8 rounded-full text-muted-foreground" onClick={() => setDay(addDays(day, -1))}>
             <ChevronRight className="size-5 rotate-180" />
@@ -249,18 +259,18 @@ export function TodayPage() {
       </div>
 
       {!goalsQuery.isLoading && !goalsQuery.data && (
-        <div className="bento-card p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <motion.div variants={itemVariants} className="bento-card p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[14px] text-foreground/80 text-center sm:text-left">
             Você ainda não calculou sua TMB. Defina sua meta para acompanhar com precisão.
           </p>
           <Button asChild size="sm" className="rounded-full px-6 shadow-lg shadow-primary/20">
             <Link to="/perfil">Calcular meta</Link>
           </Button>
-        </div>
+        </motion.div>
       )}
 
       {/* Bento Box Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 relative z-10">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 relative z-10">
         
         {/* Calorie Hero - Takes up full width on mobile, 2 cols on desktop */}
         <div className="col-span-2 sm:col-span-2 row-span-2 bento-card p-6 flex flex-col items-center justify-center transition-transform relative overflow-hidden">
@@ -272,22 +282,22 @@ export function TodayPage() {
         <MacroBento title="Proteína" consumed={consumedProtein} goal={goalProtein} color="from-[oklch(0.6_0.15_250)] to-[oklch(0.7_0.15_250)]" />
         <MacroBento title="Carbo" consumed={consumedCarbs} goal={goalCarbs} color="from-[oklch(0.7_0.18_70)] to-[oklch(0.8_0.18_70)]" />
         <MacroBento title="Gordura" consumed={consumedFat} goal={goalFat} color="from-[oklch(0.6_0.2_15)] to-[oklch(0.7_0.2_15)]" className="col-span-2" />
-      </div>
+      </motion.div>
 
-      <div className="flex items-center justify-between pt-6">
+      <motion.div variants={itemVariants} className="flex items-center justify-between pt-6">
         <h2 className="text-xl font-medium tracking-tight">Refeições</h2>
         <Button variant="ghost" size="sm" className="h-8 rounded-full text-muted-foreground hover:text-foreground text-xs" onClick={() => undoMutation.mutate()} disabled={undoMutation.isPending || entries.length === 0}>
           <Undo2 className="size-3.5 mr-1.5" /> Desfazer
         </Button>
-      </div>
+      </motion.div>
 
       {/* Rich Meal Cards Instead of Accordion */}
       {entriesQuery.isLoading ? (
-        <div className="flex justify-center py-10">
+        <motion.div variants={itemVariants} className="flex justify-center py-10">
           <Loader2 className="size-6 animate-spin text-primary" />
-        </div>
+        </motion.div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <motion.div variants={itemVariants} className="grid gap-3 sm:grid-cols-2">
           {MEALS.map((meal) => {
             const mealEntries = entries.filter((e) => e.meal === meal.id);
             const totalKcal = Math.round(mealEntries.reduce((s, e) => s + Number(e.kcal), 0));
@@ -308,9 +318,9 @@ export function TodayPage() {
               />
             );
           })}
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

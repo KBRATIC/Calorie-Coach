@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { ArrowRight } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { motion } from "motion/react";
 
 const BentoGrid = ({
   children,
@@ -11,7 +11,17 @@ const BentoGrid = ({
   className?: string;
 }) => {
   return (
-    <div
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }}
+      variants={{
+        visible: {
+          transition: {
+            staggerChildren: 0.1,
+          },
+        },
+      }}
       className={cn(
         "grid w-full grid-cols-1 lg:grid-cols-3 gap-4",
         "[grid-auto-rows:minmax(22rem,auto)]",
@@ -19,7 +29,7 @@ const BentoGrid = ({
       )}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };
 
@@ -40,8 +50,16 @@ const BentoCard = ({
   href: string;
   cta: string;
 }) => (
-  <div
+  <motion.div
     key={name}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true, margin: "-20px" }}
+    variants={{
+      hidden: { opacity: 0, y: 30, scale: 0.98 },
+      visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 150, damping: 20 } },
+    }}
+    whileHover={{ scale: 1.01, transition: { type: "spring", stiffness: 300, damping: 20 } }}
     className={cn(
       "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
       // dark styles (premium apple-y)
@@ -67,7 +85,7 @@ const BentoCard = ({
         </a>
       </div>
     </div>
-  </div>
+  </motion.div>
 );
 
 export { BentoCard, BentoGrid };

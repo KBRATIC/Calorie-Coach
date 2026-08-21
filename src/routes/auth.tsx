@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { ArrowLeft, Eye, EyeClosed } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -121,7 +122,12 @@ function AuthPage() {
         Voltar ao início
       </Link>
 
-      <div className="w-full max-w-md">
+      <motion.div 
+        initial={{ opacity: 0, y: 30, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        className="w-full max-w-md"
+      >
         <div className="w-full rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/50 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-6 sm:p-10 relative z-10">
           <Link to="/" className="mb-8 flex items-center justify-center gap-2 group">
             <img
@@ -277,7 +283,7 @@ function AuthPage() {
             Continuar com Google
           </Button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

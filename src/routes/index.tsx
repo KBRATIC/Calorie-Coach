@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
+import { motion } from "motion/react";
 
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesBento } from "@/components/landing/FeaturesBento";
@@ -44,7 +45,12 @@ function Landing() {
       <div className="aurora-layer" aria-hidden />
 
       {/* ── Header ─────────────────────────────────────────────────── */}
-      <header className="fixed top-0 z-40 w-full pt-4 md:pt-6 px-4 pointer-events-none flex justify-center">
+      <motion.header 
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="fixed top-0 z-40 w-full pt-4 md:pt-6 px-4 pointer-events-none flex justify-center"
+      >
         <div className="flex w-full max-w-[90rem] items-center justify-between px-4 md:px-6 py-2.5 rounded-full bg-surface/70 backdrop-blur-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] pointer-events-auto transition-all">
           <Link to="/" className="flex items-center gap-3 group">
             <img
@@ -67,7 +73,7 @@ function Landing() {
             </Link>
           </Button>
         </div>
-      </header>
+      </motion.header>
 
       {/* ── Main Content ───────────────────────────────────────────── */}
       <main className="relative z-10 flex flex-col">
@@ -84,7 +90,13 @@ function Landing() {
         <StatsSection />
 
         {/* 5. CTA Final — Full-width */}
-        <section className="mx-auto max-w-[90rem] px-4 pb-20 md:px-10">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          className="mx-auto max-w-[90rem] px-4 pb-20 md:px-10"
+        >
           <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-surface/30 backdrop-blur-md p-8 text-center md:p-14">
             <div className="relative z-10 flex flex-col items-center gap-5">
               <h2 className="text-3xl font-display font-bold md:text-4xl lg:text-5xl">
@@ -107,11 +119,17 @@ function Landing() {
             {/* Background flare */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[250px] w-[500px] bg-primary/8 rounded-[100%] blur-[80px] pointer-events-none" />
           </div>
-        </section>
+        </motion.section>
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
-      <footer className="relative z-10 w-full px-4 pb-4 md:pb-8 pt-10">
+      <motion.footer 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="relative z-10 w-full px-4 pb-4 md:pb-8 pt-10"
+      >
         <div className="mx-auto max-w-[90rem] rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/50 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-8 md:p-12">
           <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
             <div className="flex flex-col items-center md:items-start gap-4">
@@ -144,7 +162,7 @@ function Landing() {
             <p>Valores calóricos baseados na Tabela EndocrinoSaude.</p>
           </div>
         </div>
-      </footer>
+      </motion.footer>
     </div>
   );
 }

@@ -28,6 +28,7 @@ import {
 
 import { useSession } from "@/hooks/useSession";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -68,6 +69,16 @@ export const Route = createFileRoute("/_authenticated/perfil")({
   }),
   component: ProfilePage,
 });
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export function ProfilePage() {
   const { user } = useSession();
@@ -163,8 +174,8 @@ export function ProfilePage() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl">Perfil &amp; Meta</h1>
           <p className="text-sm text-muted-foreground">
@@ -181,10 +192,10 @@ export function ProfilePage() {
             Instalar App
           </Button>
         )}
-      </div>
+      </motion.div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-        <div className="bento-card p-6 sm:p-8 space-y-6 relative overflow-hidden">
+        <motion.div variants={itemVariants} className="bento-card p-6 sm:p-8 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
           
           <div className="grid gap-6 sm:grid-cols-2 relative z-10">
@@ -297,7 +308,7 @@ export function ProfilePage() {
           </Button>
         </div>
 
-        <div className="bento-card p-6 sm:p-8 space-y-6 flex flex-col justify-between">
+        <motion.div variants={itemVariants} className="bento-card p-6 sm:p-8 space-y-6 flex flex-col justify-between">
           <div className="space-y-6">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1">TMB (basal)</p>
@@ -355,22 +366,26 @@ export function ProfilePage() {
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
       </div>
 
-      {user && <CustomFoods userId={user.id} />}
+      {user && (
+        <motion.div variants={itemVariants}>
+          <CustomFoods userId={user.id} />
+        </motion.div>
+      )}
 
-      <div className="bento-card p-6 sm:p-8 mt-8 space-y-4">
+      <motion.div variants={itemVariants} className="bento-card p-6 sm:p-8 mt-8 space-y-4">
         <h2 className="text-xl font-medium tracking-tight">Legal e Privacidade</h2>
         <div className="flex flex-col gap-3">
           <Link to="/termos" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Termos de Uso</Link>
           <Link to="/privacidade" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Política de Privacidade</Link>
           <Link to="/cookies" className="text-[15px] text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">Política de Cookies</Link>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="bento-card border-destructive/20 space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
+      <motion.div variants={itemVariants} className="bento-card border-destructive/20 space-y-6 p-6 sm:p-8 mt-8 relative overflow-hidden">
         <div className="absolute inset-0 bg-destructive/5 -z-10" />
         <div className="absolute top-0 right-0 w-64 h-64 bg-destructive/10 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
         
@@ -411,7 +426,7 @@ export function ProfilePage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </div>
+      </motion.div>
     </div>
   );
 }

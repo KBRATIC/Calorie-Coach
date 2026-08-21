@@ -64,6 +64,16 @@ function densityTone(kcal: number) {
   return { label: "Calórico", className: "border-destructive/40 text-destructive" };
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
+
 export function FoodsPage() {
   const [term, setTerm] = useState("");
   const [category, setCategory] = useState("all");
@@ -160,16 +170,16 @@ export function FoodsPage() {
   }
 
   return (
-    <div className="space-y-6 pb-10">
-      <div>
+    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6 pb-10">
+      <motion.div variants={itemVariants}>
         <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Base de dados</p>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Alimentos</h1>
         <p className="mt-3 max-w-2xl text-[15px] text-muted-foreground leading-relaxed">
           Navegue por nossa base completa. Filtre por categoria, ordene por densidade calórica e encontre a refeição perfeita.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <motion.div variants={itemVariants} className="grid gap-3 sm:grid-cols-3">
         {[
           { icon: Utensils, label: "Alimentos listados", value: rows.length, suffix: "" },
           { icon: Salad, label: "Categorias", value: categories.length, suffix: "" },
@@ -191,9 +201,9 @@ export function FoodsPage() {
             </p>
           </div>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="bento-card overflow-hidden">
+      <motion.div variants={itemVariants} className="bento-card overflow-hidden">
         {/* Filter & Search Header */}
         <div className="flex flex-col md:flex-row items-center gap-4 p-6 bg-surface border-b border-border">
           <div className="relative w-full flex-1">
@@ -329,34 +339,28 @@ export function FoodsPage() {
           )}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border p-5 bg-surface">
-          <p className="text-sm text-muted-foreground/80 font-medium">
-            Página <span className="text-foreground">{page + 1}</span> de <span className="text-foreground">{pageCount || 1}</span>
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 rounded-full border border-border bg-surface hover:bg-surface-strong transition-colors"
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={page === 0}
-            >
-              <ChevronLeft className="size-4" />
-              Anterior
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 rounded-full border border-border bg-surface hover:bg-surface-strong transition-colors"
-              onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-              disabled={page >= pageCount - 1 || pageCount === 0}
-            >
-              Próxima
-              <ChevronRight className="size-4" />
-            </Button>
-          </div>
+        <div className="p-4 sm:p-6 bg-surface-strong border-t border-border flex items-center justify-between">
+          <Button
+            variant="outline"
+            className="rounded-xl h-10 border-border hover:bg-surface shadow-sm active:scale-95 transition-all"
+            disabled={page === 0}
+            onClick={() => setPage(page - 1)}
+          >
+            <ChevronLeft className="size-4" /> Anterior
+          </Button>
+          <span className="text-sm font-medium text-muted-foreground bg-surface px-4 py-1.5 rounded-full border border-border shadow-inner">
+            Página {page + 1} de {pageCount}
+          </span>
+          <Button
+            variant="outline"
+            className="rounded-xl h-10 border-border hover:bg-surface shadow-sm active:scale-95 transition-all"
+            disabled={page >= pageCount - 1 || pageCount === 0}
+            onClick={() => setPage(page + 1)}
+          >
+            Próxima <ChevronRight className="size-4" />
+          </Button>
         </div>
-      </div>
+      </motion.div>
 
       <p className="text-xs text-muted-foreground">
         Valores de referência baseados na Tabela de Calorias EndocrinoSaude. Podem variar conforme

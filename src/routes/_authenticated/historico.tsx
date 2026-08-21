@@ -21,6 +21,16 @@ export const Route = createFileRoute("/_authenticated/historico")({
   component: HistoryPage,
 });
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
+
 export function HistoryPage() {
   const navigate = useNavigate();
   const [period, setPeriod] = useState<"semana" | "mes">("semana");
@@ -81,8 +91,8 @@ export function HistoryPage() {
   const isPositive = netBalance >= 0;
 
   return (
-    <div className="space-y-6 pb-10">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6 pb-10">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-center sm:text-left">
           <p className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Resultados</p>
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Histórico</h1>
@@ -90,7 +100,7 @@ export function HistoryPage() {
             Sua meta diária é de <span className="text-foreground font-medium">{goal} kcal</span>
           </p>
         </div>
-    <div className="flex gap-2 bento-card p-1.5 shadow-inner">
+        <div className="flex gap-2 bento-card p-1.5 shadow-inner">
           <Button
             size="sm"
             variant="ghost"
@@ -108,9 +118,9 @@ export function HistoryPage() {
             Mês
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <motion.div variants={itemVariants} className="grid gap-3 sm:grid-cols-3">
         <div className="bento-card p-6 flex flex-col justify-center transition-transform hover:scale-[1.02]">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Média diária</p>
           <p className="stat-number text-4xl font-medium tracking-tight text-foreground">{average} <span className="text-sm text-muted-foreground font-normal">kcal</span></p>
@@ -162,7 +172,7 @@ export function HistoryPage() {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
       <div className="space-y-4">
         {entriesQuery.isLoading ? (
@@ -175,8 +185,7 @@ export function HistoryPage() {
             return (
               <motion.div 
                 key={data.day} 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={itemVariants}
                 className="bento-card p-5 sm:p-6 flex flex-col gap-4"
               >
                 <button 
@@ -222,7 +231,7 @@ export function HistoryPage() {
           })
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
