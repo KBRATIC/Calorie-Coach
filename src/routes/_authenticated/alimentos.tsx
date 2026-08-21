@@ -1,7 +1,7 @@
 import { unitFor } from "@/lib/nutrition";
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import {
   ArrowDown,
@@ -12,10 +12,13 @@ import {
   Salad,
   Search,
   Utensils,
-  Plus
+  Plus,
+  Trash2
 } from "lucide-react";
 import { BASE_FOODS, type BaseFood } from "@/data/baseFoods";
-import { fetchCustomFoods } from "@/lib/api";
+import { fetchCustomFoods, addCustomFood, deleteCustomFood } from "@/lib/api";
+import { useSession } from "@/lib/auth";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -82,6 +85,7 @@ export function FoodsPage() {
     dir: "asc",
   });
   const [page, setPage] = useState(0);
+  const { user } = useSession();
 
   const customQuery = useQuery({ queryKey: ["custom-foods"], queryFn: fetchCustomFoods });
 
@@ -202,6 +206,12 @@ export function FoodsPage() {
           </motion.div>
         ))}
       </div>
+
+      {user && (
+        <motion.div variants={itemVariants}>
+          <CustomFoods userId={user.id} />
+        </motion.div>
+      )}
 
       <motion.div variants={itemVariants} className="bento-card overflow-hidden">
         {/* Filter & Search Header */}
@@ -367,6 +377,109 @@ export function FoodsPage() {
         preparo e marca.
       </p>
     </motion.div>
+  );
+}
+
+function CustomFoods({ userId }: { userId: string }) {
+  const queryClient = useQueryClient();
+  const { data: foods } = useQuery({ queryKey: ["customFoods"], queryFn: fetchCustomFoods });
+  const [name, setName] = useState("");
+  const [kcal, setKcal] = useState("");
+  const [unit, setUnit] = useState<"g" | "ml">("g");
+
+  const create = useMutation({
+    mutationFn: () =>
+      addCustomFood({
+        user_id: userId,
+        name: name.trim(),
+        kcal_per_100g: Number(kcal),
+        default_measure: unit === "ml" ? "1 copo" : "1 porção",
+        default_grams: unit === "ml" ? 200 : 100,
+        unit,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customFoods"] });
+      setName("");
+      setKcal("");
+      toast.success("Alimento cadastrado");
+    },
+    onError: (e: Error) => toast.error("Erro ao cadastrar", { description: e.message }),
+  });
+
+  const remove = useMutation({
+    mutationFn: deleteCustomFood,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["customFoods"] }),
+  });
+
+  return (
+    <div className="bento-card p-6 sm:p-8 space-y-6">
+      <div>
+        <h2 className="text-2xl font-medium tracking-tight">Meus alimentos</h2>
+        <p className="text-[15px] text-muted-foreground/80 mt-1">
+          Cadastre itens que não estão na base de mais de 1.100 alimentos.
+        </p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-[1fr_180px_170px_auto] bg-surface p-2 rounded-[28px] border border-border">
+        <div className="relative">
+          <label htmlFor="custom-name" className="sr-only">Nome</label>
+          <Input id="custom-name" name="custom-name" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} className="bg-transparent border-border rounded-2xl h-12 w-full" />
+        </div>
+        <div className="flex rounded-2xl border border-border p-1 bg-surface-strong">
+          {(["g", "ml"] as const).map((u) => (
+            <button
+              key={u}
+              type="button"
+              onClick={() => setUnit(u)}
+              className={`flex-1 rounded-xl py-1.5 text-[13px] font-medium transition-all ${
+                unit === u ? "bg-white/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground/80"
+              }`}
+            >
+              {u === "g" ? "Sólido (g)" : "Líquido (ml)"}
+            </button>
+          ))}
+        </div>
+        <div className="relative">
+          <label htmlFor="custom-kcal" className="sr-only">Calorias</label>
+          <Input
+            id="custom-kcal"
+            name="custom-kcal"
+            placeholder={`kcal / 100 ${unit}`}
+            type="number"
+            value={kcal}
+            onChange={(e) => setKcal(e.target.value)}
+            className="bg-transparent border-border rounded-2xl h-12 w-full"
+          />
+        </div>
+        <Button
+          onClick={() => create.mutate()}
+          disabled={!name.trim() || !Number(kcal) || create.isPending}
+          className="rounded-2xl h-12 px-8 active:scale-[0.98] transition-transform"
+        >
+          Cadastrar
+        </Button>
+      </div>
+      {(foods ?? []).length > 0 && (
+        <ul className="divide-y divide-border bg-surface rounded-[24px] border border-border p-2 mt-4">
+          {foods!.map((f) => (
+            <li key={f.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/[0.02] transition-colors">
+              <span className="flex-1 truncate text-[15px] font-medium">{f.name}</span>
+              <span className="stat-number text-base">
+                {Math.round(Number(f.kcal_per_100g))} <span className="text-sm font-normal text-muted-foreground">kcal/100{f.unit === "ml" ? "ml" : "g"}</span>
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`Remover ${f.name}`}
+                onClick={() => remove.mutate(f.id)}
+                className="size-9 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
