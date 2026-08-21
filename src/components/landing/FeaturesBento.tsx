@@ -6,6 +6,8 @@ import {
   CalendarBlank,
   Fire,
   Calculator,
+  BowlFood,
+  CheckCircle,
 } from "@phosphor-icons/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,35 +16,149 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function MiniBarChart() {
-  const bars = [87, 98, 79, 105, 90, 114, 83];
+/* --- MOCKUP 1: Base de Dados Completa --- */
+function FoodDatabaseMockup() {
+  const foods = [
+    { name: "Frango Grelhado", kcal: 165, macro: "Proteína", color: "bg-primary", pct: 75 },
+    { name: "Arroz Integral", kcal: 110, macro: "Carboidrato", color: "bg-yellow-500", pct: 60 },
+    { name: "Ovo Cozido", kcal: 155, macro: "Proteína/Gordura", color: "bg-orange-500", pct: 50 },
+    { name: "Banana Prata", kcal: 89, macro: "Carboidrato", color: "bg-yellow-400", pct: 40 },
+  ];
+
   return (
-    <div className="absolute right-6 top-12 flex items-end gap-1.5 opacity-40 transition-opacity duration-500 group-hover:opacity-80">
-      {bars.map((pct, i) => (
-        <div key={i} className="flex w-5 flex-col items-center">
+    <div className="absolute inset-x-6 top-6 flex flex-col gap-3 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
+      <div className="flex items-center gap-2.5 rounded-xl border border-border/40 bg-background/50 px-3.5 py-2.5 text-xs text-muted-foreground backdrop-blur-md">
+        <MagnifyingGlass className="size-4 text-primary" />
+        <span>Buscar alimentos (ex: frango)...</span>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        {foods.map((food, i) => (
           <div
-            className="w-full rounded-sm transition-all duration-500"
-            style={{
-              height: `${Math.max(pct * 0.5, 10)}px`,
-              backgroundColor:
-                pct > 100
-                  ? "oklch(var(--color-destructive))"
-                  : "oklch(var(--color-primary))",
-            }}
-          />
-        </div>
-      ))}
+            key={i}
+            className="flex items-center justify-between rounded-xl border border-border/30 bg-surface/40 p-3 backdrop-blur-md transition-all duration-300 group-hover:bg-surface/60"
+            style={{ transform: `translateY(${i * 2}px)` }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <BowlFood className="size-4" weight="fill" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-semibold text-foreground">{food.name}</p>
+                <span className="text-[10px] text-muted-foreground">{food.macro}</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-xs font-bold text-primary">{food.kcal} kcal</span>
+              <div className="mt-1 h-1 w-16 overflow-hidden rounded-full bg-border/40">
+                <div className={`h-full ${food.color}`} style={{ width: `${food.pct}%` }} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-function FormulaOverlay() {
+/* --- MOCKUP 2: Acompanhamento Semanal --- */
+function WeeklyChartMockup() {
+  const weeklyData = [
+    { day: "Seg", kcal: 1850, status: "meta" },
+    { day: "Ter", kcal: 1980, status: "meta" },
+    { day: "Qua", kcal: 2150, status: "excedido" },
+    { day: "Qui", kcal: 1720, status: "meta" },
+    { day: "Sex", kcal: 1900, status: "meta" },
+    { day: "Sáb", kcal: 2300, status: "excedido" },
+    { day: "Dom", kcal: 1800, status: "meta" },
+  ];
+
   return (
-    <div className="absolute -bottom-6 -right-4 opacity-15 transition-all duration-500 group-hover:opacity-30 group-hover:-translate-y-2">
-      <div className="font-mono text-xl font-bold leading-tight tracking-tighter text-primary">
-        TMB =<br />
-        10×P +<br />
-        6.25×A<br />− 5×I
+    <div className="absolute inset-x-6 top-6 flex flex-col gap-4 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-2">
+      <div className="flex items-center justify-between rounded-xl border border-border/30 bg-surface/30 p-3 backdrop-blur-md">
+        <div className="text-left">
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Média Semanal</p>
+          <p className="text-lg font-bold text-foreground font-display">1.957 kcal</p>
+        </div>
+        <div className="flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1 text-xs text-primary font-semibold">
+          <CheckCircle className="size-3.5" weight="fill" />
+          5/7 dias na meta
+        </div>
+      </div>
+
+      <div className="flex h-36 items-end justify-between gap-2.5 rounded-xl border border-border/20 bg-surface/20 p-4 pt-8 relative">
+        <div className="absolute inset-x-0 bottom-24 border-t border-dashed border-primary/30 flex justify-end pr-2">
+          <span className="text-[9px] text-primary/60 font-mono -mt-2">Meta: 2000 kcal</span>
+        </div>
+
+        {weeklyData.map((data, i) => {
+          const heightPct = Math.min((data.kcal / 2500) * 100, 100);
+          return (
+            <div key={i} className="flex flex-1 flex-col items-center gap-1.5 h-full justify-end">
+              <div
+                className="w-full rounded-md transition-all duration-500"
+                style={{
+                  height: `${heightPct}%`,
+                  backgroundColor:
+                    data.status === "excedido"
+                      ? "oklch(var(--color-destructive))"
+                      : "oklch(var(--color-primary))",
+                  opacity: 0.8,
+                }}
+              />
+              <span className="text-[10px] font-semibold text-muted-foreground">{data.day}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* --- MOCKUP 3: Cenários de Meta --- */
+function GoalScenariosMockup() {
+  return (
+    <div className="absolute inset-x-6 top-6 flex flex-col gap-3 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+      <div className="flex rounded-lg bg-secondary/50 border border-border/30 p-1 text-center">
+        <div className="flex-1 rounded-md bg-primary text-[10px] font-bold text-primary-foreground py-1 shadow-sm">
+          Cutting
+        </div>
+        <div className="flex-1 text-[10px] font-semibold text-muted-foreground py-1">
+          Manutenção
+        </div>
+        <div className="flex-1 text-[10px] font-semibold text-muted-foreground py-1">
+          Lean Bulk
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between rounded-xl border border-border/30 bg-surface/30 p-2.5 backdrop-blur-md">
+        <div className="text-left">
+          <p className="text-[9px] text-muted-foreground">Calorias Recomendadas</p>
+          <p className="text-sm font-bold text-primary">1.650 kcal / dia</p>
+        </div>
+        <div className="text-right text-[9px] text-muted-foreground">
+          Déficit: <span className="text-destructive font-semibold">-500 kcal</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --- MOCKUP 4: Fórmula Científica --- */
+function ScientificFormulaMockup() {
+  return (
+    <div className="absolute inset-x-6 top-6 flex flex-col gap-2 pointer-events-none select-none transition-transform duration-500 group-hover:-translate-y-1">
+      <div className="rounded-xl border border-border/30 bg-surface/40 p-3 backdrop-blur-md font-mono text-left relative overflow-hidden">
+        <div className="text-[9px] text-muted-foreground uppercase tracking-wider mb-2">Mifflin-St Jeor</div>
+        <div className="text-[10px] text-foreground leading-relaxed space-y-1">
+          <p className="text-primary font-semibold">TMB = 10×Peso + 6.25×Alt − 5×Idade + 5</p>
+          <div className="text-muted-foreground border-t border-border/20 pt-1.5 mt-1 text-[9px] flex justify-between">
+            <span>P: 80kg</span>
+            <span>A: 180cm</span>
+            <span>I: 25 anos</span>
+          </div>
+          <p className="text-xs font-bold text-primary mt-1 text-right">Resultado: 1.785 kcal</p>
+        </div>
       </div>
     </div>
   );
@@ -56,12 +172,7 @@ const features = [
       "Mais de 1.102 alimentos cadastrados e validados na tabela TACO e IBGE.",
     href: "/auth",
     cta: "Buscar alimentos",
-    background: (
-      <>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
-        <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-primary/8 blur-3xl" />
-      </>
-    ),
+    background: <FoodDatabaseMockup />,
     className: "lg:row-start-1 lg:row-end-4 lg:col-start-1 lg:col-end-2",
   },
   {
@@ -71,12 +182,7 @@ const features = [
       "Visão clara do seu saldo de calorias, média diária e dias na meta.",
     href: "/auth",
     cta: "Ver gráficos",
-    background: (
-      <>
-        <div className="absolute inset-0 bg-gradient-to-bl from-chart-4/8 via-transparent to-transparent" />
-        <MiniBarChart />
-      </>
-    ),
+    background: <WeeklyChartMockup />,
     className: "lg:col-start-2 lg:col-end-4 lg:row-start-1 lg:row-end-3",
   },
   {
@@ -86,12 +192,7 @@ const features = [
       "Cutting, Manutenção ou Lean bulk. Adapta-se ao seu objetivo.",
     href: "/auth",
     cta: "Definir meta",
-    background: (
-      <>
-        <div className="absolute inset-0 bg-gradient-to-tr from-warning/8 via-transparent to-transparent" />
-        <div className="absolute -right-8 -bottom-8 h-28 w-28 rounded-full bg-warning/10 blur-2xl" />
-      </>
-    ),
+    background: <GoalScenariosMockup />,
     className: "lg:col-start-2 lg:col-end-3 lg:row-start-3 lg:row-end-4",
   },
   {
@@ -101,12 +202,7 @@ const features = [
       "Mifflin-St Jeor: cálculo preciso da sua TMB sem achismos.",
     href: "/auth",
     cta: "Calcular TMB",
-    background: (
-      <>
-        <div className="absolute inset-0 bg-gradient-to-tl from-primary/6 via-transparent to-transparent" />
-        <FormulaOverlay />
-      </>
-    ),
+    background: <ScientificFormulaMockup />,
     className: "lg:col-start-3 lg:col-end-4 lg:row-start-3 lg:row-end-4",
   },
 ];
