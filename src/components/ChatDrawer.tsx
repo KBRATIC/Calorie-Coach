@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { askAssistant } from "@/lib/ai.functions";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useQueryClient } from "@tanstack/react-query";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CameraCaptureDialog } from "@/components/CameraCaptureDialog";
@@ -93,7 +94,7 @@ const MessageList = React.memo(({ messages, isLoading }: { messages: Message[], 
               
               {msg.role === "model" ? (
                 <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-a:text-primary break-words">
-                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown>
                 </div>
               ) : (
                 msg.text && <span className="break-words">{msg.text}</span>
