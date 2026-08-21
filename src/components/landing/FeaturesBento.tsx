@@ -249,7 +249,7 @@ export function FeaturesBento() {
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 md:px-10 overflow-hidden">
+    <section className="mx-auto max-w-[90rem] px-4 py-16 md:py-24 md:px-10 overflow-hidden">
       <div className="mb-10 text-center">
         <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl text-foreground font-display">
           O que o{" "}

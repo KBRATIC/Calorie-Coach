@@ -68,7 +68,7 @@ export function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative mx-auto max-w-7xl px-4 py-16 md:py-24 md:px-10"
+      className="relative mx-auto max-w-[90rem] px-4 py-16 md:py-24 md:px-10"
     >
       {/* Subtle gradient background */}
       <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-b from-surface/50 to-transparent mx-4 md:mx-10" />

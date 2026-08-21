@@ -84,7 +84,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="aurora-layer" aria-hidden />
       
       <header className="fixed top-0 z-40 w-full pt-4 md:pt-6 px-4 pointer-events-none flex justify-center">
-        <div className="flex w-full max-w-5xl items-center justify-between px-4 py-2.5 rounded-full bg-surface/70 backdrop-blur-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] pointer-events-auto transition-all">
+        <div className="flex w-full max-w-7xl items-center justify-between px-4 py-2.5 rounded-full bg-surface/70 backdrop-blur-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] pointer-events-auto transition-all">
           <div className="flex items-center gap-3">
             <img 
               src="/icon.png" 
@@ -108,22 +108,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="embla h-full overflow-hidden w-full" ref={emblaRef}>
             <div className="embla__container flex touch-pan-y transform-gpu will-change-transform h-full w-full">
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-7xl mx-auto">
                   {activeIndex === 0 || (deferred && Math.abs(activeIndex - 0) <= 1) ? <TodayPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-7xl mx-auto">
                   {activeIndex === 1 || (deferred && Math.abs(activeIndex - 1) <= 1) ? <HistoryPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-7xl mx-auto">
                   {activeIndex === 2 || (deferred && Math.abs(activeIndex - 2) <= 1) ? <FoodsPage /> : null}
                 </div>
               </div>
               <div className="embla__slide min-w-0 flex-[0_0_100%] max-w-full w-full h-full overflow-y-auto overscroll-contain transform-gpu will-change-transform no-scrollbar">
-                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
+                <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-7xl mx-auto">
                   {activeIndex === 3 || (deferred && Math.abs(activeIndex - 3) <= 1) ? <ProfilePage /> : null}
                 </div>
               </div>
@@ -131,7 +131,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         ) : (
           <div className="h-full overflow-y-auto overscroll-contain no-scrollbar">
-            <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-5xl mx-auto">
+            <div className="px-4 pt-28 pb-40 md:pt-32 md:pb-32 min-h-full max-w-7xl mx-auto">
               {children}
             </div>
           </div>

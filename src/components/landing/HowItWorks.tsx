@@ -35,7 +35,7 @@ export function HowItWorks() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 md:px-10">
+    <section className="mx-auto max-w-[90rem] px-4 py-16 md:py-24 md:px-10">
       <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl text-foreground font-display text-center">
         Como funciona
       </h2>

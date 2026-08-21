@@ -29,7 +29,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 pt-12 pb-16 md:pt-20 md:pb-24 md:px-10">
+    <section className="relative mx-auto max-w-[90rem] px-4 pt-12 pb-16 md:pt-20 md:pb-24 md:px-10">
       <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
         {/* Left: Text Content */}
         <motion.div
@@ -124,8 +124,8 @@ export function HeroSection() {
             <img
               src="/hero-mockup.jpg"
               alt="Interface do KcalTrack mostrando dashboard com anel de calorias, registro de refeições e gráfico semanal"
-              className="w-64 md:w-72 lg:w-80 rounded-[1.8rem] object-cover"
-              width={320}
+              className="w-64 md:w-72 lg:w-96 rounded-[1.8rem] object-cover"
+              width={384}
               height={427}
               loading="eager"
             />

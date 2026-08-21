@@ -45,7 +45,7 @@ function Landing() {
 
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 w-full backdrop-blur-md border-b border-border/40 bg-background/70">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-10">
+        <div className="mx-auto flex max-w-[90rem] items-center justify-between px-4 py-3 md:px-10">
           <Link to="/" className="flex min-w-0 items-center gap-2 group">
             <img
               src="/icon.png"
@@ -84,7 +84,7 @@ function Landing() {
         <StatsSection />
 
         {/* 5. CTA Final — Full-width */}
-        <section className="mx-auto max-w-7xl px-4 pb-20 md:px-10">
+        <section className="mx-auto max-w-[90rem] px-4 pb-20 md:px-10">
           <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-surface/30 backdrop-blur-md p-8 text-center md:p-14">
             <div className="relative z-10 flex flex-col items-center gap-5">
               <h2 className="text-3xl font-display font-bold md:text-4xl lg:text-5xl">
@@ -112,7 +112,7 @@ function Landing() {
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
       <footer className="border-t border-border/20 py-8 relative z-10">
-        <div className="mx-auto max-w-7xl px-4 md:px-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto max-w-[90rem] px-4 md:px-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} KcalTrack. Valores calóricos baseados
             na Tabela EndocrinoSaude.
