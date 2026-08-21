@@ -2,6 +2,12 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { ArrowLeft, BookOpen, ShieldCheck, Cookie } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
+import { motion } from "motion/react";
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 40, scale: 0.9, rotateX: 5 },
+  show: { opacity: 1, y: 0, scale: 1, rotateX: 0, transition: { type: "spring", stiffness: 250, damping: 15 } }
+};
 
 const links = [
   { href: "/termos", label: "Termos de Uso", icon: BookOpen },
@@ -24,10 +30,15 @@ export function LegalLayout({ children, title, lastUpdated }: { children: ReactN
           </Button>
         </Link>
 
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-24">
+        <motion.div 
+          initial="hidden" 
+          animate="show" 
+          variants={{ show: { transition: { staggerChildren: 0.15 } } }} 
+          className="flex flex-col lg:flex-row gap-12 lg:gap-24"
+        >
           
           {/* Sidebar Navigation */}
-          <aside className="w-full lg:w-64 shrink-0">
+          <motion.aside variants={itemVariants} className="w-full lg:w-64 shrink-0">
             <div className="sticky top-24">
               <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wider">Documentos Legais</h3>
               <nav className="flex flex-col gap-1">
@@ -50,10 +61,10 @@ export function LegalLayout({ children, title, lastUpdated }: { children: ReactN
                 })}
               </nav>
             </div>
-          </aside>
+          </motion.aside>
 
           {/* Main Content */}
-          <main className="flex-1 min-w-0">
+          <motion.main variants={itemVariants} className="flex-1 min-w-0">
             <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-surface/40 backdrop-blur-xl [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-6 sm:p-10 md:p-12">
               <div className="mb-10 border-b border-border/20 pb-8">
                 <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-4">{title}</h1>
@@ -64,8 +75,8 @@ export function LegalLayout({ children, title, lastUpdated }: { children: ReactN
                 {children}
               </div>
             </div>
-          </main>
-        </div>
+          </motion.main>
+        </motion.div>
       </div>
     </div>
   );
