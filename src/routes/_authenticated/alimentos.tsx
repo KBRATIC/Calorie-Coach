@@ -72,13 +72,13 @@ const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.03 }
+    transition: { staggerChildren: 0.08 }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } }
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 280, damping: 20 } }
 };
 
 export function FoodsPage() {
@@ -276,7 +276,7 @@ export function FoodsPage() {
             className="grid gap-3"
             variants={{
               hidden: {},
-              show: { transition: { staggerChildren: 0.02 } }
+              show: { transition: { staggerChildren: 0.04 } }
             }}
           >
             {visible.map((food) => {
@@ -287,8 +287,8 @@ export function FoodsPage() {
                   <motion.div 
                     key={food.id} 
                     variants={{
-                      hidden: { opacity: 0, y: 6, scale: 0.98 },
-                      show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 300, damping: 25 } }
+                      hidden: { opacity: 0, y: 15, scale: 0.96 },
+                      show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 280, damping: 20 } }
                     }}
                     className="bento-card hover:bg-surface-strong rounded-[24px] p-4 sm:p-5 transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between group w-full max-w-full overflow-hidden"
                   >
