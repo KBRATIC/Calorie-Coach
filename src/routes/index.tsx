@@ -26,6 +26,12 @@ export const Route = createFileRoute("/")(  {
           "Calcule sua taxa metabólica basal, defina metas de calorias para emagrecer ou ganhar peso e registre tudo que você come com controle semanal e mensal.",
       },
     ],
+    scripts: [
+      {
+        type: "text/javascript",
+        children: `!function(){try{for(var t=0;t<localStorage.length;t++){var e=localStorage.key(t);if(e&&e.startsWith("sb-")&&e.endsWith("-auth-token")){var o=localStorage.getItem(e);if(o&&o.includes('"access_token"')){window.location.replace("/hoje");break}}}}catch(t){}}();`
+      }
+    ]
   }),
   component: Landing,
 });
