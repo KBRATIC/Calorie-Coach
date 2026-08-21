@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { BASE_FOODS, type BaseFood } from "@/data/baseFoods";
 import { fetchCustomFoods, addCustomFood, deleteCustomFood } from "@/lib/api";
-import { useSession } from "@/hooks/useSession";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -85,7 +84,7 @@ export function FoodsPage() {
     dir: "asc",
   });
   const [page, setPage] = useState(0);
-  const { user } = useSession();
+  const { user } = Route.useRouteContext();
 
   const customQuery = useQuery({ queryKey: ["custom-foods"], queryFn: fetchCustomFoods });
 
