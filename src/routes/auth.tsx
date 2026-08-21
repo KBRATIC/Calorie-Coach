@@ -144,8 +144,13 @@ function AuthPage() {
               <TabsTrigger value="signup">Criar conta</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="signin" className="mt-6">
-              <form onSubmit={signIn} className="space-y-4">
+            <TabsContent value="signin" className="mt-6 outline-none">
+              <motion.div
+                initial={{ opacity: 0, x: -20, filter: "blur(4px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              >
+                <form onSubmit={signIn} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">E-mail</Label>
                   <Input
@@ -199,8 +204,13 @@ function AuthPage() {
               </form>
             </TabsContent>
 
-            <TabsContent value="signup" className="mt-6">
-              <form onSubmit={signUp} className="space-y-4">
+            <TabsContent value="signup" className="mt-6 outline-none">
+              <motion.div
+                initial={{ opacity: 0, x: 20, filter: "blur(4px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              >
+                <form onSubmit={signUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Nome</Label>
                   <Input 
